@@ -1,17 +1,120 @@
 package com.pbarnhardt.abm2task1.Database;
 
-import androidx.room.Database;
-import androidx.room.RoomDatabase;
+import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import com.pbarnhardt.abm2task1.DAO.AssessmentsDAO;
+import com.pbarnhardt.abm2task1.DAO.CourseDAO;
+import com.pbarnhardt.abm2task1.DAO.NotesDAO;
+import com.pbarnhardt.abm2task1.DAO.TermsDAO;
 import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Entity.Notes;
 import com.pbarnhardt.abm2task1.Entity.Terms;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The type Course (StudentTracker) database.
  */
 @Database(entities = {Assessments.class, Courses.class, Notes.class, Terms.class}, version = 1, exportSchema = false)
 public abstract class CourseDatabase extends RoomDatabase {
+    /**
+     * The constants.
+     */
+    public static final String DATABASE_NAME = "TrackerDatabase.db";
 
+    /**
+     * The abstract method for the CourseDao.
+     *
+     * @return the course dao
+     */
+    public abstract CourseDAO courseDao();
+
+    /**
+     * The abstract method for the TermDao.
+     *
+     * @return the term dao
+     */
+    public abstract TermsDAO termDao();
+
+    /**
+     * The abstract method for the AssessmentDao.
+     *
+     * @return the assessment dao
+     */
+    public abstract AssessmentsDAO assessmentDao();
+
+    /**
+     * The abstract method for the NotesDao.
+     *
+     * @return the notes dao
+     */
+    public abstract NotesDAO notesDao();
+
+    private static volatile CourseDatabase INSTANCE;
+    private static final int NUMBER_OF_THREADS = 4;
+
+    /**
+     * Database write executor.
+     */
+    public static final ExecutorService databaseWriteExecutor =
+            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+
+    /**
+     * Gets database.
+     *
+     * @param context the context
+     * @return the database
+     */
+    public static CourseDatabase getDatabase(final Context context) {
+        if (INSTANCE == null) {
+            synchronized (CourseDatabase.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                                    CourseDatabase.class, DATABASE_NAME)
+                            .build();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onOpen(@NonNull SupportSQLiteDatabase db){
+            super.onOpen(db);
+
+            //comment out the following line to prevent the database from being cleared during app restarts
+            databaseWriteExecutor.execute(() -> {
+                // Populate the database in the background.
+                CourseDAO cdao = INSTANCE.courseDao();
+                cdao.deleteAllCourses();
+                TermsDAO tdao = INSTANCE.termDao();
+                tdao.deleteAllTerms();
+                AssessmentsDAO adao = INSTANCE.assessmentDao();
+                adao.deleteAllAssessments();
+                NotesDAO ndao = INSTANCE.notesDao();
+                ndao.deleteAllNotes();
+
+                Terms term = new Terms("Term 1", "2020-01-01", "2020-06-30", "In Progress");
+                tdao.insertTerms(term);
+
+                Courses course = new Courses("Course 1", "Course 1 Description", "2020-01-01", "2020-01-31", "In Progress", "Mentor 1", "555-555-5555", "mentor1@wgu.edu", 1);
+                cdao.insertCourses(course);
+
+                Assessments assessment = new Assessments("Assessment 1", "Objective", "Assessment 1 Description", "2020-01-15", 1);
+                adao.insertAssessments(assessment);
+
+                Notes note = new Notes("Note 1", 1);
+                ndao.insertNotes(note);
+            });
+        }
+    };
 }
