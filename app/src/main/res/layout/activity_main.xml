@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -13,6 +14,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:padding="0dp">
+
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,11 +24,147 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
+                android:background="@color/colorPrimary"
+                android:logo="@drawable/wgu"
+                android:logoTint="@color/colorWhite"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <ImageView
+            android:id="@+id/wgulogo"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:contentDescription="@string/app_name"
+            app:srcCompat="@drawable/wgu" />
+
+        <TextView
+            android:id="@+id/text_quote"
+            style="@style/QuoteText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wgulogo"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+
+            tools:text="“Lorem Ipsum. This would be a daily inspirational quote”" />
+
+        <TextView
+            android:id="@+id/text_quote_author"
+            style="@style/QuoteText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/text_quote"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingRight="16dp"
+            tools:text="Quote Author" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_quote_author"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp">
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="409dp"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                tools:layout_editor_absoluteX="1dp"
+                tools:layout_editor_absoluteY="253dp" />
+
+            <!-- relative layout for the buttons -->
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <ImageButton
+                                android:id="@+id/termButton"
+                                android:layout_width="150dp"
+                                android:layout_height="150dp"
+                                android:layout_margin="25dp"
+                                android:layout_marginBottom="0dp"
+                                android:onClick="termButton"
+                                android:scaleType="fitCenter"
+                                android:background="null"
+                                android:contentDescription="@string/terms_button"
+                                tools:text="Terms"
+                                app:srcCompat="@drawable/ic_action_term"
+                                app:tint="@color/colorAccent"
+                                />
+
+                            <TextView
+                                android:id="@+id/termButtonText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginLeft="70dp"
+                                android:clickable="false"
+                                android:text="@string/terms_button" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/courseButton"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:layout_margin="25dp"
+                            android:layout_marginBottom="0dp"
+                            android:onClick="courseButton"
+                            android:scaleType="fitCenter"
+                            android:background="null"
+                            android:contentDescription="@string/course_button"
+                            tools:text="Courses"
+                            app:srcCompat="@drawable/ic_action_course"
+                            app:tint="@color/colorAccent"
+                            />
+
+                            <TextView
+                                android:id="@+id/courseButtonText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginLeft="70dp"
+                                android:clickable="false"
+                                android:text="@string/course_button" /> />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
