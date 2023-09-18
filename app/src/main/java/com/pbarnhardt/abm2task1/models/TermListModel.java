@@ -1,4 +1,4 @@
-package com.pbarnhardt.abm2task1.models;
+package com.pbarnhardt.abm2task1.Models;
 
 import androidx.lifecycle.ViewModel;
 
