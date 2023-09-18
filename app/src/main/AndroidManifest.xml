@@ -13,10 +13,28 @@
         android:theme="@style/Theme.StudentTracker"
         tools:targetApi="31">
         <activity
-            android:name=".TermList"
+            android:name=".Views.AssessmentDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Views.AssessmentsListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.MentorDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.CourseDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.CoursesListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.TermDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.TermsListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
