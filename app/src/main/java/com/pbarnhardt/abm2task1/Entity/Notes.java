@@ -19,7 +19,7 @@ public class Notes {
     private int courseId;
 
     /**
-     * Instantiates a new Notes.
+     * Instantiates a new Note.
      *
      * @param noteContent the note content
      * @param courseId    the course id
