@@ -93,6 +93,42 @@ public class CourseRepository {
     }
 
     /**
+     * Gets term by id.
+     *
+     * @param termId the term id
+     * @return the term by id
+     */
+    public Terms getTermById(int termId) {
+        CourseDatabase.databaseWriteExecutor.execute(() -> {
+            mAllTerms = termsDao.getTerms();
+        });
+        for (Terms term : mAllTerms) {
+            if (term.getTermId() == termId) {
+                return term;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets term by title.
+     *
+     * @param termTitle the term title
+     * @return the term by title
+     */
+    public Terms getTermByTitle(String termTitle) {
+        CourseDatabase.databaseWriteExecutor.execute(() -> {
+            mAllTerms = termsDao.getTerms();
+        });
+        for (Terms term : mAllTerms) {
+            if (term.getTermName().equals(termTitle)) {
+                return term;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Gets all courses.
      *
      * @return the list
@@ -102,6 +138,60 @@ public class CourseRepository {
             mAllCourses = courseDao.getCourses();
         });
         return mAllCourses;
+    }
+
+    /**
+     * Gets course by id.
+     *
+     * @param courseId the course id
+     * @return the course by id
+     */
+    public Courses getCourseById(int courseId) {
+        CourseDatabase.databaseWriteExecutor.execute(() -> {
+            mAllCourses = courseDao.getCourses();
+        });
+        for (Courses course : mAllCourses) {
+            if (course.getCourseId() == courseId) {
+                return course;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets course by term id.
+     *
+     * @param termId the term id
+     * @return the course
+     */
+    public List<Courses> getCourseByTermId(int termId) {
+        CourseDatabase.databaseWriteExecutor.execute(() -> {
+            mAllCourses = courseDao.getCourses();
+        });
+        for (Courses course : mAllCourses) {
+            if (course.getCourseTermId() == termId) {
+                return mAllCourses;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets course by mentor name
+     *
+     * @param mentorName the mentor name
+     * @return the course
+     */
+    public Courses getCourseByMentorName(String mentorName) {
+        CourseDatabase.databaseWriteExecutor.execute(() -> {
+            mAllCourses = courseDao.getCourses();
+        });
+        for (Courses course : mAllCourses) {
+            if (course.getCourseMentorName().equals(mentorName)) {
+                return course;
+            }
+        }
+        return null;
     }
 
     /**
