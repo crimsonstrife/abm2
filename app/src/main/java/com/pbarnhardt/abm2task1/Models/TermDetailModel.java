@@ -3,6 +3,7 @@ package com.pbarnhardt.abm2task1.Models;
 import androidx.lifecycle.ViewModel;
 
 import com.pbarnhardt.abm2task1.Database.CourseRepository;
+import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 
 public class TermDetailModel extends ViewModel {
@@ -21,7 +22,23 @@ public class TermDetailModel extends ViewModel {
         this.courseRepository.deleteTerm(termToDelete);
     }
 
-    public void LiveData<Terms> getTermById(int termId) {
-        return this.courseRepository.getTermById(termId);
+    public void getTermById(int termId) {
+        this.courseRepository.getTermById(termId);
+    }
+
+    public void getTermByTitle(String termTitle) {
+        this.courseRepository.getTermByTitle(termTitle);
+    }
+
+    public void getCoursesByTerm(int termId) {
+        this.courseRepository.getCourseByTermId(termId);
+    }
+
+    public void addCourseToTerm(Courses course) {
+        this.courseRepository.insertCourse(course);
+    }
+
+    public void deleteCourseFromTerm(Courses course) {
+        this.courseRepository.deleteCourse(course);
     }
 }
