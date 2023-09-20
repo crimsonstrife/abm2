@@ -2,6 +2,7 @@ package com.pbarnhardt.abm2task1.Models;
 
 import android.view.LayoutInflater;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,7 +35,7 @@ public class TermListModel extends ViewModel {
         this.courseRepository = courseRepository;
     }
 
-    public List<Terms> getListOfAllTerms() {
-        return this.courseRepository.getmAllTerms();
+    public LiveData<List<Terms>> getListOfAllTerms() {
+        return this.courseRepository.;
     }
 }
