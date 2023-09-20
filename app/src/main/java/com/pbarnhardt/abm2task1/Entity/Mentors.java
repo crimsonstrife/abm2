@@ -18,6 +18,8 @@ public class Mentors {
     private String courseMentorName;
     private String courseMentorPhone;
     private String courseMentorEmail;
+
+    //only one mentor per course
     private int courseId;
 
     /**
