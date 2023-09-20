@@ -4,10 +4,12 @@ import android.app.Application;
 
 import com.pbarnhardt.abm2task1.DAO.AssessmentsDAO;
 import com.pbarnhardt.abm2task1.DAO.CourseDAO;
+import com.pbarnhardt.abm2task1.DAO.MentorsDAO;
 import com.pbarnhardt.abm2task1.DAO.NotesDAO;
 import com.pbarnhardt.abm2task1.DAO.TermsDAO;
 import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Entity.Courses;
+import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Entity.Notes;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 
@@ -38,6 +40,11 @@ public class CourseRepository {
     private NotesDAO notesDao;
 
     /**
+     * The Mentors dao.
+     */
+    private MentorsDAO mentorsDao;
+
+    /**
      * The M all terms.
      */
     private List<Terms> mAllTerms;
@@ -58,6 +65,11 @@ public class CourseRepository {
     private List<Notes> mAllNotes;
 
     /**
+     * The M all mentors.
+     */
+    private List<Mentors> mAllMentors;
+
+    /**
      * Instantiates a new Course repository.
      *
      * @param application the application
@@ -72,6 +84,7 @@ public class CourseRepository {
         mAllAssessments = getmAllAssessments();
         notesDao = db.notesDao();
         mAllNotes = getmAllNotes();
+        mentorsDao = db.mentorsDao();
         //Delay so the constructor has time to complete
         try {
             Thread.sleep(1000);
@@ -181,14 +194,16 @@ public class CourseRepository {
      *
      * @param mentorName the mentor name
      * @return the course
+     *
+     * Searches the Mentor table for the mentor name and returns the course associated with that mentor
      */
     public Courses getCourseByMentorName(String mentorName) {
         CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllCourses = courseDao.getCourses();
+            mAllMentors = mentorsDao.getMentors();
         });
-        for (Courses course : mAllCourses) {
-            if (course.getCourseMentorName().equals(mentorName)) {
-                return course;
+        for (Mentors mentor : mAllMentors) {
+            if (mentor.getMentorName().equals(mentorName)) {
+                return getCourseById(mentor.getCourseId());
             }
         }
         return null;
@@ -216,6 +231,18 @@ public class CourseRepository {
             mAllNotes = notesDao.getNotes();
         });
         return mAllNotes;
+    }
+
+    /**
+     * Gets all mentors.
+     *
+     * @return the list
+     */
+    public List<Mentors> getmAllMentors() {
+        CourseDatabase.databaseWriteExecutor.execute(() -> {
+            mAllMentors = mentorsDao.getMentors();
+        });
+        return mAllMentors;
     }
 
     /**
@@ -259,6 +286,17 @@ public class CourseRepository {
     public void insertNote (Notes note) {
         CourseDatabase.databaseWriteExecutor.execute(() -> {
             notesDao.insertNotes(note);
+        });
+    }
+
+    /**
+     * Insert mentor.
+     *
+     * @param mentor the mentor
+     */
+    public void insertMentor (Mentors mentor) {
+        CourseDatabase.databaseWriteExecutor.execute(() -> {
+            mentorsDao.insertMentors(mentor);
         });
     }
 
@@ -307,6 +345,17 @@ public class CourseRepository {
     }
 
     /**
+     * Delete mentor.
+     *
+     * @param mentor the mentor
+     */
+    public void deleteMentor (Mentors mentor) {
+        CourseDatabase.databaseWriteExecutor.execute(() -> {
+            mentorsDao.deleteMentors(mentor);
+        });
+    }
+
+    /**
      * Update term.
      *
      * @param term the term
@@ -347,6 +396,17 @@ public class CourseRepository {
     public void updateNote (Notes note) {
         CourseDatabase.databaseWriteExecutor.execute(() -> {
             notesDao.updateNotes(note);
+        });
+    }
+
+    /**
+     * Update mentor.
+     *
+     * @param mentor the mentor
+     */
+    public void updateMentor (Mentors mentor) {
+        CourseDatabase.databaseWriteExecutor.execute(() -> {
+            mentorsDao.updateMentors(mentor);
         });
     }
 }
