@@ -7,19 +7,22 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="WaiterText">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">#0033cc</item>
+
+    <style name="TitleText">
+        <item name="android:textSize">25dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:textColor">@color/colorBackground</item>
     </style>
 
-    <style name="BoldBooth">
-        <item name="android:layout_height">10dp</item>
-        <item name="android:layout_width">10dp</item>
+    <style name="ListItemTitle">
+        <item name="android:textSize">18dp</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="BoldTable">
-        <item name="android:layout_height">90dp</item>
-        <item name="android:layout_width">90dp</item>
+    <style name="FieldNameText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorNeutralDark</item>
     </style>
 
     <style name="QuoteText">
@@ -27,6 +30,30 @@
         <item name="android:textColor">@color/colorNeutral</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="ContextualText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/colorNeutral</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="button_date">
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:backgroundTint">@color/colorBackground</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:hint">"mm/dd/yy"</item>
+    </style>
+
+    <style name="button_mentor">
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:backgroundTint">@color/colorBackground</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
