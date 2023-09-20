@@ -19,9 +19,12 @@ public class Courses {
     private String courseStartDate;
     private String courseEndDate;
     private String courseStatus;
-    private String courseMentorName;
-    private String courseMentorPhone;
-    private String courseMentorEmail;
+
+    // Made the mentor into its own entity
+    //private String courseMentorName;
+    //private String courseMentorPhone;
+    //private String courseMentorEmail;
+
     private int courseNotesCount;
     private int courseAssessmentsCount;
     private int termId;
@@ -34,21 +37,18 @@ public class Courses {
      * @param courseStartDate      the course start date
      * @param courseEndDate        the course end date
      * @param courseStatus         the course status
-     * @param courseMentorName     the course mentor name
-     * @param courseMentorPhone    the course mentor phone
-     * @param courseMentorEmail    the course mentor email
      * @param termId               the term id
      * Course note and assessment counts are set to 0 by default.
      */
-    public Courses(String courseName, String courseDescription, String courseStartDate, String courseEndDate, String courseStatus, String courseMentorName, String courseMentorPhone, String courseMentorEmail, int termId) {
+    public Courses(String courseName, String courseDescription, String courseStartDate, String courseEndDate, String courseStatus, int termId) {
         this.courseName = courseName;
         this.courseDescription = courseDescription;
         this.courseStartDate = courseStartDate;
         this.courseEndDate = courseEndDate;
         this.courseStatus = courseStatus;
-        this.courseMentorName = courseMentorName;
-        this.courseMentorPhone = courseMentorPhone;
-        this.courseMentorEmail = courseMentorEmail;
+        //this.courseMentorName = courseMentorName;
+        //this.courseMentorPhone = courseMentorPhone;
+        //this.courseMentorEmail = courseMentorEmail;
         this.courseNotesCount = 0;
         this.courseAssessmentsCount = 0;
         this.termId = termId;
@@ -113,27 +113,27 @@ public class Courses {
      *
      * @return the course mentor name
      */
-    public String getCourseMentorName() {
-        return courseMentorName;
-    }
+    //public String getCourseMentorName() {
+        //return courseMentorName;
+    //}
 
     /**
      * Gets course mentor phone.
      *
      * @return the course mentor phone
      */
-    public String getCourseMentorPhone() {
-        return courseMentorPhone;
-    }
+    //public String getCourseMentorPhone() {
+        //return courseMentorPhone;
+    //}
 
     /**
      * Gets course mentor email.
      *
      * @return the course mentor email
      */
-    public String getCourseMentorEmail() {
-        return courseMentorEmail;
-    }
+    //public String getCourseMentorEmail() {
+        //return courseMentorEmail;
+    //}
 
     /**
      * Gets course notes count.
@@ -212,27 +212,27 @@ public class Courses {
      *
      * @param courseMentorName the course mentor name
      */
-    public void setCourseMentorName(String courseMentorName) {
-        this.courseMentorName = courseMentorName;
-    }
+    //public void setCourseMentorName(String courseMentorName) {
+        //this.courseMentorName = courseMentorName;
+    //}
 
     /**
      * Sets course mentor phone.
      *
      * @param courseMentorPhone the course mentor phone
      */
-    public void setCourseMentorPhone(String courseMentorPhone) {
-        this.courseMentorPhone = courseMentorPhone;
-    }
+    //public void setCourseMentorPhone(String courseMentorPhone) {
+        //this.courseMentorPhone = courseMentorPhone;
+    //}
 
     /**
      * Sets course mentor email.
      *
      * @param courseMentorEmail the course mentor email
      */
-    public void setCourseMentorEmail(String courseMentorEmail) {
-        this.courseMentorEmail = courseMentorEmail;
-    }
+    //public void setCourseMentorEmail(String courseMentorEmail) {
+        //this.courseMentorEmail = courseMentorEmail;
+    //}
 
     /**
      * Increment course notes count.
