@@ -5,32 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
+    android:id="@+id/termListLayout"
     tools:context=".Views.TermsListActivity">
 
-    <RelativeLayout
-        android:id="@+id/relLay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="0dp">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
-
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/termsListToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorPrimary"
                 android:logo="@drawable/wgu"
+                android:elevation="5dp"
                 android:logoTint="@color/colorWhite"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-        </com.google.android.material.appbar.AppBarLayout>
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="@string/term_list_title"
+                app:titleTextColor="@color/colorBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="350dp"
@@ -38,29 +31,62 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:id="@+id/termRecyclerView"
-            android:layout_below="@+id/appBarLayout"
+            android:id="@+id/termListRecyclerView"
+            android:layout_below="@+id/termsListToolbar"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintStart_toStartOf="@id/appBarLayout" />
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="60dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottomTermsListNavigationLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/termsListToolbar"
+            />
 
-    </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingAddTermButton"
-        android:layout_width="64dp"
-        android:layout_height="75dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="72dp"
         android:clickable="true"
         android:onClick="addTermButton"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_action_add"
+        android:tooltipText="Add a Term"
         app:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteX="314dp"
-        tools:layout_editor_absoluteY="632dp"
-        />
+        app:srcCompat="@drawable/ic_action_add"
+        android:importantForAccessibility="no" />
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/bottomTermsListNavigationLayout"
+        android:background="@color/colorNeutral"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/bottomTermsListNavigation"
+            android:background="@color/colorNeutral"
+            app:menu="@menu/nav_btm"
+            app:labelVisibilityMode="labeled"
+            app:itemIconTint="@color/colorWhite"
+            app:itemTextColor="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
