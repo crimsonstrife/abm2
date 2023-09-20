@@ -12,11 +12,13 @@ import com.pbarnhardt.abm2task1.DAO.AssessmentsDAO;
 import com.pbarnhardt.abm2task1.DAO.CourseDAO;
 import com.pbarnhardt.abm2task1.DAO.MentorsDAO;
 import com.pbarnhardt.abm2task1.DAO.NotesDAO;
+import com.pbarnhardt.abm2task1.DAO.StatusDAO;
 import com.pbarnhardt.abm2task1.DAO.TermsDAO;
 import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Entity.Notes;
+import com.pbarnhardt.abm2task1.Entity.Status;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 
 import java.util.concurrent.ExecutorService;
@@ -67,6 +69,11 @@ public abstract class CourseDatabase extends RoomDatabase {
      */
     public abstract MentorsDAO mentorsDao();
 
+    /**
+     * The abstract method for the StatusDao.
+     */
+    public abstract StatusDAO statusDao();
+
     private static volatile CourseDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
 
@@ -113,11 +120,13 @@ public abstract class CourseDatabase extends RoomDatabase {
                 ndao.deleteAllNotes();
                 MentorsDAO mdao = INSTANCE.mentorsDao();
                 mdao.deleteAllMentors();
+                StatusDAO sdao = INSTANCE.statusDao();
+                sdao.deleteAllStatus();
 
                 Terms term = new Terms("Term 1", "2020-01-01", "2020-06-30", "In Progress");
                 tdao.insertTerms(term);
 
-                Courses course = new Courses("Course 1", "Course 1 Description", "2020-01-01", "2020-01-31", "In Progress", "Mentor 1", "555-555-5555", "mentor1@wgu.edu", 1);
+                Courses course = new Courses("Course 1", "Course 1 Description", "2020-01-01", "2020-01-31", 1, 1);
                 cdao.insertCourses(course);
 
                 Assessments assessment = new Assessments("Assessment 1", "Objective", "Assessment 1 Description", "2020-01-15", 1);
@@ -128,6 +137,15 @@ public abstract class CourseDatabase extends RoomDatabase {
 
                 Mentors mentor = new Mentors("John Doe", "555-555-5555", "jdoe@school.edu", 1);
                 mdao.insertMentors(mentor);
+
+                Status status1 = new Status("In Progress");
+                sdao.insertStatus(status1);
+                Status status2 = new Status("Completed");
+                sdao.insertStatus(status2);
+                Status status3 = new Status("Dropped");
+                sdao.insertStatus(status3);
+                Status status4 = new Status("Plan to Take");
+                sdao.insertStatus(status4);
             });
         }
     };
