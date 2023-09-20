@@ -6,11 +6,13 @@ import com.pbarnhardt.abm2task1.DAO.AssessmentsDAO;
 import com.pbarnhardt.abm2task1.DAO.CourseDAO;
 import com.pbarnhardt.abm2task1.DAO.MentorsDAO;
 import com.pbarnhardt.abm2task1.DAO.NotesDAO;
+import com.pbarnhardt.abm2task1.DAO.StatusDAO;
 import com.pbarnhardt.abm2task1.DAO.TermsDAO;
 import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Entity.Notes;
+import com.pbarnhardt.abm2task1.Entity.Status;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 
 import java.util.List;
@@ -45,6 +47,11 @@ public class CourseRepository {
     private MentorsDAO mentorsDao;
 
     /**
+     * The Status dao.
+     */
+    private StatusDAO statusDao;
+
+    /**
      * The M all terms.
      */
     private List<Terms> mAllTerms;
@@ -70,6 +77,11 @@ public class CourseRepository {
     private List<Mentors> mAllMentors;
 
     /**
+     * The M all statuses.
+     */
+    private List<Status> mAllStatus;
+
+    /**
      * Instantiates a new Course repository.
      *
      * @param application the application
@@ -85,6 +97,9 @@ public class CourseRepository {
         notesDao = db.notesDao();
         mAllNotes = getmAllNotes();
         mentorsDao = db.mentorsDao();
+        mAllMentors = getmAllMentors();
+        statusDao = db.statusDao();
+        mAllStatus = statusDao.getmAllStatus();
         //Delay so the constructor has time to complete
         try {
             Thread.sleep(1000);
@@ -103,6 +118,18 @@ public class CourseRepository {
             mAllTerms = termsDao.getTerms();
         });
         return mAllTerms;
+    }
+
+    /**
+     * Gets all statuses.
+     *
+     * @return the list
+     */
+    public List<Status> getmAllStatus() {
+        CourseDatabase.databaseWriteExecutor.execute(() -> {
+            mAllStatus = statusDao.getmAllStatus();
+        });
+        return mAllStatus;
     }
 
     /**
