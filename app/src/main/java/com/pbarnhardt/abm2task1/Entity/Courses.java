@@ -6,11 +6,13 @@ import androidx.room.PrimaryKey;
 
 /**
  * The type Courses(Classes) for student tracker.
+ *
  */
 @Entity(tableName = "Courses", foreignKeys = @ForeignKey(entity = Terms.class,
         parentColumns = "termId",
         childColumns = "termId",
-        onDelete = ForeignKey.RESTRICT))
+        onDelete = ForeignKey.RESTRICT)
+)
 public class Courses {
     @PrimaryKey(autoGenerate = true)
     private int courseId;
@@ -18,7 +20,13 @@ public class Courses {
     private String courseDescription;
     private String courseStartDate;
     private String courseEndDate;
-    private String courseStatus;
+    //private String courseStatus;
+
+    //foreign keys to Terms
+    private int termId;
+
+    private int courseStatus;
+
 
     // Made the mentor into its own entity
     //private String courseMentorName;
@@ -27,7 +35,6 @@ public class Courses {
 
     private int courseNotesCount;
     private int courseAssessmentsCount;
-    private int termId;
 
     /**
      * Instantiates a new Course.
@@ -40,7 +47,7 @@ public class Courses {
      * @param termId               the term id
      * Course note and assessment counts are set to 0 by default.
      */
-    public Courses(String courseName, String courseDescription, String courseStartDate, String courseEndDate, String courseStatus, int termId) {
+    public Courses(String courseName, String courseDescription, String courseStartDate, String courseEndDate, int courseStatus, int termId) {
         this.courseName = courseName;
         this.courseDescription = courseDescription;
         this.courseStartDate = courseStartDate;
@@ -104,7 +111,7 @@ public class Courses {
      *
      * @return the course status
      */
-    public String getCourseStatus() {
+    public int getCourseStatus() {
         return courseStatus;
     }
 
@@ -203,7 +210,7 @@ public class Courses {
      *
      * @param courseStatus the course status
      */
-    public void setCourseStatus(String courseStatus) {
+    public void setCourseStatus(int courseStatus) {
         this.courseStatus = courseStatus;
     }
 
