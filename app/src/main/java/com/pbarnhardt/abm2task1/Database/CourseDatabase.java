@@ -10,10 +10,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.pbarnhardt.abm2task1.DAO.AssessmentsDAO;
 import com.pbarnhardt.abm2task1.DAO.CourseDAO;
+import com.pbarnhardt.abm2task1.DAO.MentorsDAO;
 import com.pbarnhardt.abm2task1.DAO.NotesDAO;
 import com.pbarnhardt.abm2task1.DAO.TermsDAO;
 import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Entity.Courses;
+import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Entity.Notes;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 
@@ -23,7 +25,7 @@ import java.util.concurrent.Executors;
 /**
  * The type Course (StudentTracker) database.
  */
-@Database(entities = {Assessments.class, Courses.class, Notes.class, Terms.class}, version = 1, exportSchema = false)
+@Database(entities = {Assessments.class, Courses.class, Notes.class, Terms.class, Mentors.class}, version = 1, exportSchema = false)
 public abstract class CourseDatabase extends RoomDatabase {
     /**
      * The constants.
@@ -57,6 +59,13 @@ public abstract class CourseDatabase extends RoomDatabase {
      * @return the notes dao
      */
     public abstract NotesDAO notesDao();
+
+    /**
+     * The abstract method for the MentorsDao.
+     *
+     * @return the mentors dao
+     */
+    public abstract MentorsDAO mentorsDao();
 
     private static volatile CourseDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -102,6 +111,8 @@ public abstract class CourseDatabase extends RoomDatabase {
                 adao.deleteAllAssessments();
                 NotesDAO ndao = INSTANCE.notesDao();
                 ndao.deleteAllNotes();
+                MentorsDAO mdao = INSTANCE.mentorsDao();
+                mdao.deleteAllMentors();
 
                 Terms term = new Terms("Term 1", "2020-01-01", "2020-06-30", "In Progress");
                 tdao.insertTerms(term);
@@ -114,6 +125,9 @@ public abstract class CourseDatabase extends RoomDatabase {
 
                 Notes note = new Notes("Note 1", 1);
                 ndao.insertNotes(note);
+
+                Mentors mentor = new Mentors("John Doe", "555-555-5555", "jdoe@school.edu", 1);
+                mdao.insertMentors(mentor);
             });
         }
     };
