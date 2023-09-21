@@ -52,4 +52,28 @@
     <string name="termStatusTitle">Status</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="termNameText">First Term</string>
+    <string name="dummyDateRange">1/1/2025-12/1/2023</string>
+    <string name="sublistItemTitleText">Course Name</string>
+    <string name="sublistItemDescText">Course Description</string>
+    <string name="sublistItemDateRangeText">1/1/2023-12/1/2023</string>
+    <string name="mentorDetailsTitleText">Mentor Details</string>
+    <string name="dummyPhoneNumber">ex. 555-555-5555</string>
+    <string name="dummyEmail">ex. johndoe@example.org</string>
+    <string name="dummyName">ex. John Doe</string>
+    <string name="EmailText">Email</string>
+    <string name="NameText">Name</string>
+    <string name="PhoneText">Phone</string>
+    <string name="courseListTitle">Course List</string>
+    <string name="course_details_Title">Course Details</string>
+    <string name="statusTextTitle">Status</string>
+    <string name="datesTitleText">Dates</string>
+    <string name="course_startText">Course Start</string>
+    <string name="courseDummyTitle">ex. C196</string>
+    <string name="courseEndText">Course End</string>
+    <string name="NotesTitle">Notes</string>
+    <string name="CourseTitleText">Title</string>
+    <string name="ShareButtonText">Share</string>
+    <string name="enterNotesPromptText">Enter your notes about the course</string>
+    <string name="assessmentsTitleText">Assessments</string>
 </resources>
