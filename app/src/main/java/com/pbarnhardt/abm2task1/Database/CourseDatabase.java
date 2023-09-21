@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 /**
  * The type Course (StudentTracker) database.
  */
-@Database(entities = {Assessments.class, Courses.class, Notes.class, Terms.class, Mentors.class}, version = 1, exportSchema = false)
+@Database(entities = {Assessments.class, Courses.class, Notes.class, Terms.class, Mentors.class, Status.class}, version = 1, exportSchema = false)
 public abstract class CourseDatabase extends RoomDatabase {
     /**
      * The constants.
@@ -149,4 +149,22 @@ public abstract class CourseDatabase extends RoomDatabase {
             });
         }
     };
+
+    /**
+     * Populate the Status table with the 4 default values.
+     *
+     */
+    public static void populateStatus() {
+        databaseWriteExecutor.execute(() -> {
+            StatusDAO sdao = INSTANCE.statusDao();
+            Status status1 = new Status("In Progress");
+            sdao.insertStatus(status1);
+            Status status2 = new Status("Completed");
+            sdao.insertStatus(status2);
+            Status status3 = new Status("Dropped");
+            sdao.insertStatus(status3);
+            Status status4 = new Status("Plan to Take");
+            sdao.insertStatus(status4);
+        });
+    }
 }
