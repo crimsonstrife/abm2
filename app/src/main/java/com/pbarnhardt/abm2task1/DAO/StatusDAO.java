@@ -21,8 +21,8 @@ public interface StatusDAO {
      *
      * @return the Status
      */
-    @Query("SELECT * FROM CourseStatus")
-    public List<Status> getStatus();
+    @Query("SELECT * FROM Status")
+    public List<Status> getStatuses();
 
     /**
      * Insert Status.
@@ -52,6 +52,6 @@ public interface StatusDAO {
     /**
      * Delete all Status.
      */
-    @Query("DELETE FROM CourseStatus")
+    @Query("DELETE FROM Status")
     public void deleteAllStatus();
 }
