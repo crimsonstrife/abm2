@@ -69,7 +69,7 @@
         <Spinner
             android:id="@+id/spinner_course_status"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_marginStart="120dp"
             android:layout_marginTop="150dp"
             android:entries="@array/statusArray"
