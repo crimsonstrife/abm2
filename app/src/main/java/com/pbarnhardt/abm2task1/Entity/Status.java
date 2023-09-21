@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 /**
  * The type Statuses for courses.
  */
-@Entity(tableName = "CourseStatus")
+@Entity(tableName = "Status")
 public class Status {
     @PrimaryKey(autoGenerate = true)
     private int statusId;
