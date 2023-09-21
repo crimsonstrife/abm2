@@ -99,7 +99,7 @@ public class CourseRepository {
         mentorsDao = db.mentorsDao();
         mAllMentors = getmAllMentors();
         statusDao = db.statusDao();
-        mAllStatus = statusDao.getmAllStatus();
+        mAllStatus = getmAllStatus();
         //Delay so the constructor has time to complete
         try {
             Thread.sleep(1000);
@@ -114,9 +114,7 @@ public class CourseRepository {
      * @return the list
      */
     public List<Terms> getmAllTerms() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllTerms = termsDao.getTerms();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllTerms = termsDao.getTerms());
         return mAllTerms;
     }
 
@@ -126,9 +124,7 @@ public class CourseRepository {
      * @return the list
      */
     public List<Status> getmAllStatus() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllStatus = statusDao.getmAllStatus();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllStatus = statusDao.getStatuses());
         return mAllStatus;
     }
 
@@ -139,9 +135,7 @@ public class CourseRepository {
      * @return the term by id
      */
     public Terms getTermById(int termId) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllTerms = termsDao.getTerms();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllTerms = termsDao.getTerms());
         for (Terms term : mAllTerms) {
             if (term.getTermId() == termId) {
                 return term;
@@ -157,9 +151,7 @@ public class CourseRepository {
      * @return the term by title
      */
     public Terms getTermByTitle(String termTitle) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllTerms = termsDao.getTerms();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllTerms = termsDao.getTerms());
         for (Terms term : mAllTerms) {
             if (term.getTermName().equals(termTitle)) {
                 return term;
@@ -174,9 +166,7 @@ public class CourseRepository {
      * @return the list
      */
     public List<Courses> getmAllCourses() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllCourses = courseDao.getCourses();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllCourses = courseDao.getCourses());
         return mAllCourses;
     }
 
@@ -187,9 +177,7 @@ public class CourseRepository {
      * @return the course by id
      */
     public Courses getCourseById(int courseId) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllCourses = courseDao.getCourses();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllCourses = courseDao.getCourses());
         for (Courses course : mAllCourses) {
             if (course.getCourseId() == courseId) {
                 return course;
@@ -205,9 +193,7 @@ public class CourseRepository {
      * @return the course
      */
     public List<Courses> getCourseByTermId(int termId) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllCourses = courseDao.getCourses();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllCourses = courseDao.getCourses());
         for (Courses course : mAllCourses) {
             if (course.getCourseTermId() == termId) {
                 return mAllCourses;
@@ -225,9 +211,7 @@ public class CourseRepository {
      * Searches the Mentor table for the mentor name and returns the course associated with that mentor
      */
     public Courses getCourseByMentorName(String mentorName) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllMentors = mentorsDao.getMentors();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllMentors = mentorsDao.getMentors());
         for (Mentors mentor : mAllMentors) {
             if (mentor.getMentorName().equals(mentorName)) {
                 return getCourseById(mentor.getCourseId());
@@ -242,9 +226,7 @@ public class CourseRepository {
      * @return the list
      */
     public List<Assessments> getmAllAssessments() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllAssessments = assessmentsDao.getAssessments();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllAssessments = assessmentsDao.getAssessments());
         return mAllAssessments;
     }
 
@@ -254,9 +236,7 @@ public class CourseRepository {
      * @return the list
      */
     public List<Notes> getmAllNotes() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllNotes = notesDao.getNotes();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllNotes = notesDao.getNotes());
         return mAllNotes;
     }
 
@@ -266,9 +246,7 @@ public class CourseRepository {
      * @return the list
      */
     public List<Mentors> getmAllMentors() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mAllMentors = mentorsDao.getMentors();
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mAllMentors = mentorsDao.getMentors());
         return mAllMentors;
     }
 
@@ -278,9 +256,7 @@ public class CourseRepository {
      * @param term the term
      */
     public void insertTerm(Terms term) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            termsDao.insertTerms(term);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> termsDao.insertTerms(term));
     }
 
     /**
@@ -289,9 +265,7 @@ public class CourseRepository {
      * @param course the course
      */
     public void insertCourse(Courses course) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            courseDao.insertCourses(course);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> courseDao.insertCourses(course));
     }
 
     /**
@@ -300,9 +274,7 @@ public class CourseRepository {
      * @param assessment the assessment
      */
     public void insertAssessment(Assessments assessment) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            assessmentsDao.insertAssessments(assessment);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> assessmentsDao.insertAssessments(assessment));
     }
 
     /**
@@ -311,9 +283,7 @@ public class CourseRepository {
      * @param note the note
      */
     public void insertNote (Notes note) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            notesDao.insertNotes(note);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> notesDao.insertNotes(note));
     }
 
     /**
@@ -322,9 +292,7 @@ public class CourseRepository {
      * @param mentor the mentor
      */
     public void insertMentor (Mentors mentor) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mentorsDao.insertMentors(mentor);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mentorsDao.insertMentors(mentor));
     }
 
     /**
@@ -333,9 +301,7 @@ public class CourseRepository {
      * @param term the term
      */
     public void deleteTerm(Terms term) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            termsDao.deleteTerms(term);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> termsDao.deleteTerms(term));
     }
 
     /**
@@ -344,9 +310,7 @@ public class CourseRepository {
      * @param course the course
      */
     public void deleteCourse(Courses course) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            courseDao.deleteCourses(course);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> courseDao.deleteCourses(course));
     }
 
     /**
@@ -355,9 +319,7 @@ public class CourseRepository {
      * @param assessment the assessment
      */
     public void deleteAssessment(Assessments assessment) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            assessmentsDao.deleteAssessments(assessment);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> assessmentsDao.deleteAssessments(assessment));
     }
 
     /**
@@ -366,9 +328,7 @@ public class CourseRepository {
      * @param note the note
      */
     public void deleteNote (Notes note) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            notesDao.deleteNotes(note);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> notesDao.deleteNotes(note));
     }
 
     /**
@@ -377,9 +337,7 @@ public class CourseRepository {
      * @param mentor the mentor
      */
     public void deleteMentor (Mentors mentor) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mentorsDao.deleteMentors(mentor);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mentorsDao.deleteMentors(mentor));
     }
 
     /**
@@ -388,9 +346,7 @@ public class CourseRepository {
      * @param term the term
      */
     public void updateTerm(Terms term) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            termsDao.updateTerms(term);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> termsDao.updateTerms(term));
     }
 
     /**
@@ -399,9 +355,7 @@ public class CourseRepository {
      * @param course the course
      */
     public void updateCourse(Courses course) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            courseDao.updateCourses(course);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> courseDao.updateCourses(course));
     }
 
     /**
@@ -410,9 +364,7 @@ public class CourseRepository {
      * @param assessment the assessment
      */
     public void updateAssessment(Assessments assessment) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            assessmentsDao.updateAssessments(assessment);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> assessmentsDao.updateAssessments(assessment));
     }
 
     /**
@@ -421,9 +373,7 @@ public class CourseRepository {
      * @param note the note
      */
     public void updateNote (Notes note) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            notesDao.updateNotes(note);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> notesDao.updateNotes(note));
     }
 
     /**
@@ -432,8 +382,6 @@ public class CourseRepository {
      * @param mentor the mentor
      */
     public void updateMentor (Mentors mentor) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> {
-            mentorsDao.updateMentors(mentor);
-        });
+        CourseDatabase.databaseWriteExecutor.execute(() -> mentorsDao.updateMentors(mentor));
     }
 }
