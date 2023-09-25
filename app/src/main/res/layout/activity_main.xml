@@ -1,199 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/drawer_layout"
     android:background="@color/colorBackground"
-    tools:context=".Views.MainActivity">
+    tools:context=".Views.MainActivity"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="end">
 
-    <RelativeLayout
-        android:id="@+id/relLay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="0dp">
+        <include layout="@layout/menu_toolbar"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
-                android:logo="@drawable/wgu"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <ImageView
-            android:id="@+id/wgulogo"
-            android:layout_width="100dp"
-            android:layout_height="25dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="80dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
-            android:contentDescription="@string/app_name"
-            app:srcCompat="@drawable/wgu"
-            app:tint="@color/colorPrimary" />
-
-        <TextView
-            android:id="@+id/text_quote"
-            style="@style/QuoteText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/wgulogo"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:textColor="#78909C"
-            tools:text="@string/dailyQoute" />
-
-        <TextView
-            android:id="@+id/text_quote_author"
-            style="@style/QuoteText"
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_quote"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:paddingEnd="16dp"
-            android:textColor="#78909C"
-            tools:text="@string/dailyqouteAuthor"
-            tools:ignore="RtlSymmetry" />
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/nav_header"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+            app:menu="@menu/menu_drawer"
+            android:background="@color/colorNeutralDark"/>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_quote_author"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp">
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="409dp"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider"
-                tools:layout_editor_absoluteX="1dp"
-                tools:layout_editor_absoluteY="253dp" />
-
-            <!-- relative layout for the buttons -->
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/divider"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp">
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <ImageButton
-                                android:id="@+id/termButton"
-                                android:layout_width="150dp"
-                                android:layout_height="150dp"
-                                android:layout_margin="25dp"
-                                android:layout_marginBottom="0dp"
-                                android:onClick="termButton"
-                                android:scaleType="fitCenter"
-                                android:background="@color/colorBackground"
-                                android:contentDescription="@string/terms_button"
-                                app:srcCompat="@drawable/ic_action_term"
-                                app:tint="@color/colorAccent"
-                                />
-
-                            <TextView
-                                android:id="@+id/termButtonText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="70dp"
-                                android:clickable="false"
-                                android:text="@string/terms_button" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            tools:ignore="ExtraText">
-
-                        <ImageButton
-                            android:id="@+id/courseButton"
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:layout_margin="25dp"
-                            android:layout_marginBottom="0dp"
-                            android:onClick="courseButton"
-                            android:scaleType="fitCenter"
-                            android:background="@color/colorBackground"
-                            android:contentDescription="@string/course_button"
-                            app:srcCompat="@drawable/ic_action_course"
-                            app:tint="@color/colorAccent"
-                            />
-
-                            <TextView
-                                android:id="@+id/courseButtonText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="70dp"
-                                android:clickable="false"
-                                android:text="@string/course_button" /> />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/bottomHomeListNavigationLayout"
-            android:background="@color/colorNeutral"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            >
-
-            <com.google.android.material.bottomappbar.BottomAppBar
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/bottomHomeListNavigation"
-                android:background="@color/colorNeutral"
-                app:menu="@menu/nav_btm_home"
-                app:labelVisibilityMode="labeled"
-                app:itemIconTint="@color/colorWhite"
-                app:itemTextColor="@color/colorWhite"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                />
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    </RelativeLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
