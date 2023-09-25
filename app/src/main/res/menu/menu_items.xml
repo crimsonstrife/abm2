@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    android:logo="@drawable/wgu"
-    android:logoTint="@color/colorWhite">
+    android:logo="@drawable/wgu">
 
     <item
         android:id="@+id/info"
