@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="Views.TermEditActivity"
+    tools:showIn="@layout/activity_term_edit">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textTermTitleLabel"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/termDetailTitleLabel"
+            android:textAlignment="viewEnd"
+            android:labelFor="@id/termDetailTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <EditText
+            android:id="@+id/termDetailTitle"
+            android:layout_width="wrap_content"
+            android:maxWidth="488dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+
+            android:layout_marginEnd="20dp"
+            android:autofillHints="Edit Title"
+            android:ems="10"
+            android:inputType="textCapWords"
+            android:minHeight="48dp"
+            android:text="@string/termDetailTitle"
+            android:textColor="@color/colorHintText"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/textTermTitleLabel"
+            app:layout_constraintTop_toTopOf="@id/textTermTitleLabel" />
+
+        <TextView
+            android:id="@+id/termDetailDatesLabel"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            style="@style/FieldNameText"
+            android:text="@string/termDetailDatesLabel"
+            android:textAlignment="viewEnd"
+            app:layout_constraintTop_toBottomOf="@id/termDetailTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TextSizeCheck" />
+
+        <Button
+            android:id="@+id/termDetailEditStartDate"
+            style="@style/button_date"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:textColorHint="@color/colorHintText"
+            app:layout_constraintStart_toEndOf="@id/termDetailDatesLabel"
+            app:layout_constraintTop_toBottomOf="@id/termDetailTitle"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+        <TextView
+            android:id="@+id/termDetailTextUntil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/untilForDates"
+            android:textColor="@color/colorText"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@id/termDetailEditStartDate"
+            app:layout_constraintTop_toBottomOf="@id/termDetailTitle" />
+        <Button
+            android:id="@+id/termDetailEditEndDate"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            style="@style/button_date"
+            android:textColorHint="@color/colorHintText"
+            app:layout_constraintStart_toEndOf="@id/termDetailTextUntil"
+            app:layout_constraintTop_toBottomOf="@id/termDetailTitle"
+            tools:ignore="DuplicateSpeakableTextCheck"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
