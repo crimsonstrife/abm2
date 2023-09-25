@@ -138,33 +138,35 @@ public abstract class CourseDatabase extends RoomDatabase {
                 Mentors mentor = new Mentors("John Doe", "555-555-5555", "jdoe@school.edu", 1);
                 mdao.insertMentors(mentor);
 
-                Status status1 = new Status("In Progress");
-                sdao.insertStatus(status1);
-                Status status2 = new Status("Completed");
-                sdao.insertStatus(status2);
-                Status status3 = new Status("Dropped");
-                sdao.insertStatus(status3);
-                Status status4 = new Status("Plan to Take");
-                sdao.insertStatus(status4);
+                //Status status1 = new Status("In Progress");
+                //sdao.insertStatus(status1);
+                //Status status2 = new Status("Completed");
+                //sdao.insertStatus(status2);
+                //Status status3 = new Status("Dropped");
+                //sdao.insertStatus(status3);
+                //Status status4 = new Status("Plan to Take");
+                //sdao.insertStatus(status4);
             });
         }
     };
 
+
+    //Changed to an Array, so the below is no longer required.
     /**
      * Populate the Status table with the 4 default values.
      *
      */
-    public static void populateStatus() {
-        databaseWriteExecutor.execute(() -> {
-            StatusDAO sdao = INSTANCE.statusDao();
-            Status status1 = new Status("In Progress");
-            sdao.insertStatus(status1);
-            Status status2 = new Status("Completed");
-            sdao.insertStatus(status2);
-            Status status3 = new Status("Dropped");
-            sdao.insertStatus(status3);
-            Status status4 = new Status("Plan to Take");
-            sdao.insertStatus(status4);
-        });
-    }
+    //public static void populateStatus() {
+        //databaseWriteExecutor.execute(() -> {
+            //StatusDAO sdao = INSTANCE.statusDao();
+            //Status status1 = new Status("In Progress");
+            //sdao.insertStatus(status1);
+            //Status status2 = new Status("Completed");
+            //sdao.insertStatus(status2);
+            //Status status3 = new Status("Dropped");
+            //sdao.insertStatus(status3);
+            //Status status4 = new Status("Plan to Take");
+            //sdao.insertStatus(status4);
+        //});
+    //}
 }
