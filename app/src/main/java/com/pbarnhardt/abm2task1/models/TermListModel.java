@@ -36,6 +36,6 @@ public class TermListModel extends ViewModel {
     }
 
     public LiveData<List<Terms>> getListOfAllTerms() {
-        return this.courseRepository.;
+        return this.courseRepository.getAllTerms();
     }
 }
