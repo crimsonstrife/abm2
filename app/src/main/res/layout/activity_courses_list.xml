@@ -15,7 +15,6 @@
         android:background="@color/colorPrimary"
         android:logo="@drawable/wgu"
         android:elevation="5dp"
-        android:logoTint="@color/colorWhite"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:title="@string/courseListTitle"
