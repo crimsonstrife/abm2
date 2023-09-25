@@ -2,6 +2,8 @@ package com.pbarnhardt.abm2task1.Database;
 
 import android.app.Application;
 
+import androidx.lifecycle.LiveData;
+
 import com.pbarnhardt.abm2task1.DAO.AssessmentsDAO;
 import com.pbarnhardt.abm2task1.DAO.CourseDAO;
 import com.pbarnhardt.abm2task1.DAO.MentorsDAO;
@@ -383,5 +385,9 @@ public class CourseRepository {
      */
     public void updateMentor (Mentors mentor) {
         CourseDatabase.databaseWriteExecutor.execute(() -> mentorsDao.updateMentors(mentor));
+    }
+
+    public LiveData<List<Terms>> getAllTerms() {
+        return (LiveData<List<Terms>>) termsDao.getTerms();
     }
 }
