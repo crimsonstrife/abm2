@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/textTermTitle"
-            android:style="@style/FieldNameText"
+            style="@style/FieldNameText"
             android:layout_width="85dp"
             android:layout_height="40dp"
             android:layout_marginStart="16dp"
@@ -42,7 +42,7 @@
 
         <TextView
             android:id="@+id/textTermCourses"
-            android:style="@style/FieldNameText"
+            style="@style/FieldNameText"
             android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -58,7 +58,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="150dp"
-            android:style="@style/FieldNameText"
+            style="@style/FieldNameText"
             android:text="@string/termDatesTitle"
             android:textAlignment="viewEnd"
             app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +72,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="120dp"
             android:layout_marginTop="150dp"
-            android:style="@style/button_date"
+            style="@style/button_date"
             android:textColorHint="#757575"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -94,7 +94,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="255dp"
             android:layout_marginTop="150dp"
-            android:style="@style/button_date"
+            style="@style/button_date"
             android:textColorHint="#757575"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="250dp"
-            android:style="@style/ContextualText"
+            style="@style/ContextualText"
             android:text="@string/courseList_ContextText"
             android:textColor="#757575"
             app:layout_constraintStart_toStartOf="parent"
