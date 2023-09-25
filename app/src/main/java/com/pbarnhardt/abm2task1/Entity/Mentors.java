@@ -25,15 +25,15 @@ public class Mentors {
     /**
      * Instantiates a new Mentor.
      *
-     * @param mentorName
-     * @param mentorPhone
-     * @param mentorEmail
+     * @param courseMentorName
+     * @param courseMentorPhone
+     * @param courseMentorEmail
      * @param courseId
     */
-    public Mentors(String mentorName, String mentorPhone, String mentorEmail, int courseId) {
-        this.courseMentorName = mentorName;
-        this.courseMentorPhone = mentorPhone;
-        this.courseMentorEmail = mentorEmail;
+    public Mentors(String courseMentorName, String courseMentorPhone, String courseMentorEmail, int courseId) {
+        this.courseMentorName = courseMentorName;
+        this.courseMentorPhone = courseMentorPhone;
+        this.courseMentorEmail = courseMentorEmail;
         this.courseId = courseId;
     }
 
@@ -87,7 +87,7 @@ public class Mentors {
      *
      * @param name the mentor name
      */
-    public void setMentorName(String name) {
+    public void setCourseMentorName(String name) {
         this.courseMentorName = name;
     }
 
@@ -96,7 +96,7 @@ public class Mentors {
      *
      * @param phone the mentor phone
      */
-    public void setMentorPhone(String phone) {
+    public void setCourseMentorPhone(String phone) {
         this.courseMentorPhone = phone;
     }
 
@@ -105,8 +105,42 @@ public class Mentors {
      *
      * @param email the mentor email
      */
-    public void setMentorEmail(String email) {
+    public void setCourseMentorEmail(String email) {
         this.courseMentorEmail = email;
     }
 
+    /**
+     * Get mentor name string.
+     */
+    public String getCourseMentorName() {
+        return courseMentorName;
+    }
+
+    /**
+     * Get mentor phone string.
+     */
+    public String getCourseMentorPhone() {
+        return courseMentorPhone;
+    }
+
+    /**
+     * Get mentor email string.
+     */
+    public String getCourseMentorEmail() {
+        return courseMentorEmail;
+    }
+
+    /**
+     * Set mentor Id
+     */
+    public void setMentorId(int mentorId) {
+        this.mentorId = mentorId;
+    }
+
+    /**
+     * Set course Id
+     */
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
 }
