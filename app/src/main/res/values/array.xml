@@ -10,4 +10,8 @@
         <item>Objective</item>
         <item>Performance</item>
     </array>
+    <array name="assessmentTypeShortCodeArray">
+        <item>OA</item>
+        <item>PA</item>
+    </array>
 </resources>
