@@ -76,4 +76,8 @@
     <string name="ShareButtonText">Share</string>
     <string name="enterNotesPromptText">Enter your notes about the course</string>
     <string name="assessmentsTitleText">Assessments</string>
+    <string name="dailyQoute">“Lorem Ipsum. This would be a daily inspirational quote”</string>
+    <string name="dailyqouteAuthor">Quote Author</string>
+    <string name="channel_name">EXAMPLE</string>
+    <string name="channel_description">Notification Channel for Sample Code</string>
 </resources>
