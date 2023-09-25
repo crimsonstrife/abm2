@@ -86,4 +86,18 @@ public class Notes {
         notes[1] = this.noteContent;
         return notes;
     }
+
+    /**
+     * Get private int courseId
+     */
+    public int getCourseId() {
+        return courseId;
+    }
+
+    /**
+     * Set private int noteId
+     */
+    public void setNoteId(int noteId) {
+        this.noteId = noteId;
+    }
 }
