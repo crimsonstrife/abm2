@@ -1,158 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     android:id="@+id/termDetailsLayout"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".Views.TermDetailsActivity">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/term_toolbarParentLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/termDetailsCoordinatorLayout"
-        >
+        android:layout_height="180dp"
+        android:fitsSystemWindows="true">
 
-        <TextView
-            android:id="@+id/textTermTitle"
-            style="@style/FieldNameText"
-            android:layout_width="85dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="80dp"
-            android:text="@string/termTitleText"
-            android:textAlignment="viewEnd"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/termDetailEditTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="120dp"
-            android:layout_marginTop="80dp"
-            android:autofillHints="name"
-            android:ems="10"
-            android:hint="@string/termTitleExample"
-            android:inputType="textPersonName"
-            android:textColorHint="#757575"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textTermCourses"
-            style="@style/FieldNameText"
-            android:layout_width="85dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="215dp"
-            android:text="@string/termCoursesTitle"
-            android:textAlignment="viewEnd"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/termDetailDatesText"
-            android:layout_width="85dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="150dp"
-            style="@style/FieldNameText"
-            android:text="@string/termDatesTitle"
-            android:textAlignment="viewEnd"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TextSizeCheck" />
-
-
-        <Button
-            android:id="@+id/termDetailEditStartDate"
-            android:layout_width="100dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="120dp"
-            android:layout_marginTop="150dp"
-            style="@style/button_date"
-            android:textColorHint="#757575"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="DuplicateSpeakableTextCheck" />
-
-        <TextView
-            android:id="@+id/termDetailTextUntil"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="224dp"
-            android:layout_marginTop="165dp"
-            android:text="@string/untilForDates"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/termDetailEditEndDate"
-            android:layout_width="100dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="255dp"
-            android:layout_marginTop="150dp"
-            style="@style/button_date"
-            android:textColorHint="#757575"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/termDetailsToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/colorAccent"
-            android:minHeight="?android:attr/actionBarSize"
-            android:theme="?android:attr/actionBarTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/detail_tools"
-            app:titleTextColor="@color/colorBackground"
-            tools:title="@string/term_detail_title" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/termCoursesRecyclerView"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/term_toolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="120dp"
-            android:layout_marginTop="215dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:toolbarId="@id/toolbar">
 
-        <TextView
-            android:id="@+id/termCourseListContext"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="250dp"
-            style="@style/ContextualText"
-            android:text="@string/courseList_ContextText"
-            android:textColor="#757575"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TextSizeCheck" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"/>
 
-        <TextView
-            android:id="@+id/termCourseListEmptyText"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="120dp"
-            android:layout_marginTop="215dp"
-            android:text="@string/termCourseListEmptyText"
-            android:textAlignment="center"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:ignore="SpeakableTextPresentCheck">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <include layout="@layout/content_details_terms" />
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingEditTermButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="72dp"
+        android:clickable="true"
+        android:layout_gravity="bottom|end"
+        android:tooltipText="Edit Term"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_action_edit"
+        android:importantForAccessibility="no" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
