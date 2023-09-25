@@ -2,6 +2,7 @@ package com.pbarnhardt.abm2task1.Entity;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 /**
@@ -151,5 +152,19 @@ public class Assessments {
         assessments[3] = this.assessmentDescription;
         assessments[4] = this.assessmentDueDate;
         return assessments;
+    }
+
+    /**
+     * Get courseId private int
+     */
+    public int getCourseId() {
+        return courseId;
+    }
+
+    /**
+     * Set assessmentId private int
+     */
+    public void setAssessmentId(int assessmentId) {
+        this.assessmentId = assessmentId;
     }
 }
