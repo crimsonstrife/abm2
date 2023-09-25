@@ -26,22 +26,22 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorPrimary"
                 android:logo="@drawable/wgu"
-                android:logoTint="@color/colorWhite"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
         <ImageView
             android:id="@+id/wgulogo"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="80dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="20dp"
             android:contentDescription="@string/app_name"
-            app:srcCompat="@drawable/wgu" />
+            app:srcCompat="@drawable/wgu"
+            app:tint="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/text_quote"
@@ -50,24 +50,26 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/wgulogo"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="0dp"
+            android:layout_marginRight="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-
-            tools:text="“Lorem Ipsum. This would be a daily inspirational quote”" />
+            android:textColor="#78909C"
+            tools:text="@string/dailyQoute" />
 
         <TextView
             android:id="@+id/text_quote_author"
             style="@style/QuoteText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_below="@id/text_quote"
+            android:layout_alignParentEnd="true"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:paddingRight="16dp"
-            tools:text="Quote Author" />
+            android:paddingEnd="16dp"
+            android:textColor="#78909C"
+            tools:text="@string/dailyqouteAuthor"
+            tools:ignore="RtlSymmetry" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -111,9 +113,8 @@
                                 android:layout_marginBottom="0dp"
                                 android:onClick="termButton"
                                 android:scaleType="fitCenter"
-                                android:background="null"
+                                android:background="@color/colorBackground"
                                 android:contentDescription="@string/terms_button"
-                                tools:text="Terms"
                                 app:srcCompat="@drawable/ic_action_term"
                                 app:tint="@color/colorAccent"
                                 />
@@ -122,8 +123,7 @@
                                 android:id="@+id/termButtonText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                android:layout_marginLeft="70dp"
+                                android:layout_marginStart="70dp"
                                 android:clickable="false"
                                 android:text="@string/terms_button" />
 
@@ -132,7 +132,8 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            tools:ignore="ExtraText">
 
                         <ImageButton
                             android:id="@+id/courseButton"
@@ -142,9 +143,8 @@
                             android:layout_marginBottom="0dp"
                             android:onClick="courseButton"
                             android:scaleType="fitCenter"
-                            android:background="null"
+                            android:background="@color/colorBackground"
                             android:contentDescription="@string/course_button"
-                            tools:text="Courses"
                             app:srcCompat="@drawable/ic_action_course"
                             app:tint="@color/colorAccent"
                             />
@@ -153,8 +153,7 @@
                                 android:id="@+id/courseButtonText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                android:layout_marginLeft="70dp"
+                                android:layout_marginStart="70dp"
                                 android:clickable="false"
                                 android:text="@string/course_button" /> />
 
@@ -165,6 +164,35 @@
             </RelativeLayout>
 
         </RelativeLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/bottomHomeListNavigationLayout"
+            android:background="@color/colorNeutral"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+            <com.google.android.material.bottomappbar.BottomAppBar
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/bottomHomeListNavigation"
+                android:background="@color/colorNeutral"
+                app:menu="@menu/nav_btm_home"
+                app:labelVisibilityMode="labeled"
+                app:itemIconTint="@color/colorWhite"
+                app:itemTextColor="@color/colorWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </RelativeLayout>
 
