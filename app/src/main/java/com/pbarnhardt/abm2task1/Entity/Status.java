@@ -54,4 +54,13 @@ public class Status {
     public String toString() {
         return statusText;
     }
+
+    /**
+     * Sets status id.
+     *
+     * @param statusId the status id
+     */
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
+    }
 }
