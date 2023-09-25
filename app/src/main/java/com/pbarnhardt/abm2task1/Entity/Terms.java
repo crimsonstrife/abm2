@@ -156,4 +156,21 @@ public class Terms {
         return termsList;
     }
 
+    /**
+     * Set term id.
+     *
+     * @param termId the term id
+     */
+    public void setTermId(int termId) {
+        this.termId = termId;
+    }
+
+    /**
+     * Set term course count.
+     *
+     * @param termCourseCount the term course count
+     */
+    public void setTermCourseCount(int termCourseCount) {
+        this.termCourseCount = termCourseCount;
+    }
 }
