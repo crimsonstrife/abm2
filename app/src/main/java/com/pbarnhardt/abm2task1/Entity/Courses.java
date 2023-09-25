@@ -295,4 +295,32 @@ public class Courses {
         courseList[1] = this.courseName;
         return courseList;
     }
+
+    /**
+     * Get private int termId
+     */
+    public int getTermId() {
+        return termId;
+    }
+
+    /**
+     * Set private int courseId
+     */
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+    /**
+     * Set private int courseNotesCount
+     */
+    public void setCourseNotesCount(int courseNotesCount) {
+        this.courseNotesCount = courseNotesCount;
+    }
+
+    /**
+     * Set private int courseAssessmentsCount
+     */
+    public void setCourseAssessmentsCount(int courseAssessmentsCount) {
+        this.courseAssessmentsCount = courseAssessmentsCount;
+    }
 }
