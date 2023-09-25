@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="115dp"
+    android:background="@color/colorBackground"
+    android:gravity="bottom"
+    android:padding="15dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:backgroundTint="@color/colorPrimaryDark">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/nav_userLayout"
+        tools:ignore="UselessParent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/nav_UserConstraint">
+            <!-- Would be replaced with user profile picture-->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/ic_ui_user"
+                android:id="@+id/nav_userIcon"
+                app:layout_constraintStart_toStartOf="@id/nav_UserConstraint"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintTop_toTopOf="@id/nav_UserConstraint"
+                tools:ignore="VisualLintBounds" />
+
+            <TextView
+                android:id="@+id/nav_userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="50dp"
+                android:text="@string/nav_userName"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/colorText"
+                app:layout_constraintStart_toEndOf="@id/nav_userIcon"
+                app:layout_constraintTop_toTopOf="@id/nav_UserConstraint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nav_userProgram"
+                android:id="@+id/nav_userProgram"
+                android:textColor="@color/colorText"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                app:layout_constraintStart_toEndOf="@id/nav_userIcon"
+                app:layout_constraintTop_toBottomOf="@id/nav_userName"
+                tools:ignore="VisualLintBounds" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+
+</LinearLayout>
