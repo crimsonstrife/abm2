@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="Views.CourseEditActivity"
+    tools:showIn="@layout/activity_course_edit">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_course_title"
+            style="@style/FieldNameText"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/CourseDetailTitleLabel"
+            android:textAlignment="viewEnd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/editText_course_title"/>
+
+        <EditText
+            android:id="@+id/editText_course_title"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:autofillHints="name"
+            android:hint="@string/edit_titleHint"
+            android:inputType="textCapWords"
+            android:maxWidth="250dp"
+            android:maxLines="2"
+            android:minHeight="48dp"
+            android:textColorHint="#8D6E63"
+            app:layout_constraintStart_toEndOf="@+id/text_course_title"
+            app:layout_constraintTop_toTopOf="@+id/text_course_title" />
+
+        <TextView
+            android:id="@+id/text_course_status"
+            style="@style/FieldNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/statusTextLabel"
+            android:textAlignment="viewEnd"
+            app:layout_constraintStart_toStartOf="@id/text_course_title"
+            app:layout_constraintTop_toBottomOf="@+id/editText_course_title"
+            app:layout_constraintEnd_toEndOf="@id/text_course_title"/>
+
+        <Spinner
+            android:id="@+id/spinner_course_status"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="30dp"
+            android:entries="@array/statusArray"
+            android:spinnerMode="dropdown"
+            app:layout_constraintStart_toEndOf="@+id/text_course_status"
+            app:layout_constraintTop_toTopOf="@+id/text_course_status" />
+
+        <TextView
+            android:id="@+id/text_course_dates"
+            style="@style/FieldNameText"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/courseDetailDatesLabel"
+            android:textAlignment="viewEnd"
+            app:layout_constraintStart_toStartOf="@+id/text_course_title"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_course_status" />
+
+        <Button
+            android:id="@+id/editText_start_date"
+            style="@style/button_date"
+            android:layout_height="48dp"
+            android:layout_marginStart="20dp"
+            android:textColorHint="#757575"
+            app:layout_constraintStart_toEndOf="@+id/text_course_dates"
+            app:layout_constraintTop_toTopOf="@+id/text_course_dates"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+        <TextView
+            android:id="@+id/text_until"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/untilForDates"
+            app:layout_constraintStart_toEndOf="@+id/editText_start_date"
+            app:layout_constraintTop_toTopOf="@+id/editText_start_date" />
+
+        <Button
+            android:id="@+id/editText_end_date"
+            style="@style/button_date"
+            android:layout_height="48dp"
+            android:layout_marginStart="20dp"
+            android:textColorHint="#757575"
+            app:layout_constraintStart_toEndOf="@+id/text_until"
+            app:layout_constraintTop_toTopOf="@+id/editText_start_date" />
+
+        <TextView
+            android:id="@+id/text_course_reminders"
+            style="@style/FieldNameText"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/remindersLabel"
+            android:textAlignment="viewEnd"
+            app:layout_constraintStart_toStartOf="@+id/text_course_dates"
+            app:layout_constraintTop_toBottomOf="@+id/text_course_dates" />
+
+        <CheckBox
+            android:id="@+id/checkBox_start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/courseStartText"
+            app:layout_constraintStart_toEndOf="@+id/text_course_reminders"
+            app:layout_constraintTop_toTopOf="@+id/text_course_reminders" />
+
+        <CheckBox
+            android:id="@+id/checkBox_end_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:text="@string/courseEndText"
+            app:layout_constraintStart_toEndOf="@+id/checkBox_start_date"
+            app:layout_constraintTop_toTopOf="@+id/checkBox_start_date" />
+
+        <TextView
+            android:id="@+id/text_term_note"
+            style="@style/FieldNameText"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/courseDetailNotesLabel"
+            android:textAlignment="viewEnd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox_start_date" />
+
+        <EditText
+            android:id="@+id/editText_course_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:hint="@string/enterNotesPromptText"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences"
+            android:lines="5"
+            android:maxWidth="250dp"
+            android:maxLines="5"
+            android:minWidth="250dp"
+            android:minHeight="48dp"
+            android:textColorHint="#8D6E63"
+            app:layout_constraintStart_toEndOf="@+id/text_term_note"
+            app:layout_constraintTop_toTopOf="@+id/text_term_note" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
