@@ -23,6 +23,9 @@
             android:id="@+id/nav_assessments"
             android:icon="@drawable/ic_action_assessment"
             android:title="@string/nav_assessmentTitle"/>
+        <item
+            android:id="@+id/nav_mentors"
+            android:icon="@drawable/ic_action_mentor"
+            android:title="@string/nav_mentorTitle"/>
     </group>
-
 </menu>
