@@ -24,7 +24,7 @@
                 android:ellipsize="end"
                 android:padding="2dp"
                 android:maxLines ="1"
-                android:text="@string/sublistItemTitleText"
+                android:text="sublistItemTitleText"
                 android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
@@ -38,7 +38,7 @@
                 android:ellipsize="end"
                 android:padding="2dp"
                 android:maxLines ="1"
-                android:text="@string/sublistItemDescText"
+                android:text="sublistItemDescText"
                 android:textAlignment="viewStart"
                 android:textSize="14sp" />
             <TextView
@@ -51,7 +51,7 @@
                 android:ellipsize="end"
                 android:padding="2dp"
                 android:maxLines ="1"
-                android:text="@string/sublistItemDateRangeText"
+                android:text="sublistItemDateRangeText"
                 android:textAlignment="viewStart"
                 android:textSize="14sp" />
         </LinearLayout>
