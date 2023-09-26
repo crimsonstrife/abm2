@@ -15,6 +15,10 @@
         android:theme="@style/Theme.StudentTracker"
         tools:targetApi="31">
         <activity
+            android:name=".Views.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+        <activity
             android:name=".Views.MentorsListActivity"
             android:exported="false" />
         <activity
@@ -46,10 +50,10 @@
             android:exported="false" />
         <activity
             android:name=".Views.TermDetailsActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Views.TermsListActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Views.MainActivity"
             android:exported="true">
