@@ -1,59 +1,70 @@
 package com.pbarnhardt.abm2task1.Views;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.pbarnhardt.abm2task1.Adapters.TermAdapter;
 import com.pbarnhardt.abm2task1.Entity.Terms;
-import com.pbarnhardt.abm2task1.Models.TermListModel;
+import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
+import com.pbarnhardt.abm2task1.Models.TermModel;
 import com.pbarnhardt.abm2task1.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TermsListActivity extends AppCompatActivity {
-
-    private List<Terms> termsList;
+    private List<Terms> termsList = new ArrayList<>();
+    RecyclerView recyclerView = findViewById(R.id.termListRecyclerView);
+    private TermModel termModel;
+    private TermAdapter termAdapter;
 
     /**
-     * Binding for the recycler view
-     *
-     * @param savedInstanceState
+     * On create.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_list);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        initializeRecyclerView();
+        initializeViewModel();
+    }
 
-        RecyclerView recyclerView = findViewById(R.id.termListRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+    /**
+     * Edit button click.
+     */
 
-        final TermListAdapter adapter = new TermListAdapter();
-        recyclerView.setAdapter(adapter);
 
-        TermListModel model = new ViewModelProvider(this).get(TermListModel.class);
-        model.getAllTerms().observe(this, terms -> {
-            termsList = terms;
-            adapter.setTerms(terms);
-        });
+    private void initializeViewModel() {
+        final Observer<List<Terms>> observer = terms -> {
+            termsList.clear();
+            termsList.addAll(terms);
+            if (termAdapter == null) {
+                termAdapter = new TermAdapter(termsList, this, RecyclerAdapter.MAIN);
+                recyclerView.setAdapter(termAdapter);
+            } else {
+                termAdapter.notifyDataSetChanged();
+            }
+        };
+    }
 
-        FloatingActionButton fab = findViewById(R.id.terms_fab);
-        fab.setOnClickListener(view -> {
-            Intent intent = new Intent(TermsListActivity.this, TermEditActivity.class);
-            startActivity(intent);
-        });
+    private void initializeRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+    }
+
+    public void editTermFloatingButtonClicked(View view) {
+        Intent intent = new Intent(this, TermEditActivity.class);
+        startActivity(intent);
     }
 }
