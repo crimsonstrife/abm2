@@ -2,7 +2,10 @@ package com.pbarnhardt.abm2task1.Entity;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.pbarnhardt.abm2task1.Enums.Status;
 
 import java.util.Date;
 
@@ -31,8 +34,9 @@ public class Courses {
     //foreign keys to Terms
     private int termId;
 
-    private int courseStatus;
+    private Status courseStatus;
 
+    private String courseNote;
 
     // Made the mentor into its own entity
     //private String courseMentorName;
@@ -48,26 +52,41 @@ public class Courses {
      * @param courseName           the course name
      * @param courseDescription    the course description
      * @param courseStartDate      the course start date
-     * @param endAlert       the course end alert
-     * @param startAlert     the course start alert
+     * @param courseEndAlert             the course end alert
+     * @param courseStartAlert           the course start alert
      * @param courseEndDate        the course end date
      * @param courseStatus         the course status
+     * @param courseNote           the note
      * @param termId               the term id
      * Course note and assessment counts are set to 0 by default.
      */
-    public Courses(String courseName, String courseDescription, boolean startAlert, Date courseStartDate, boolean endAlert, Date courseEndDate, int courseStatus, int termId) {
+    @Ignore
+    public Courses (int id, String courseName, String courseDescription, boolean courseStartAlert, Date courseStartDate, boolean courseEndAlert, Date courseEndDate, Status courseStatus, String courseNote, int termId){
+        this.courseId = id;
         this.courseName = courseName;
         this.courseDescription = courseDescription;
         this.courseStartDate = courseStartDate;
         this.courseEndDate = courseEndDate;
-        this.courseStartAlert = startAlert;
-        this.courseEndAlert = endAlert;
+        this.courseStartAlert = courseStartAlert;
+        this.courseEndAlert = courseEndAlert;
         this.courseStatus = courseStatus;
-        //this.courseMentorName = courseMentorName;
-        //this.courseMentorPhone = courseMentorPhone;
-        //this.courseMentorEmail = courseMentorEmail;
         this.courseNotesCount = 0;
         this.courseAssessmentsCount = 0;
+        this.courseNote = courseNote;
+        this.termId = termId;
+    }
+
+    public Courses(String courseName, String courseDescription, boolean courseStartAlert, Date courseStartDate, boolean courseEndAlert, Date courseEndDate, Status courseStatus, String courseNote, int termId) {
+        this.courseName = courseName;
+        this.courseDescription = courseDescription;
+        this.courseStartDate = courseStartDate;
+        this.courseEndDate = courseEndDate;
+        this.courseStartAlert = courseStartAlert;
+        this.courseEndAlert = courseEndAlert;
+        this.courseStatus = courseStatus;
+        this.courseNotesCount = 0;
+        this.courseAssessmentsCount = 0;
+        this.courseNote = courseNote;
         this.termId = termId;
     }
 
@@ -139,7 +158,7 @@ public class Courses {
      *
      * @return the course status
      */
-    public int getCourseStatus() {
+    public Status getCourseStatus() {
         return courseStatus;
     }
 
@@ -198,6 +217,15 @@ public class Courses {
     }
 
     /**
+     * Gets course note.
+     *
+     * @return the course note
+     */
+    public String getCourseNote() {
+        return courseNote;
+    }
+
+    /**
      * Sets course name.
      *
      * @param courseName the course name
@@ -238,7 +266,7 @@ public class Courses {
      *
      * @param courseStatus the course status
      */
-    public void setCourseStatus(int courseStatus) {
+    public void setCourseStatus(Status courseStatus) {
         this.courseStatus = courseStatus;
     }
 
@@ -285,6 +313,15 @@ public class Courses {
      */
     public void setCourseEndAlert(boolean courseEndAlert) {
         this.courseEndAlert = courseEndAlert;
+    }
+
+    /**
+     * Sets course note.
+     *
+     * @param courseNote the course note
+     */
+    public void setCourseNote (String courseNote) {
+        this.courseNote = courseNote;
     }
 
     /**
