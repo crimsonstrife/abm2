@@ -44,14 +44,14 @@ public interface MentorsDAO {
     /**
      * The Queries
      */
-    @Query("SELECT * FROM mentors WHERE id = :id")
+    @Query("SELECT * FROM coursementors WHERE mentorId = :id")
     public Mentors getMentorsById(int id);
-    @Query("SELECT * FROM mentors ORDER BY name DESC")
+    @Query("SELECT * FROM coursementors ORDER BY courseMentorName DESC")
     LiveData<List<Mentors>> getAllMentors();
-    @Query("SELECT * FROM mentors WHERE courseId = :courseId")
+    @Query("SELECT * FROM coursementors WHERE courseId = :courseId")
     LiveData<List<Mentors>> getMentorsByCourse(final int courseId);
-    @Query("DELETE FROM mentors")
+    @Query("DELETE FROM coursementors")
     int deleteAll();
-    @Query("SELECT COUNT(*) FROM mentors")
+    @Query("SELECT COUNT(*) FROM coursementors")
     int getCount();
 }
