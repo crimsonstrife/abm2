@@ -1,6 +1,7 @@
 package com.pbarnhardt.abm2task1.Database;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
@@ -16,6 +17,7 @@ import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Entity.Notes;
 import com.pbarnhardt.abm2task1.Enums.Status;
 import com.pbarnhardt.abm2task1.Entity.Terms;
+import com.pbarnhardt.abm2task1.Utils.SampleDataSet;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -48,7 +50,7 @@ public class CourseRepository {
     /**
      * The Notes dao.
      */
-    private NotesDAO notesDao;
+    //private NotesDAO notesDao;
 
     /**
      * The Mentors dao.
@@ -58,7 +60,7 @@ public class CourseRepository {
     /**
      * The Status dao.
      */
-    private StatusDAO statusDao;
+    //private StatusDAO statusDao;
 
     /**
      * The M all terms.
@@ -102,22 +104,22 @@ public class CourseRepository {
     /**
      * Instantiates a new Course repository.
      *
-     * @param application the application
+     * @param context the application
      */
-    private CourseRepository(Application application) {
-        mdatabase = CourseDatabase.getInstance(application);
+    private CourseRepository(Context context) {
+        mdatabase = CourseDatabase.getInstance(context);
         termsDao = mdatabase.termDao();
         mAllTerms = getAllTerms();
         courseDao = mdatabase.courseDao();
         mAllCourses = getAllCourses();
         assessmentsDao = mdatabase.assessmentDao();
         mAllAssessments = getAllAssessments();
-        notesDao = mdatabase.notesDao();
-        mAllNotes = getmAllNotes();
+        //notesDao = mdatabase.notesDao();
+        //mAllNotes = getAllNotes();
         mentorsDao = mdatabase.mentorsDao();
         mAllMentors = getAllMentors();
-        statusDao = mdatabase.statusDao();
-        mAllStatus = getmAllStatus();
+        //statusDao = mdatabase.statusDao();
+        //mAllStatus = getAllStatus();
         //Delay so the constructor has time to complete
         try {
             Thread.sleep(1000);
@@ -126,9 +128,9 @@ public class CourseRepository {
         }
     }
 
-    public static CourseRepository getInstance(Application application) {
+    public static CourseRepository getInstance(Context context) {
         if(instance == null) {
-            instance = new CourseRepository(application);
+            instance = new CourseRepository(context);
         }
         return instance;
     }
@@ -185,6 +187,132 @@ public class CourseRepository {
      * @param term the term
      */
     public void deleteTerm(final Terms term) {
-        executor.execute(() -> mdatabase.termDao().deleteTerm(term));
+        executor.execute(() -> mdatabase.termDao().deleteTerms(term));
+    }
+
+    /**
+     * Gets all courses.
+     * @return the all courses
+     */
+    public LiveData<List<Courses>> getAllCourses() {
+        return mdatabase.courseDao().getAllCourses();
+    }
+
+    /**
+     * Gets course by id.
+     * @param courseId the course id
+     * @return the course by id
+     */
+    public Courses getCourseById(int courseId) {
+        return mdatabase.courseDao().getCourseById(courseId);
+    }
+
+    /**
+     * Gets courses by term.
+     * @param termId the term id
+     * @return the courses by term
+     */
+    public LiveData<List<Courses>> getCoursesByTermId(final int termId) {
+        return mdatabase.courseDao().getCoursesByTerm(termId);
+    }
+
+    /**
+     * Insert course.
+     * @param course the course
+     */
+    public void insertCourse(final Courses course) {
+        executor.execute(() -> mdatabase.courseDao().insertCourses(course));
+    }
+
+    /**
+     * Delete course.
+     * @param course the course
+     */
+    public void deleteCourse(final Courses course) {
+        executor.execute(() -> mdatabase.courseDao().deleteCourses(course));
+    }
+
+    /**
+     * Gets all assessments.
+     * @return the all assessments
+     */
+    public LiveData<List<Assessments>> getAllAssessments() {
+        return mdatabase.assessmentDao().getAllAssessments();
+    }
+
+    /**
+     * Gets assessment by id.
+     * @param assessmentId the assessment id
+     * @return the assessment by id
+     */
+    public Assessments getAssessmentById(int assessmentId) {
+        return mdatabase.assessmentDao().getAssessmentsById(assessmentId);
+    }
+
+    /**
+     * Gets assessments by course.
+     * @param courseId the course id
+     * @return the assessments by course
+     */
+    public LiveData<List<Assessments>> getAssessmentsByCourseId(final int courseId) {
+        return mdatabase.assessmentDao().getAssessmentsByCourse(courseId);
+    }
+
+    /**
+     * Insert assessment.
+     * @param assessment the assessment
+     */
+    public void insertAssessment(final Assessments assessment) {
+        executor.execute(() -> mdatabase.assessmentDao().insertAssessments(assessment));
+    }
+
+    /**
+     * Delete assessment.
+     * @param assessment the assessment
+     */
+    public void deleteAssessment(final Assessments assessment) {
+        executor.execute(() -> mdatabase.assessmentDao().deleteAssessments(assessment));
+    }
+
+    /**
+     * Gets all Mentors.
+     * @return the all Mentors
+     */
+    public LiveData<List<Mentors>> getAllMentors() {
+        return mdatabase.mentorsDao().getAllMentors();
+    }
+
+    /**
+     * Gets Mentors by id.
+     * @param mentorId the mentor id
+     * @return the Mentors by id
+     */
+    public Mentors getMentorById(int mentorId) {
+        return mdatabase.mentorsDao().getMentorsById(mentorId);
+    }
+
+    /**
+     * Gets Mentors by course.
+     * @param courseId the course id
+     * @return the Mentors by course
+     */
+    public LiveData<List<Mentors>> getMentorsByCourseId(final int courseId) {
+        return mdatabase.mentorsDao().getMentorsByCourse(courseId);
+    }
+
+    /**
+     * Insert Mentors.
+     * @param mentor the mentor
+     */
+    public void insertMentor(final Mentors mentor) {
+        executor.execute(() -> mdatabase.mentorsDao().insertMentors(mentor));
+    }
+
+    /**
+     * Delete Mentors.
+     * @param mentor the mentor
+     */
+    public void deleteMentor(final Mentors mentor) {
+        executor.execute(() -> mdatabase.mentorsDao().deleteMentors(mentor));
     }
 }
