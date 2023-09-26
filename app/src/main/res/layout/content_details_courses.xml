@@ -40,18 +40,41 @@
         android:layout_marginTop="20dp"
         android:text="@string/statusTextLabel"
         android:textAlignment="viewEnd"
-        app:layout_constraintStart_toStartOf="@id/text_course_title"
-        app:layout_constraintTop_toBottomOf="@id/text_course_title"
-        app:layout_constraintEnd_toEndOf="@id/text_course_title"/>
+        app:layout_constraintTop_toBottomOf="@id/courseDetailDescription"
+        app:layout_constraintEnd_toEndOf="@id/courseDetailDescriptionLabel"/>
 
     <TextView
         android:id="@+id/spinner_course_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:text="@string/statusTextDummy"
-        app:layout_constraintStart_toEndOf="@+id/text_course_status"
+        app:layout_constraintStart_toStartOf="@+id/editText_course_title"
         app:layout_constraintTop_toTopOf="@+id/text_course_status" />
+
+    <TextView
+        android:id="@+id/courseDetailDescriptionLabel"
+        style="@style/FieldNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/courseDetailDescriptionLabel"
+        android:textAlignment="viewEnd"
+        app:layout_constraintTop_toBottomOf="@id/text_course_title"
+        app:layout_constraintEnd_toEndOf="@id/text_course_title"
+        />
+
+    <TextView
+        android:id="@+id/courseDetailDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:text="@string/dummyCourseDescription"
+        android:lines="5"
+        android:maxWidth="250dp"
+        android:maxLines="5"
+        android:minWidth="250dp"
+        app:layout_constraintStart_toStartOf="@+id/editText_course_title"
+        app:layout_constraintTop_toTopOf="@+id/courseDetailDescriptionLabel"/>
 
     <TextView
         android:id="@+id/courseDetailDatesLabel"
@@ -136,13 +159,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:ellipsize="end"
-        android:hint="@string/enterNotesPromptText"
-        android:importantForAutofill="no"
+        android:text="@string/enterNotesPromptText"
         android:lines="5"
         android:maxWidth="250dp"
         android:maxLines="5"
         android:minWidth="250dp"
-        android:textColorHint="#8D6E63"
         app:layout_constraintStart_toEndOf="@+id/text_term_note"
         app:layout_constraintTop_toTopOf="@+id/text_term_note" />
 
