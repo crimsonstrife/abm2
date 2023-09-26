@@ -4,6 +4,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 /**
  * The type Terms(semesters) for student tracker.
  */
@@ -12,8 +14,8 @@ public class Terms {
     @PrimaryKey(autoGenerate = true)
     private int termId;
     private String termName;
-    private String termStartDate;
-    private String termEndDate;
+    private Date termStartDate;
+    private Date termEndDate;
     private int termCourseCount;
 
     /**
@@ -25,14 +27,15 @@ public class Terms {
      * Description: This is the constructor for the Terms class. It is used to create a new term. Course count is set to 0 by default.
      */
     @Ignore
-    public Terms(int id, String termName, String termStartDate, String termEndDate) {
+    public Terms(int id, String termName, Date termStartDate, Date termEndDate) {
         this.termId = id;
         this.termName = termName;
         this.termStartDate = termStartDate;
         this.termEndDate = termEndDate;
         this.termCourseCount = 0;
     }
-    public Terms(String termName, String termStartDate, String termEndDate) {
+
+    public Terms(String termName, Date termStartDate, Date termEndDate) {
         this.termName = termName;
         this.termStartDate = termStartDate;
         this.termEndDate = termEndDate;
@@ -62,7 +65,7 @@ public class Terms {
      *
      * @return the term start date
      */
-    public String getTermStartDate() {
+    public Date getTermStartDate() {
         return termStartDate;
     }
 
@@ -71,7 +74,7 @@ public class Terms {
      *
      * @return the term end date
      */
-    public String getTermEndDate() {
+    public Date getTermEndDate() {
         return termEndDate;
     }
 
@@ -98,7 +101,7 @@ public class Terms {
      *
      * @param termStartDate the term start date
      */
-    public void setTermStartDate(String termStartDate) {
+    public void setTermStartDate(Date termStartDate) {
         this.termStartDate = termStartDate;
     }
 
@@ -107,7 +110,7 @@ public class Terms {
      *
      * @param termEndDate the term end date
      */
-    public void setTermEndDate(String termEndDate) {
+    public void setTermEndDate(Date termEndDate) {
         this.termEndDate = termEndDate;
     }
 
