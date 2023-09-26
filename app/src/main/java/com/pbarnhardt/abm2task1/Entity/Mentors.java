@@ -2,6 +2,7 @@ package com.pbarnhardt.abm2task1.Entity;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 /**
@@ -30,6 +31,14 @@ public class Mentors {
      * @param courseMentorEmail
      * @param courseId
     */
+    @Ignore
+    public Mentors(int mentorId, String courseMentorName, String courseMentorPhone, String courseMentorEmail, int courseId){
+        this.mentorId = mentorId;
+        this.courseMentorName = courseMentorName;
+        this.courseMentorPhone = courseMentorPhone;
+        this.courseMentorEmail = courseMentorEmail;
+        this.courseId = courseId;
+    }
     public Mentors(String courseMentorName, String courseMentorPhone, String courseMentorEmail, int courseId) {
         this.courseMentorName = courseMentorName;
         this.courseMentorPhone = courseMentorPhone;
