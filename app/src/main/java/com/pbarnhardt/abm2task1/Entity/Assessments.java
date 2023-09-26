@@ -2,6 +2,7 @@ package com.pbarnhardt.abm2task1.Entity;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -37,6 +38,16 @@ public class Assessments {
      * @param assessmentAlert    the assessment alert
      * @param courseId           the course id
      */
+    @Ignore
+    public Assessments(int assessmentId, String assessmentName, Types assessmentType, String assessmentDescription, Date assessmentDueDate, boolean assessmentAlert, int courseId) {
+        this.assessmentId = assessmentId;
+        this.assessmentName = assessmentName;
+        this.assessmentDescription = assessmentDescription;
+        this.assessmentType = assessmentType;
+        this.assessmentDueDate = assessmentDueDate;
+        this.assessmentAlert = assessmentAlert;
+        this.courseId = courseId;
+    }
     public Assessments(String assessmentName, Types assessmentType, String assessmentDescription, Date assessmentDueDate, boolean assessmentAlert, int courseId) {
         this.assessmentName = assessmentName;
         this.assessmentDescription = assessmentDescription;
