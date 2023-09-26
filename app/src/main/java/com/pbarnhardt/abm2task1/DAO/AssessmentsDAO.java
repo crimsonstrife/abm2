@@ -44,9 +44,9 @@ public interface AssessmentsDAO {
     /**
      * Queries
      */
-    @Query("SELECT * FROM Assessments WHERE id = :id")
+    @Query("SELECT * FROM Assessments WHERE assessmentId = :id")
     public Assessments getAssessmentsById(int id);
-    @Query("SELECT * FROM Assessments ORDER BY dueDate DESC")
+    @Query("SELECT * FROM Assessments ORDER BY assessmentDueDate DESC")
     LiveData<List<Assessments>> getAllAssessments();
     @Query("SELECT * FROM Assessments WHERE courseId = :courseId")
     LiveData<List<Assessments>> getAssessmentsByCourse(final int courseId);
