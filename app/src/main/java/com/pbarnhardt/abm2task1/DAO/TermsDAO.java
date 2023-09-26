@@ -34,11 +34,19 @@ public interface TermsDAO {
     public void insertAll(List<Terms> terms);
 
     /**
+     * Delete terms.
+     *
+     * @param term the term
+     */
+    @Delete
+    public void deleteTerms(Terms term);
+
+    /**
      * Queries
      */
-    @Query("SELECT * FROM terms WHERE id = :id")
+    @Query("SELECT * FROM terms WHERE termId = :id")
     public Terms getTermById(int id);
-    @Query("SELECT * FROM terms ORDER BY startDate DESC")
+    @Query("SELECT * FROM terms ORDER BY termStartDate DESC")
     LiveData<List<Terms>> getAll();
     @Query("DELETE FROM terms")
     int deleteAll();
