@@ -53,6 +53,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="72dp"
         android:clickable="true"
+        android:onClick="termEditButtonClick"
         android:layout_gravity="bottom|end"
         android:tooltipText="Edit Term"
         app:backgroundTint="@color/colorAccent"
