@@ -24,7 +24,6 @@ public class HomeModel extends AndroidViewModel {
 
     public HomeModel(@NonNull Application application) {
         super(application);
-
         repository = CourseRepository.getInstance(application.getApplicationContext());
         termsList = repository.getAllTerms();
         coursesList = repository.getAllCourses();
