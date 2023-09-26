@@ -41,14 +41,43 @@
             app:layout_constraintTop_toTopOf="@+id/text_assessment_title" />
 
         <TextView
+            android:id="@+id/assessmentDetailDescriptionLabel"
+            style="@style/FieldNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/courseDetailDescriptionLabel"
+            android:textAlignment="viewEnd"
+            app:layout_constraintTop_toBottomOf="@id/editText_assessment_title"
+            app:layout_constraintEnd_toEndOf="@id/text_assessment_title"
+            />
+
+        <EditText
+            android:id="@+id/assessmentDetailDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:hint="@string/enter_description"
+            android:inputType="textCapSentences"
+            android:lines="5"
+            android:maxWidth="250dp"
+            android:maxLines="5"
+            android:minWidth="250dp"
+            android:minHeight="48dp"
+            android:textColorHint="#8D6E63"
+            app:layout_constraintStart_toStartOf="@+id/editText_assessment_title"
+            app:layout_constraintTop_toTopOf="@+id/assessmentDetailDescriptionLabel"
+            android:importantForAutofill="no" />
+
+        <TextView
             android:id="@+id/text_assessment_type"
             style="@style/FieldNameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:text="@string/assessmentTypeLabel"
             android:textAlignment="viewEnd"
-            app:layout_constraintTop_toBottomOf="@+id/editText_assessment_title"
+            app:layout_constraintTop_toBottomOf="@+id/assessmentDetailDescription"
             app:layout_constraintEnd_toEndOf="@id/text_assessment_title" />
 
         <Spinner
