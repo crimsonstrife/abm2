@@ -1,5 +1,6 @@
 package com.pbarnhardt.abm2task1.DAO;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -17,21 +18,21 @@ import java.util.List;
 @Dao
 public interface CourseDAO {
     /**
-     * Gets Courses
-     *
-     * @return the Courses
-     */
-    // @Query("SELECT * FROM Courses" ORDER BY courseID ASC)
-    @Query("SELECT * FROM Courses")
-    public List<Courses> getCourses();
-
-    /**
      * Insert Courses
      *
      * @param courses the Courses
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertCourses(Courses courses);
+
+    /**
+     * Insert all Courses
+     *
+     * @param courses the Courses
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insertAll(List<Courses> courses);
+
 
     /**
      * Delete Courses
@@ -42,25 +43,16 @@ public interface CourseDAO {
     public void deleteCourses(Courses courses);
 
     /**
-     * Update Courses
-     *
-     * @param courses the Courses
+     * Queries
      */
-    @Update
-    public void updateCourses(Courses courses);
-
-    /**
-     * Delete all Courses
-     */
-    @Query("DELETE FROM Courses")
-    public void deleteAllCourses();
-
-    /**
-     * Gets Courses by term id
-     *
-     * @param termId the term id
-     * @return the Courses
-     */
-    @Query("SELECT * FROM Courses WHERE termId = :termId")
-    public List<Courses> getCoursesByTermId(int termId);
+    @Query("SELECT * FROM courses WHERE id = :id")
+    public Courses getCourseById(int id);
+    @Query("SELECT * FROM courses ORDER BY courseStartDate DESC")
+    LiveData<List<Courses>> getAllCourses();
+    @Query("SELECT * FROM courses WHERE termId = :termId")
+    LiveData<List<Courses>> getCoursesByTerm(final int termId);
+    @Query("DELETE FROM courses")
+    int deleteAll();
+    @Query("SELECT COUNT(*) FROM courses")
+    int getCount();
 }

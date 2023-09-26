@@ -1,5 +1,6 @@
 package com.pbarnhardt.abm2task1.DAO;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -17,21 +18,20 @@ import java.util.List;
 @Dao
 public interface MentorsDAO {
     /**
-     * Gets mentors.
-     *
-     * @return the mentors
-     */
-    // @Query("SELECT * FROM CourseMentors ORDER BY courseId")
-    @Query("SELECT * FROM CourseMentors")
-    public List<Mentors> getMentors();
-
-    /**
      * Insert mentors.
      *
      * @param mentor the mentor
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertMentors(Mentors mentor);
+
+    /**
+     * Insert all.
+     *
+     * @param mentors the mentors
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insertAll(List<Mentors> mentors);
 
     /**
      * Delete mentors.
@@ -42,25 +42,16 @@ public interface MentorsDAO {
     public void deleteMentors(Mentors mentor);
 
     /**
-     * Update mentors.
-     *
-     * @param mentor the mentor
+     * The Queries
      */
-    @Update
-    public void updateMentors(Mentors mentor);
-
-    /**
-     * Delete all mentors.
-     */
-    @Query("DELETE FROM CourseMentors")
-    public void deleteAllMentors();
-
-    /**
-     * Gets mentors by course id.
-     *
-     * @param courseId the course id
-     * @return the mentors by course id
-     */
-    @Query("SELECT * FROM CourseMentors WHERE courseId = :courseId")
-    public List<Mentors> getMentorsByCourseId(int courseId);
+    @Query("SELECT * FROM mentors WHERE id = :id")
+    public Mentors getMentorsById(int id);
+    @Query("SELECT * FROM mentors ORDER BY name DESC")
+    LiveData<List<Mentors>> getAllMentors();
+    @Query("SELECT * FROM mentors WHERE courseId = :courseId")
+    LiveData<List<Mentors>> getMentorsByCourse(final int courseId);
+    @Query("DELETE FROM mentors")
+    int deleteAll();
+    @Query("SELECT COUNT(*) FROM mentors")
+    int getCount();
 }

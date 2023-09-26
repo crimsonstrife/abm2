@@ -1,5 +1,6 @@
 package com.pbarnhardt.abm2task1.DAO;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -17,21 +18,20 @@ import java.util.List;
 @Dao
 public interface AssessmentsDAO {
     /**
-     * Gets Assessments.
-     *
-     * @return the Assessments
-     */
-    // @Query("SELECT * FROM Assessments ORDER BY courseId")
-    @Query("SELECT * FROM Assessments")
-    public List<Assessments> getAssessments();
-
-    /**
      * Insert Assessments.
      *
      * @param assessment the Assessment
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAssessments(Assessments assessment);
+
+    /**
+     * Insert all Assessments.
+     *
+     * @param assessments the Assessments
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insertAll(List<Assessments> assessments);
 
     /**
      * Delete Assessments.
@@ -42,25 +42,16 @@ public interface AssessmentsDAO {
     public void deleteAssessments(Assessments assessment);
 
     /**
-     * Update Assessments.
-     *
-     * @param assessment the Assessment
+     * Queries
      */
-    @Update
-    public void updateAssessments(Assessments assessment);
-
-    /**
-     * Delete all Assessments.
-     */
-    @Query("DELETE FROM Assessments")
-    public void deleteAllAssessments();
-
-    /**
-     * Gets Assessments by course id.
-     *
-     * @param courseId the course id
-     * @return the Assessments by course id
-     */
+    @Query("SELECT * FROM Assessments WHERE id = :id")
+    public Assessments getAssessmentsById(int id);
+    @Query("SELECT * FROM Assessments ORDER BY dueDate DESC")
+    LiveData<List<Assessments>> getAllAssessments();
     @Query("SELECT * FROM Assessments WHERE courseId = :courseId")
-    public List<Assessments> getAssessmentsByCourseId(int courseId);
+    LiveData<List<Assessments>> getAssessmentsByCourse(final int courseId);
+    @Query("DELETE FROM Assessments")
+    int deleteAll();
+    @Query("SELECT COUNT(*) FROM Assessments")
+    int getCount();
 }

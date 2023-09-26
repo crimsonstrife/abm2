@@ -35,4 +35,20 @@
     <string name="remindersLabel">Reminders</string>
     <string name="courseStartText">Start Date</string>
     <string name="courseEndText">End Date</string>
+    <string name="assessmentTitleLabel">Assessment</string>
+    <string name="dummyAssessmentName">Ex. Project + Cert</string>
+    <string name="assessmentTypeLabel">Type</string>
+    <string name="dummyAssessmentType">Performance Assessment</string>
+    <string name="assessmentDueDateLabel">Goal Date</string>
+    <string name="remind_me">Remind Me</string>
+    <string name="NameLabel">Name</string>
+    <string name="dummyMentorName">Da Mentor</string>
+    <string name="EmailLabel">Email</string>
+    <string name="dummyMentorEmail">damentor@email.edu</string>
+    <string name="PhoneLabel">Phone\n</string>
+    <string name="dummyMentorPhoneNumber">111-222-3333</string>
+    <string name="dummyAssessmentTypeShortCode">PA</string>
+    <string name="term_details">Term Details</string>
+    <string name="open_navigation">Open Navigation</string>
+    <string name="close_navigation">Close Navigation</string>
 </resources>

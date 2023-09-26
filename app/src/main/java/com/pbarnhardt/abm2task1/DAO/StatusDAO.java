@@ -7,8 +7,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.pbarnhardt.abm2task1.Entity.Status;
-
 import java.util.List;
 
 /**
@@ -16,42 +14,5 @@ import java.util.List;
  */
 @Dao
 public interface StatusDAO {
-    /**
-     * Gets Status.
-     *
-     * @return the Status
-     */
-    @Query("SELECT * FROM Status")
-    public List<Status> getStatuses();
 
-    /**
-     * Insert Status.
-     *
-     * @param status the Status
-     */
-    // @Insert(onConflict = OnConflictStrategy.REPLACE)
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertStatus(Status status);
-
-    /**
-     * Delete Status.
-     *
-     * @param status the Status
-     */
-    @Delete
-    public void deleteStatus(Status status);
-
-    /**
-     * Update Status.
-     *
-     * @param status the Status
-     */
-    @Update
-    public void updateStatus(Status status);
-
-    /**
-     * Delete all Status.
-     */
-    @Query("DELETE FROM Status")
-    public void deleteAllStatus();
 }

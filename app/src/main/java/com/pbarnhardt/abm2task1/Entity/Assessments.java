@@ -5,6 +5,10 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.pbarnhardt.abm2task1.Enums.Types;
+
+import java.util.Date;
+
 /**
  * The type Assessments for courses in student tracker.
  */
@@ -18,8 +22,9 @@ public class Assessments {
 
     private String assessmentName;
     private String assessmentDescription;
-    private String assessmentType;
-    private String assessmentDueDate;
+    private Types assessmentType;
+    private Date assessmentDueDate;
+    private boolean assessmentAlert;
     private int courseId;
 
     /**
@@ -29,13 +34,15 @@ public class Assessments {
      * @param assessmentDescription the assessment description
      * @param assessmentType     the assessment type
      * @param assessmentDueDate  the assessment due date
+     * @param assessmentAlert    the assessment alert
      * @param courseId           the course id
      */
-    public Assessments(String assessmentName, String assessmentType, String assessmentDescription, String assessmentDueDate, int courseId) {
+    public Assessments(String assessmentName, Types assessmentType, String assessmentDescription, Date assessmentDueDate, boolean assessmentAlert, int courseId) {
         this.assessmentName = assessmentName;
         this.assessmentDescription = assessmentDescription;
         this.assessmentType = assessmentType;
         this.assessmentDueDate = assessmentDueDate;
+        this.assessmentAlert = assessmentAlert;
         this.courseId = courseId;
     }
 
@@ -62,7 +69,7 @@ public class Assessments {
      *
      * @return the assessment type
      */
-    public String getAssessmentType() {
+    public Types getAssessmentType() {
         return assessmentType;
     }
 
@@ -80,8 +87,17 @@ public class Assessments {
      *
      * @return the assessment due date
      */
-    public String getAssessmentDueDate() {
+    public Date getAssessmentDueDate() {
         return assessmentDueDate;
+    }
+
+    /**
+     * Gets assessment alert.
+     *
+     * @return the assessment alert
+     */
+    public boolean getAssessmentAlert() {
+        return assessmentAlert;
     }
 
     /**
@@ -107,7 +123,7 @@ public class Assessments {
      *
      * @param assessmentType the assessment type
      */
-    public void setAssessmentType(String assessmentType) {
+    public void setAssessmentType(Types assessmentType) {
         this.assessmentType = assessmentType;
     }
 
@@ -125,7 +141,7 @@ public class Assessments {
      *
      * @param assessmentDueDate the assessment due date
      */
-    public void setAssessmentDueDate(String assessmentDueDate) {
+    public void setAssessmentDueDate(Date assessmentDueDate) {
         this.assessmentDueDate = assessmentDueDate;
     }
 
@@ -139,6 +155,15 @@ public class Assessments {
     }
 
     /**
+     * Sets assessment alert.
+     *
+     * @param assessmentAlert the assessment alert
+     */
+    public void setAssessmentAlert(boolean assessmentAlert) {
+        this.assessmentAlert = assessmentAlert;
+    }
+
+    /**
      * Get all assessments for a course.
      *
      * @param courseId the course id
@@ -148,9 +173,9 @@ public class Assessments {
         String[] assessments = new String[5];
         assessments[0] = Integer.toString(this.assessmentId);
         assessments[1] = this.assessmentName;
-        assessments[2] = this.assessmentType;
+        assessments[2] = this.assessmentType.toString();
         assessments[3] = this.assessmentDescription;
-        assessments[4] = this.assessmentDueDate;
+        assessments[4] = this.assessmentDueDate.toString();
         return assessments;
     }
 

@@ -4,6 +4,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 /**
  * The type Courses(Classes) for student tracker.
  *
@@ -18,9 +20,13 @@ public class Courses {
     private int courseId;
     private String courseName;
     private String courseDescription;
-    private String courseStartDate;
-    private String courseEndDate;
+    private Date courseStartDate;
+    private Date courseEndDate;
     //private String courseStatus;
+
+    private boolean courseStartAlert;
+
+    private boolean courseEndAlert;
 
     //foreign keys to Terms
     private int termId;
@@ -42,16 +48,20 @@ public class Courses {
      * @param courseName           the course name
      * @param courseDescription    the course description
      * @param courseStartDate      the course start date
+     * @param endAlert       the course end alert
+     * @param startAlert     the course start alert
      * @param courseEndDate        the course end date
      * @param courseStatus         the course status
      * @param termId               the term id
      * Course note and assessment counts are set to 0 by default.
      */
-    public Courses(String courseName, String courseDescription, String courseStartDate, String courseEndDate, int courseStatus, int termId) {
+    public Courses(String courseName, String courseDescription, boolean startAlert, Date courseStartDate, boolean endAlert, Date courseEndDate, int courseStatus, int termId) {
         this.courseName = courseName;
         this.courseDescription = courseDescription;
         this.courseStartDate = courseStartDate;
         this.courseEndDate = courseEndDate;
+        this.courseStartAlert = startAlert;
+        this.courseEndAlert = endAlert;
         this.courseStatus = courseStatus;
         //this.courseMentorName = courseMentorName;
         //this.courseMentorPhone = courseMentorPhone;
@@ -93,7 +103,7 @@ public class Courses {
      *
      * @return the course start date
      */
-    public String getCourseStartDate() {
+    public Date getCourseStartDate() {
         return courseStartDate;
     }
 
@@ -102,8 +112,26 @@ public class Courses {
      *
      * @return the course end date
      */
-    public String getCourseEndDate() {
+    public Date getCourseEndDate() {
         return courseEndDate;
+    }
+
+    /**
+     * Gets course start alert.
+     *
+     * @return the course start alert
+     */
+    public boolean getCourseStartAlert() {
+        return courseStartAlert;
+    }
+
+    /**
+     * Gets course end alert.
+     *
+     * @return the course end alert
+     */
+    public boolean getCourseEndAlert() {
+        return courseEndAlert;
     }
 
     /**
@@ -192,7 +220,7 @@ public class Courses {
      *
      * @param courseStartDate the course start date
      */
-    public void setCourseStartDate(String courseStartDate) {
+    public void setCourseStartDate(Date courseStartDate) {
         this.courseStartDate = courseStartDate;
     }
 
@@ -201,7 +229,7 @@ public class Courses {
      *
      * @param courseEndDate the course end date
      */
-    public void setCourseEndDate(String courseEndDate) {
+    public void setCourseEndDate(Date courseEndDate) {
         this.courseEndDate = courseEndDate;
     }
 
@@ -240,6 +268,24 @@ public class Courses {
     //public void setCourseMentorEmail(String courseMentorEmail) {
         //this.courseMentorEmail = courseMentorEmail;
     //}
+
+    /**
+     * Sets course start alert.
+     *
+     * @param courseStartAlert the course start alert
+     */
+    public void setCourseStartAlert(boolean courseStartAlert) {
+        this.courseStartAlert = courseStartAlert;
+    }
+
+    /**
+     * Sets course end alert.
+     *
+     * @param courseEndAlert the course end alert
+     */
+    public void setCourseEndAlert(boolean courseEndAlert) {
+        this.courseEndAlert = courseEndAlert;
+    }
 
     /**
      * Increment course notes count.

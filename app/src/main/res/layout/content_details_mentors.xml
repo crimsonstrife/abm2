@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Views.MentorDetailsActivity">
+
+    <TextView
+        android:id="@+id/text_mentor_nameLabel"
+        style="@style/FieldNameText"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/NameLabel"
+        android:textAlignment="viewEnd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/editText_mentor_title"
+        android:layout_width="wrap_content"
+        android:maxWidth="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:maxLines="2"
+        android:text="@string/dummyMentorName"
+        app:layout_constraintStart_toEndOf="@+id/text_mentor_nameLabel"
+        app:layout_constraintTop_toTopOf="@+id/text_mentor_nameLabel"/>
+
+    <TextView
+        android:id="@+id/text_mentor_emailLabel"
+        style="@style/FieldNameText"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/EmailLabel"
+        android:textAlignment="viewEnd"
+        app:layout_constraintEnd_toEndOf="@id/text_mentor_nameLabel"
+        app:layout_constraintTop_toBottomOf="@id/editText_mentor_title" />
+
+    <TextView
+        android:id="@+id/editText_mentor_email"
+        android:layout_width="wrap_content"
+        android:maxWidth="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/dummyMentorEmail"
+        app:layout_constraintStart_toEndOf="@+id/text_mentor_emailLabel"
+        app:layout_constraintTop_toTopOf="@+id/text_mentor_emailLabel" />
+
+    <TextView
+        android:id="@+id/text_mentor_phoneLabel"
+        style="@style/FieldNameText"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/PhoneLabel"
+        android:textAlignment="viewEnd"
+        app:layout_constraintEnd_toEndOf="@id/text_mentor_nameLabel"
+        app:layout_constraintTop_toBottomOf="@id/editText_mentor_email" />
+
+    <TextView
+        android:id="@+id/editText_mentor_phone"
+        android:layout_width="wrap_content"
+        android:maxWidth="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/dummyMentorPhoneNumber"
+        app:layout_constraintStart_toEndOf="@+id/text_mentor_phoneLabel"
+        app:layout_constraintTop_toTopOf="@+id/text_mentor_phoneLabel"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.pbarnhardt.abm2task1.Entity;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 /**
@@ -13,7 +14,6 @@ public class Terms {
     private String termName;
     private String termStartDate;
     private String termEndDate;
-    private String termStatus;
     private int termCourseCount;
 
     /**
@@ -22,14 +22,20 @@ public class Terms {
      * @param termName       the term name
      * @param termStartDate  the term start date
      * @param termEndDate    the term end date
-     * @param termStatus     the term status
      * Description: This is the constructor for the Terms class. It is used to create a new term. Course count is set to 0 by default.
      */
-    public Terms(String termName, String termStartDate, String termEndDate, String termStatus) {
+    @Ignore
+    public Terms(int id, String termName, String termStartDate, String termEndDate) {
+        this.termId = id;
         this.termName = termName;
         this.termStartDate = termStartDate;
         this.termEndDate = termEndDate;
-        this.termStatus = termStatus;
+        this.termCourseCount = 0;
+    }
+    public Terms(String termName, String termStartDate, String termEndDate) {
+        this.termName = termName;
+        this.termStartDate = termStartDate;
+        this.termEndDate = termEndDate;
         this.termCourseCount = 0;
     }
 
@@ -40,15 +46,6 @@ public class Terms {
      */
     public int getTermId() {
         return termId;
-    }
-
-    /**
-     * Gets the Status of the term.
-     *
-     * @return the term status
-     */
-    public String getTermStatus() {
-        return termStatus;
     }
 
     /**
@@ -112,15 +109,6 @@ public class Terms {
      */
     public void setTermEndDate(String termEndDate) {
         this.termEndDate = termEndDate;
-    }
-
-    /**
-     * Sets term status.
-     *
-     * @param termStatus the term status
-     */
-    public void setTermStatus(String termStatus) {
-        this.termStatus = termStatus;
     }
 
     /**

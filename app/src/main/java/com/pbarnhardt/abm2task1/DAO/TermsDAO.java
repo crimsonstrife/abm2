@@ -18,15 +18,6 @@ import java.util.List;
 @Dao
 public interface TermsDAO {
     /**
-     * Gets terms.
-     *
-     * @return the terms
-     */
-    // @Query("SELECT * FROM Terms ORDER BY termId")
-    @Query("SELECT * FROM Terms")
-    public List<Terms> getTerms();
-
-    /**
      * Insert terms.
      *
      * @param term the term
@@ -35,24 +26,22 @@ public interface TermsDAO {
     public void insertTerms(Terms term);
 
     /**
-     * Delete terms.
+     * Insert all.
      *
-     * @param term the term
+     * @param terms the terms
      */
-    @Delete
-    public void deleteTerms(Terms term);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insertAll(List<Terms> terms);
 
     /**
-     * Update terms.
-     *
-     * @param term the term
+     * Queries
      */
-    @Update
-    public void updateTerms(Terms term);
-
-    /**
-     * Delete all terms.
-     */
-    @Query("DELETE FROM Terms")
-    public void deleteAllTerms();
+    @Query("SELECT * FROM terms WHERE id = :id")
+    public Terms getTermById(int id);
+    @Query("SELECT * FROM terms ORDER BY startDate DESC")
+    LiveData<List<Terms>> getAll();
+    @Query("DELETE FROM terms")
+    int deleteAll();
+    @Query("SELECT COUNT(*) FROM terms")
+    int getCount();
 }

@@ -49,7 +49,6 @@
             android:layout_marginTop="20dp"
             android:text="@string/statusTextLabel"
             android:textAlignment="viewEnd"
-            app:layout_constraintStart_toStartOf="@id/text_course_title"
             app:layout_constraintTop_toBottomOf="@+id/editText_course_title"
             app:layout_constraintEnd_toEndOf="@id/text_course_title"/>
 

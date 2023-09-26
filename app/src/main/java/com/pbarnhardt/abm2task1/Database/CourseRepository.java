@@ -14,15 +14,22 @@ import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Entity.Notes;
-import com.pbarnhardt.abm2task1.Entity.Status;
+import com.pbarnhardt.abm2task1.Enums.Status;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * The type Course repository.
  */
 public class CourseRepository {
+    private static CourseRepository instance;
+    /**
+     * The Db.
+     */
+    private CourseDatabase mdatabase;
     /**
      * The Terms dao.
      */
@@ -56,17 +63,17 @@ public class CourseRepository {
     /**
      * The M all terms.
      */
-    private List<Terms> mAllTerms;
+    public LiveData<List<Terms>> mAllTerms;
 
     /**
      * The M all courses.
      */
-    private List<Courses> mAllCourses;
+    public LiveData<List<Courses>> mAllCourses;
 
     /**
      * The M all assessments.
      */
-    private List<Assessments> mAllAssessments;
+    public LiveData<List<Assessments>> mAllAssessments;
 
     /**
      * The M all notes.
@@ -76,7 +83,7 @@ public class CourseRepository {
     /**
      * The M all mentors.
      */
-    private List<Mentors> mAllMentors;
+    public LiveData<List<Mentors>> mAllMentors;
 
     /**
      * The M all statuses.
@@ -84,23 +91,32 @@ public class CourseRepository {
     private List<Status> mAllStatus;
 
     /**
+     * Handle database operations on a background thread
+     */
+    private static final int NUMBER_OF_THREADS = 4;
+    /**
+     * The executor.
+     */
+    private Executor executor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+
+    /**
      * Instantiates a new Course repository.
      *
      * @param application the application
      */
-    public CourseRepository(Application application) {
-        CourseDatabase db = CourseDatabase.getDatabase(application);
-        termsDao = db.termDao();
-        mAllTerms = getmAllTerms();
-        courseDao = db.courseDao();
-        mAllCourses = getmAllCourses();
-        assessmentsDao = db.assessmentDao();
-        mAllAssessments = getmAllAssessments();
-        notesDao = db.notesDao();
+    private CourseRepository(Application application) {
+        mdatabase = CourseDatabase.getInstance(application);
+        termsDao = mdatabase.termDao();
+        mAllTerms = getAllTerms();
+        courseDao = mdatabase.courseDao();
+        mAllCourses = getAllCourses();
+        assessmentsDao = mdatabase.assessmentDao();
+        mAllAssessments = getAllAssessments();
+        notesDao = mdatabase.notesDao();
         mAllNotes = getmAllNotes();
-        mentorsDao = db.mentorsDao();
-        mAllMentors = getmAllMentors();
-        statusDao = db.statusDao();
+        mentorsDao = mdatabase.mentorsDao();
+        mAllMentors = getAllMentors();
+        statusDao = mdatabase.statusDao();
         mAllStatus = getmAllStatus();
         //Delay so the constructor has time to complete
         try {
@@ -110,284 +126,65 @@ public class CourseRepository {
         }
     }
 
-    /**
-     * Gets all terms.
-     *
-     * @return the list
-     */
-    public List<Terms> getmAllTerms() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllTerms = termsDao.getTerms());
-        return mAllTerms;
+    public static CourseRepository getInstance(Application application) {
+        if(instance == null) {
+            instance = new CourseRepository(application);
+        }
+        return instance;
     }
 
     /**
-     * Gets all statuses.
-     *
-     * @return the list
+     * Delete all data to start fresh
      */
-    public List<Status> getmAllStatus() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllStatus = statusDao.getStatuses());
-        return mAllStatus;
+    public void deleteAllData() {
+        executor.execute(() -> mdatabase.termDao().deleteAll());
+        executor.execute(() -> mdatabase.courseDao().deleteAll());
+        executor.execute(() -> mdatabase.assessmentDao().deleteAll());
+        executor.execute(() -> mdatabase.mentorsDao().deleteAll());
+    }
+
+    /**
+     * Add sample data to the database
+     */
+    public void addSampleDataset() {
+        executor.execute(() -> mdatabase.termDao().insertAll(SampleDataSet.getTerms()));
+        executor.execute(() -> mdatabase.courseDao().insertAll(SampleDataSet.getCourses()));
+        executor.execute(() -> mdatabase.assessmentDao().insertAll(SampleDataSet.getAssessments()));
+        executor.execute(() -> mdatabase.mentorsDao().insertAll(SampleDataSet.getMentors()));
+    }
+
+    /**
+     * Gets all terms.
+     *
+     * @return the all terms
+     */
+    public LiveData<List<Terms>> getAllTerms() {
+        return mdatabase.termDao().getAll();
     }
 
     /**
      * Gets term by id.
-     *
      * @param termId the term id
-     * @return the term by id
+     * @return the term
      */
     public Terms getTermById(int termId) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllTerms = termsDao.getTerms());
-        for (Terms term : mAllTerms) {
-            if (term.getTermId() == termId) {
-                return term;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets term by title.
-     *
-     * @param termTitle the term title
-     * @return the term by title
-     */
-    public Terms getTermByTitle(String termTitle) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllTerms = termsDao.getTerms());
-        for (Terms term : mAllTerms) {
-            if (term.getTermName().equals(termTitle)) {
-                return term;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets all courses.
-     *
-     * @return the list
-     */
-    public List<Courses> getmAllCourses() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllCourses = courseDao.getCourses());
-        return mAllCourses;
-    }
-
-    /**
-     * Gets course by id.
-     *
-     * @param courseId the course id
-     * @return the course by id
-     */
-    public Courses getCourseById(int courseId) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllCourses = courseDao.getCourses());
-        for (Courses course : mAllCourses) {
-            if (course.getCourseId() == courseId) {
-                return course;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets course by term id.
-     *
-     * @param termId the term id
-     * @return the course
-     */
-    public List<Courses> getCourseByTermId(int termId) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllCourses = courseDao.getCourses());
-        for (Courses course : mAllCourses) {
-            if (course.getCourseTermId() == termId) {
-                return mAllCourses;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets course by mentor name
-     *
-     * @param mentorName the mentor name
-     * @return the course
-     *
-     * Searches the Mentor table for the mentor name and returns the course associated with that mentor
-     */
-    public Courses getCourseByMentorName(String mentorName) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllMentors = mentorsDao.getMentors());
-        for (Mentors mentor : mAllMentors) {
-            if (mentor.getMentorName().equals(mentorName)) {
-                return getCourseById(mentor.getCourseId());
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets all assessments.
-     *
-     * @return the list
-     */
-    public List<Assessments> getmAllAssessments() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllAssessments = assessmentsDao.getAssessments());
-        return mAllAssessments;
-    }
-
-    /**
-     * Gets all notes.
-     *
-     * @return the list
-     */
-    public List<Notes> getmAllNotes() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllNotes = notesDao.getNotes());
-        return mAllNotes;
-    }
-
-    /**
-     * Gets all mentors.
-     *
-     * @return the list
-     */
-    public List<Mentors> getmAllMentors() {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mAllMentors = mentorsDao.getMentors());
-        return mAllMentors;
+        return mdatabase.termDao().getTermById(termId);
     }
 
     /**
      * Insert term.
-     *
+     * (will overwrite if term already exists)
      * @param term the term
      */
-    public void insertTerm(Terms term) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> termsDao.insertTerms(term));
-    }
-
-    /**
-     * Insert course.
-     *
-     * @param course the course
-     */
-    public void insertCourse(Courses course) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> courseDao.insertCourses(course));
-    }
-
-    /**
-     * Insert assessment.
-     *
-     * @param assessment the assessment
-     */
-    public void insertAssessment(Assessments assessment) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> assessmentsDao.insertAssessments(assessment));
-    }
-
-    /**
-     * Insert note.
-     *
-     * @param note the note
-     */
-    public void insertNote (Notes note) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> notesDao.insertNotes(note));
-    }
-
-    /**
-     * Insert mentor.
-     *
-     * @param mentor the mentor
-     */
-    public void insertMentor (Mentors mentor) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mentorsDao.insertMentors(mentor));
+    public void insertTerm(final Terms term) {
+        executor.execute(() -> mdatabase.termDao().insertTerms(term));
     }
 
     /**
      * Delete term.
-     *
      * @param term the term
      */
-    public void deleteTerm(Terms term) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> termsDao.deleteTerms(term));
-    }
-
-    /**
-     * Delete course.
-     *
-     * @param course the course
-     */
-    public void deleteCourse(Courses course) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> courseDao.deleteCourses(course));
-    }
-
-    /**
-     * Delete assessment.
-     *
-     * @param assessment the assessment
-     */
-    public void deleteAssessment(Assessments assessment) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> assessmentsDao.deleteAssessments(assessment));
-    }
-
-    /**
-     * Delete note.
-     *
-     * @param note the note
-     */
-    public void deleteNote (Notes note) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> notesDao.deleteNotes(note));
-    }
-
-    /**
-     * Delete mentor.
-     *
-     * @param mentor the mentor
-     */
-    public void deleteMentor (Mentors mentor) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mentorsDao.deleteMentors(mentor));
-    }
-
-    /**
-     * Update term.
-     *
-     * @param term the term
-     */
-    public void updateTerm(Terms term) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> termsDao.updateTerms(term));
-    }
-
-    /**
-     * Update course.
-     *
-     * @param course the course
-     */
-    public void updateCourse(Courses course) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> courseDao.updateCourses(course));
-    }
-
-    /**
-     * Update assessment.
-     *
-     * @param assessment the assessment
-     */
-    public void updateAssessment(Assessments assessment) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> assessmentsDao.updateAssessments(assessment));
-    }
-
-    /**
-     * Update note.
-     *
-     * @param note the note
-     */
-    public void updateNote (Notes note) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> notesDao.updateNotes(note));
-    }
-
-    /**
-     * Update mentor.
-     *
-     * @param mentor the mentor
-     */
-    public void updateMentor (Mentors mentor) {
-        CourseDatabase.databaseWriteExecutor.execute(() -> mentorsDao.updateMentors(mentor));
-    }
-
-    public LiveData<List<Terms>> getAllTerms() {
-        return (LiveData<List<Terms>>) termsDao.getTerms();
+    public void deleteTerm(final Terms term) {
+        executor.execute(() -> mdatabase.termDao().deleteTerm(term));
     }
 }
