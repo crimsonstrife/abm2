@@ -1,5 +1,7 @@
 package com.pbarnhardt.abm2task1.Adapters;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_KEY;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -67,7 +69,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
                 holder.termFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(theContext, R.drawable.ic_action_edit));
                 holder.termDetailsButton.setOnClickListener(v -> {
                     Intent intent = new Intent(theContext, TermDetailsActivity.class);
-                    intent.putExtra("TERM_ID", term.getTermId());
+                    intent.putExtra(TERM_KEY, term.getTermId());
                     theContext.startActivity(intent);
                 });
                 break;
@@ -75,7 +77,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
                 holder.termFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(theContext, R.drawable.ic_action_add));
                 holder.termDetailsButton.setOnClickListener(v -> {
                     Intent intent = new Intent(theContext, TermEditActivity.class);
-                    intent.putExtra("TERM_ID", term.getTermId());
+                    intent.putExtra(TERM_KEY, term.getTermId());
                     theContext.startActivity(intent);
                 });
                 break;
