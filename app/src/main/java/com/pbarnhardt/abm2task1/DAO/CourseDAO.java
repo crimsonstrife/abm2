@@ -45,7 +45,7 @@ public interface CourseDAO {
     /**
      * Queries
      */
-    @Query("SELECT * FROM courses WHERE id = :id")
+    @Query("SELECT * FROM courses WHERE courseId = :id")
     public Courses getCourseById(int id);
     @Query("SELECT * FROM courses ORDER BY courseStartDate DESC")
     LiveData<List<Courses>> getAllCourses();
