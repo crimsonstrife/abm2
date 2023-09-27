@@ -1,5 +1,6 @@
 package com.pbarnhardt.abm2task1.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
 import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
 import com.pbarnhardt.abm2task1.Views.CourseDetailsActivity;
+import com.pbarnhardt.abm2task1.Views.CourseEditActivity;
 
 import java.util.List;
 
@@ -81,6 +83,11 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     intent.putExtra("COURSE_ID", course.getCourseId());
                     theContext.startActivity(intent);
                 });
+                holder.courseFloatingActionButton.setOnClickListener(v -> {
+                    Intent intent = new Intent(theContext, CourseEditActivity.class);
+                    intent.putExtra("COURSE_ID", course.getCourseId());
+                    theContext.startActivity(intent);
+                });
                 break;
             case CHILD:
                 holder.courseFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(theContext, R.drawable.ic_action_delete));
@@ -88,6 +95,19 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     if (courseSelected != null) {
                         courseSelected.onCourseSelected(position, course);
                     }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(theContext);
+                    builder.setTitle("Are you sure you want to delete this course?");
+                    builder.setMessage("This will not delete the course permanently, it will only unassign it from this term.");
+                    builder.setIcon(android.R.drawable.ic_dialog_alert);
+                    builder.setPositiveButton("Continue", (dialog, id) -> {
+                        dialog.dismiss();
+                        course.setTermId(-1);
+                        listedCourses.remove(position);
+                        notifyDataSetChanged();
+                    });
+                    builder.setNegativeButton("Cancel", (dialog, id) -> dialog.dismiss());
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 });
                 break;
         }

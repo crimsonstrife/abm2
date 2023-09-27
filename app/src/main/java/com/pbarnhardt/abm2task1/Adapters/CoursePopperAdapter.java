@@ -31,18 +31,18 @@ public class CoursePopperAdapter  extends RecyclerView.Adapter<CoursePopperAdapt
      * Listener
      * @param courseListener
      */
-    public void setCourseListener(CoursePopperAdapter.CourseListener courseListener) {
+    public void setCourseListener(CourseListener courseListener) {
         this.courseListener = courseListener;
     }
 
     @NonNull
     @Override
-    public CoursePopperAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_course, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CoursePopperAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Courses course = coursesList.get(position);
         holder.itemTitle.setText(course.getCourseName());
         holder.courseItemAddIcon.setOnClickListener(view -> {

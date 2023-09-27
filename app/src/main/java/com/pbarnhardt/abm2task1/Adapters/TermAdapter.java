@@ -72,14 +72,14 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
                     intent.putExtra(TERM_KEY, term.getTermId());
                     theContext.startActivity(intent);
                 });
-                break;
-            case CHILD:
-                holder.termFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(theContext, R.drawable.ic_action_add));
-                holder.termDetailsButton.setOnClickListener(v -> {
+                holder.termFloatingActionButton.setOnClickListener(v -> {
                     Intent intent = new Intent(theContext, TermEditActivity.class);
                     intent.putExtra(TERM_KEY, term.getTermId());
                     theContext.startActivity(intent);
                 });
+                break;
+            case CHILD:
+                holder.termFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(theContext, R.drawable.ic_action_delete));
                 break;
         }
     }

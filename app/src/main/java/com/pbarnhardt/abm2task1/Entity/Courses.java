@@ -1,5 +1,8 @@
 package com.pbarnhardt.abm2task1.Entity;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_TABLE_NAME;
+import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_COLUMN_ID;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -13,9 +16,9 @@ import java.util.Date;
  * The type Courses(Classes) for student tracker.
  *
  */
-@Entity(tableName = "Courses", foreignKeys = @ForeignKey(entity = Terms.class,
-        parentColumns = "termId",
-        childColumns = "termId",
+@Entity(tableName = COURSE_TABLE_NAME, foreignKeys = @ForeignKey(entity = Terms.class,
+        parentColumns = TERM_COLUMN_ID,
+        childColumns = TERM_COLUMN_ID,
         onDelete = ForeignKey.RESTRICT)
 )
 public class Courses {

@@ -1,5 +1,8 @@
 package com.pbarnhardt.abm2task1.Entity;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.ASSESSMENT_TABLE_NAME;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_COLUMN_ID;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -7,15 +10,16 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.pbarnhardt.abm2task1.Enums.Types;
+import com.pbarnhardt.abm2task1.Utils.Constants;
 
 import java.util.Date;
 
 /**
  * The type Assessments for courses in student tracker.
  */
-@Entity(tableName = "Assessments", foreignKeys = @ForeignKey(entity = Courses.class,
-        parentColumns = "courseId",
-        childColumns = "courseId",
+@Entity(tableName = ASSESSMENT_TABLE_NAME, foreignKeys = @ForeignKey(entity = Courses.class,
+        parentColumns = COURSE_COLUMN_ID,
+        childColumns = COURSE_COLUMN_ID,
         onDelete = ForeignKey.RESTRICT))
 public class Assessments {
     @PrimaryKey(autoGenerate = true)

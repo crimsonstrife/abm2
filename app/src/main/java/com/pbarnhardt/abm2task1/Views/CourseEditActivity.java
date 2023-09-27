@@ -1,6 +1,6 @@
 package com.pbarnhardt.abm2task1.Views;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class CourseEditActivity extends Activity {
+public class CourseEditActivity extends AppCompatActivity {
 }

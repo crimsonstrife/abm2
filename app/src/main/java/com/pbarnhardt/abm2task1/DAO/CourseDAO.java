@@ -1,5 +1,7 @@
 package com.pbarnhardt.abm2task1.DAO;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_TABLE_NAME;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -45,14 +47,14 @@ public interface CourseDAO {
     /**
      * Queries
      */
-    @Query("SELECT * FROM courses WHERE courseId = :id")
+    @Query("SELECT * FROM " + COURSE_TABLE_NAME + " WHERE courseId = :id")
     public Courses getCourseById(int id);
-    @Query("SELECT * FROM courses ORDER BY courseStartDate DESC")
+    @Query("SELECT * FROM " + COURSE_TABLE_NAME + " ORDER BY courseName DESC")
     LiveData<List<Courses>> getAllCourses();
-    @Query("SELECT * FROM courses WHERE termId = :termId")
+    @Query("SELECT * FROM " + COURSE_TABLE_NAME + " WHERE termId = :termId")
     LiveData<List<Courses>> getCoursesByTerm(final int termId);
-    @Query("DELETE FROM courses")
+    @Query("DELETE FROM " + COURSE_TABLE_NAME)
     int deleteAll();
-    @Query("SELECT COUNT(*) FROM courses")
+    @Query("SELECT COUNT(*) FROM " + COURSE_TABLE_NAME)
     int getCount();
 }

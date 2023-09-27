@@ -1,5 +1,7 @@
 package com.pbarnhardt.abm2task1.DAO;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.MENTOR_TABLE_NAME;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -44,14 +46,14 @@ public interface MentorsDAO {
     /**
      * The Queries
      */
-    @Query("SELECT * FROM coursementors WHERE mentorId = :id")
+    @Query("SELECT * FROM " + MENTOR_TABLE_NAME + " WHERE mentorId = :id")
     public Mentors getMentorsById(int id);
-    @Query("SELECT * FROM coursementors ORDER BY courseMentorName DESC")
+    @Query("SELECT * FROM " + MENTOR_TABLE_NAME + " ORDER BY courseMentorName DESC")
     LiveData<List<Mentors>> getAllMentors();
-    @Query("SELECT * FROM coursementors WHERE courseId = :courseId")
+    @Query("SELECT * FROM " + MENTOR_TABLE_NAME + " WHERE courseId = :courseId")
     LiveData<List<Mentors>> getMentorsByCourse(final int courseId);
-    @Query("DELETE FROM coursementors")
+    @Query("DELETE FROM " + MENTOR_TABLE_NAME)
     int deleteAll();
-    @Query("SELECT COUNT(*) FROM coursementors")
+    @Query("SELECT COUNT(*) FROM " + MENTOR_TABLE_NAME)
     int getCount();
 }

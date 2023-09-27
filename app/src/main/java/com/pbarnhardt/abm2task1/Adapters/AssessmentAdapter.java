@@ -19,6 +19,7 @@ import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
 import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
 import com.pbarnhardt.abm2task1.Views.AssessmentDetailsActivity;
+import com.pbarnhardt.abm2task1.Views.AssessmentEditActivity;
 
 import java.util.List;
 
@@ -86,15 +87,15 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.Vi
                     theContext.startActivity(intent);
                 });
                 holder.assessmentFloatingActionButton.setOnClickListener(v -> {
-                    Intent intent = new Intent(theContext, AssessmentDetailsActivity.class);
+                    Intent intent = new Intent(theContext, AssessmentEditActivity.class);
                     intent.putExtra(ASSESSMENT_KEY, assessment.getAssessmentId());
                     theContext.startActivity(intent);
                 });
                 break;
             case CHILD:
                 holder.assessmentFloatingActionButton.setImageDrawable(theContext.getDrawable(R.drawable.ic_action_delete));
-                holder.assessmentDetailsButton.setOnClickListener(v -> {
-                    if (assessmentSelected != null) {
+                holder.assessmentFloatingActionButton.setOnClickListener(v -> {
+                    if(assessmentSelected != null) {
                         assessmentSelected.onAssessmentSelected(position, assessment);
                     }
                 });

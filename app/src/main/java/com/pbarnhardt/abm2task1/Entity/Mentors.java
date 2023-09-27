@@ -1,5 +1,8 @@
 package com.pbarnhardt.abm2task1.Entity;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_COLUMN_ID;
+import static com.pbarnhardt.abm2task1.Utils.Constants.MENTOR_TABLE_NAME;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -8,9 +11,9 @@ import androidx.room.PrimaryKey;
 /**
  * The type Mentors for courses in student tracker.
  */
-@Entity(tableName = "CourseMentors", foreignKeys = @ForeignKey(entity = Courses.class,
-        parentColumns = "courseId",
-        childColumns = "courseId",
+@Entity(tableName = MENTOR_TABLE_NAME, foreignKeys = @ForeignKey(entity = Courses.class,
+        parentColumns = COURSE_COLUMN_ID,
+        childColumns = COURSE_COLUMN_ID,
         onDelete = ForeignKey.RESTRICT))
 public class Mentors {
     @PrimaryKey(autoGenerate = true)

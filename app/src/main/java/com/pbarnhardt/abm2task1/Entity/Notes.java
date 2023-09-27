@@ -1,5 +1,7 @@
 package com.pbarnhardt.abm2task1.Entity;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_COLUMN_ID;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ForeignKey;
@@ -8,8 +10,8 @@ import androidx.room.ForeignKey;
  * The type Notes for courses in student tracker.
  */
 @Entity(tableName = "CourseNotes", foreignKeys = @ForeignKey(entity = Courses.class,
-        parentColumns = "courseId",
-        childColumns = "courseId",
+        parentColumns = COURSE_COLUMN_ID,
+        childColumns = COURSE_COLUMN_ID,
         onDelete = ForeignKey.RESTRICT))
 public class Notes {
     @PrimaryKey(autoGenerate = true)

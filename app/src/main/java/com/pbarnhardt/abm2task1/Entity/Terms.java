@@ -1,5 +1,7 @@
 package com.pbarnhardt.abm2task1.Entity;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_TABLE_NAME;
+
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -9,7 +11,7 @@ import java.util.Date;
 /**
  * The type Terms(semesters) for student tracker.
  */
-@Entity(tableName = "Terms")
+@Entity(tableName = TERM_TABLE_NAME)
 public class Terms {
     @PrimaryKey(autoGenerate = true)
     private int termId;

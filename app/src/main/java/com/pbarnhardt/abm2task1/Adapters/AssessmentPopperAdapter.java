@@ -30,6 +30,14 @@ public class AssessmentPopperAdapter extends RecyclerView.Adapter<AssessmentPopp
         this.assessmentsList = assessmentsList;
     }
 
+    /**
+     * Listener
+     * @param assessmentListener
+     */
+    public void setAssessmentListener(AssessmentListener assessmentListener) {
+        this.assessmentListener = assessmentListener;
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView itemTitle;
         TextView itemType;

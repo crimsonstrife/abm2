@@ -2,18 +2,15 @@ package com.pbarnhardt.abm2task1.Database;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.pbarnhardt.abm2task1.DAO.AssessmentsDAO;
 import com.pbarnhardt.abm2task1.DAO.CourseDAO;
 import com.pbarnhardt.abm2task1.DAO.MentorsDAO;
 import com.pbarnhardt.abm2task1.DAO.NotesDAO;
-import com.pbarnhardt.abm2task1.DAO.StatusDAO;
 import com.pbarnhardt.abm2task1.DAO.TermsDAO;
 import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Entity.Courses;
@@ -21,9 +18,6 @@ import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Entity.Notes;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 import com.pbarnhardt.abm2task1.Utils.Converters;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * The type Course (StudentTracker) database.

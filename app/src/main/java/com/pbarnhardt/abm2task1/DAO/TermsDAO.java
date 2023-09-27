@@ -1,5 +1,7 @@
 package com.pbarnhardt.abm2task1.DAO;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_TABLE_NAME;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -44,12 +46,12 @@ public interface TermsDAO {
     /**
      * Queries
      */
-    @Query("SELECT * FROM terms WHERE termId = :id")
+    @Query("SELECT * FROM " + TERM_TABLE_NAME + " WHERE termId = :id")
     public Terms getTermById(int id);
-    @Query("SELECT * FROM terms ORDER BY termStartDate DESC")
+    @Query("SELECT * FROM " + TERM_TABLE_NAME + " ORDER BY termStartDate DESC")
     LiveData<List<Terms>> getAll();
-    @Query("DELETE FROM terms")
+    @Query("DELETE FROM " + TERM_TABLE_NAME)
     int deleteAll();
-    @Query("SELECT COUNT(*) FROM terms")
+    @Query("SELECT COUNT(*) FROM " + TERM_TABLE_NAME)
     int getCount();
 }
