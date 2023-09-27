@@ -23,5 +23,6 @@ public class TrackerApplication extends Application {
 
         void inject(TermDetailsActivity termDetailsActivity);
         void inject(TermsListActivity termsListActivity);
+
     }
 }
