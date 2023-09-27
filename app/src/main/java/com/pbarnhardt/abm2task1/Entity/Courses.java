@@ -16,11 +16,7 @@ import java.util.Date;
  * The type Courses(Classes) for student tracker.
  *
  */
-@Entity(tableName = COURSE_TABLE_NAME, foreignKeys = @ForeignKey(entity = Terms.class,
-        parentColumns = TERM_COLUMN_ID,
-        childColumns = TERM_COLUMN_ID,
-        onDelete = ForeignKey.RESTRICT)
-)
+@Entity(tableName = COURSE_TABLE_NAME)
 public class Courses {
     @PrimaryKey(autoGenerate = true)
     private int courseId;
