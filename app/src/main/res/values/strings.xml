@@ -74,4 +74,5 @@
     <string name="courseDetailDescriptionLabel">Description</string>
     <string name="dummyCourseDescription">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</string>
     <string name="enter_description">Enter Description</string>
+    <string name="helpFAQTitle">Application Help</string>
 </resources>
