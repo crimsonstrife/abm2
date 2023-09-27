@@ -17,10 +17,7 @@ import java.util.Date;
 /**
  * The type Assessments for courses in student tracker.
  */
-@Entity(tableName = ASSESSMENT_TABLE_NAME, foreignKeys = @ForeignKey(entity = Courses.class,
-        parentColumns = COURSE_COLUMN_ID,
-        childColumns = COURSE_COLUMN_ID,
-        onDelete = ForeignKey.RESTRICT))
+@Entity(tableName = ASSESSMENT_TABLE_NAME)
 public class Assessments {
     @PrimaryKey(autoGenerate = true)
     private int assessmentId;
