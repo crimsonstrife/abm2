@@ -47,6 +47,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="72dp"
         android:clickable="true"
+        android:onClick="editCourseFloatingButtonClicked"
         android:layout_gravity="bottom|end"
         android:tooltipText="Edit Course"
         app:backgroundTint="@color/colorAccent"
