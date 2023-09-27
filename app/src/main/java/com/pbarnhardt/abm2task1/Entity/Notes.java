@@ -9,10 +9,7 @@ import androidx.room.ForeignKey;
 /**
  * The type Notes for courses in student tracker.
  */
-@Entity(tableName = "CourseNotes", foreignKeys = @ForeignKey(entity = Courses.class,
-        parentColumns = COURSE_COLUMN_ID,
-        childColumns = COURSE_COLUMN_ID,
-        onDelete = ForeignKey.RESTRICT))
+@Entity(tableName = "CourseNotes")
 public class Notes {
     @PrimaryKey(autoGenerate = true)
     private int noteId;
