@@ -34,7 +34,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="72dp"
         android:clickable="true"
-        android:onClick="editTermFloatingButtonClicked"
+        android:onClick="addTermFloatingButtonClicked"
         android:layout_gravity="bottom|end"
         android:tooltipText="Add a Term"
         app:backgroundTint="@color/colorAccent"
