@@ -58,6 +58,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Assessments> assessmentListData = new ArrayList<>();
     private List<Mentors> mentorListData = new ArrayList<>();
 
+
+    /**
+     * On create
+     *
+     * @param savedInstanceState the saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,16 +189,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int assessmentsNavId = R.id.nav_assessments;
         int mentorsNavId = R.id.nav_mentors;
         if(itemId == termsNavId) {
-            Intent intent = new Intent(this, TermsListActivity.class);
+            Intent intent = new Intent(MainActivity.this, TermsListActivity.class);
             startActivity(intent);
         } else if(itemId == coursesNavId) {
-            Intent intent = new Intent(this, CoursesListActivity.class);
+            Intent intent = new Intent(MainActivity.this, CoursesListActivity.class);
             startActivity(intent);
         } else if(itemId == assessmentsNavId) {
-            Intent intent = new Intent(this, AssessmentsListActivity.class);
+            Intent intent = new Intent(MainActivity.this, AssessmentsListActivity.class);
             startActivity(intent);
         } else if(itemId == mentorsNavId) {
-            Intent intent = new Intent(this, MentorsListActivity.class);
+            Intent intent = new Intent(MainActivity.this, MentorsListActivity.class);
             startActivity(intent);
         }
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
@@ -264,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param view the view
      */
     public void showTerms(View view) {
-        Intent intent = new Intent(this, TermsListActivity.class);
+        Intent intent = new Intent(MainActivity.this, TermsListActivity.class);
         startActivity(intent);
     }
 
@@ -274,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param view the view
      */
     public void showCourses(View view) {
-        Intent intent = new Intent(this, CoursesListActivity.class);
+        Intent intent = new Intent(MainActivity.this, CoursesListActivity.class);
         startActivity(intent);
     }
 
@@ -284,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param view the view
      */
     public void showAssessments(View view) {
-        Intent intent = new Intent(this, AssessmentsListActivity.class);
+        Intent intent = new Intent(MainActivity.this, AssessmentsListActivity.class);
         startActivity(intent);
     }
 
@@ -294,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param view the view
      */
     public void showMentors(View view) {
-        Intent intent = new Intent(this, MentorsListActivity.class);
+        Intent intent = new Intent(MainActivity.this, MentorsListActivity.class);
         startActivity(intent);
     }
 }
