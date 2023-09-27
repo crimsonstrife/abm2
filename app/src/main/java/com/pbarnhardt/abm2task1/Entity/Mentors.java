@@ -11,10 +11,7 @@ import androidx.room.PrimaryKey;
 /**
  * The type Mentors for courses in student tracker.
  */
-@Entity(tableName = MENTOR_TABLE_NAME, foreignKeys = @ForeignKey(entity = Courses.class,
-        parentColumns = COURSE_COLUMN_ID,
-        childColumns = COURSE_COLUMN_ID,
-        onDelete = ForeignKey.RESTRICT))
+@Entity(tableName = MENTOR_TABLE_NAME)
 public class Mentors {
     @PrimaryKey(autoGenerate = true)
     private int mentorId;
