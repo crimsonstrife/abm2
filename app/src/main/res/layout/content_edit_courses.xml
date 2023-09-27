@@ -108,6 +108,9 @@
             android:layout_height="48dp"
             android:layout_marginStart="20dp"
             android:textColorHint="#757575"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="startDatePickerClick"
             app:layout_constraintStart_toEndOf="@+id/text_course_dates"
             app:layout_constraintTop_toTopOf="@+id/text_course_dates"
             tools:ignore="DuplicateSpeakableTextCheck" />
@@ -128,6 +131,9 @@
             android:layout_height="48dp"
             android:layout_marginStart="20dp"
             android:textColorHint="#757575"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="endDatePickerClick"
             app:layout_constraintStart_toEndOf="@+id/text_until"
             app:layout_constraintTop_toTopOf="@+id/editText_start_date" />
 
