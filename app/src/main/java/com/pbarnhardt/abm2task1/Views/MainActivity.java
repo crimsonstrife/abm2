@@ -73,12 +73,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Set the navigation view listener
         navigationView.setNavigationItemSelectedListener(this);
 
+        initializeViewModel();
         //Initialize the views
         inspirationalQuote = findViewById(R.id.text_quote);
         inspirationalAuthor = findViewById(R.id.text_quote_author);
+        setDailyQuote(inspirationalQuote, inspirationalAuthor);
     }
 
-    private void initViewModel() {
+    private void initializeViewModel() {
         //Observer for the terms
         final Observer<List<Terms>> termsObserver = terms -> {
             termListData.clear();
@@ -109,6 +111,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Initialize the view model
         homeModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(HomeModel.class);
+        homeModel.termsList.observe(this, termsObserver);
+        homeModel.coursesList.observe(this, coursesObserver);
+        homeModel.assessmentsList.observe(this, assessmentsObserver);
+        homeModel.mentorsList.observe(this, mentorsObserver);
     }
 
     /**
