@@ -1,5 +1,7 @@
 package com.pbarnhardt.abm2task1.Database;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.DATABASE_VERSION;
+
 import android.content.Context;
 
 import androidx.room.Database;
@@ -22,7 +24,7 @@ import com.pbarnhardt.abm2task1.Utils.Converters;
 /**
  * The type Course (StudentTracker) database.
  */
-@Database(entities = {Assessments.class, Courses.class, Notes.class, Terms.class, Mentors.class}, version = 1, exportSchema = false)
+@Database(entities = {Assessments.class, Courses.class, Notes.class, Terms.class, Mentors.class}, version = DATABASE_VERSION, exportSchema = false)
 @TypeConverters(Converters.class)
 public abstract class CourseDatabase extends RoomDatabase {
     /**
