@@ -16,50 +16,55 @@
         tools:targetApi="31">
         <activity
             android:name=".Views.SettingsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_settings" />
+            android:exported="true"
+            android:label="@string/action_settings" />
         <activity
             android:name=".Views.MentorsListActivity"
-            android:exported="false" />
+            android:parentActivityName=".Views.MainActivity"
+            android:exported="true" />
         <activity
             android:name=".Views.MentorEditActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Views.AssessmentEditActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Views.HelpActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Views.InfoActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Views.AssessmentDetailsActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Views.AssessmentsListActivity"
-            android:exported="false" />
+            android:parentActivityName=".Views.MainActivity"
+            android:exported="true" />
         <activity
             android:name=".Views.MentorDetailsActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Views.CourseDetailsActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Views.CoursesListActivity"
-            android:exported="false" />
+            android:parentActivityName=".Views.MainActivity"
+            android:exported="true" />
         <activity
             android:name=".Views.TermDetailsActivity"
             android:exported="true" />
         <activity
             android:name=".Views.TermsListActivity"
+            android:label="@string/nav_termTitle"
+            android:parentActivityName=".Views.MainActivity"
             android:exported="true" />
         <activity
             android:name=".Views.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
