@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,11 +40,6 @@ public class TermsListActivity extends AppCompatActivity {
         initializeViewModel();
     }
 
-    /**
-     * Edit button click.
-     */
-
-
     private void initializeViewModel() {
         final Observer<List<Terms>> observer = terms -> {
             termsList.clear();
@@ -55,6 +51,8 @@ public class TermsListActivity extends AppCompatActivity {
                 termAdapter.notifyDataSetChanged();
             }
         };
+        termModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(TermModel.class);
+        termModel.terms.observe(this, observer);
     }
 
     private void initializeRecyclerView() {
@@ -63,7 +61,10 @@ public class TermsListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
     }
 
-    public void editTermFloatingButtonClicked(View view) {
+    /**
+     * Add button click.
+     */
+    public void addTermFloatingButtonClicked(View view) {
         Intent intent = new Intent(this, TermEditActivity.class);
         startActivity(intent);
     }
