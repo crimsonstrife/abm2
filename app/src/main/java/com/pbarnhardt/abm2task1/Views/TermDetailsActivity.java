@@ -4,6 +4,7 @@ import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_KEY;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,8 @@ import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.Popups.DropdownCourses;
 import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
+import com.pbarnhardt.abm2task1.databinding.ActivityTermDetailsBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentDetailsTermsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,12 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
     private CourseAdapter courseAdapter;
     private Toolbar toolbar;
     private EditorModel viewModel;
+    private ActivityTermDetailsBinding activityBinding;
+    private ContentDetailsTermsBinding contentBinding;
+    private TextView termTitleView;
+    private TextView termStartDateView;
+    private TextView termEndDateView;
+    private RecyclerView recyclerView;
 
     /**
      * On create method
@@ -43,15 +52,24 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_term_details);
-        toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityTermDetailsBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
-        initiateRecyclerView();
+
+        //initialize the binding
+        contentBinding = activityBinding.contentInclude;
+        termTitleView = contentBinding.termDetailTitle;
+        termStartDateView = contentBinding.termDetailStartDate;
+        termEndDateView = contentBinding.termDetailEndDate;
+        recyclerView = contentBinding.termCoursesRecyclerView;
+
+        initiateRecyclerView(recyclerView);
         initiateViewModel();
 
         //floating action button
-        final FloatingActionButton termAddCourseButton = findViewById(R.id.floatingAddCourseToTermButton);
-        termAddCourseButton.setOnClickListener(v -> {
+        contentBinding.floatingAddCourseToTermButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add Course to Term");
             builder.setMessage("Would you like to add a new or an existing course to this term?");
@@ -70,7 +88,7 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
                     menu.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                     menu.setFocusable(true);
                     menu.setOutsideTouchable(true);
-                    menu.showAsDropDown(termAddCourseButton);
+                    menu.showAsDropDown(contentBinding.floatingAddCourseToTermButton);
                     menu.setSelectedCourseListener((position, course) -> {
                         menu.dismiss();
                         course.setTermId(termId);
@@ -84,8 +102,7 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
             AlertDialog dialog = builder.create();
             dialog.show();
         });
-        final FloatingActionButton termEditButton = findViewById(R.id.floatingEditTermButton);
-        termEditButton.setOnClickListener(v -> {
+        activityBinding.floatingEditTermButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, TermEditActivity.class);
             intent.putExtra(TERM_KEY, termId);
             startActivity(intent);
@@ -95,10 +112,6 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
 
     private void initiateViewModel() {
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
-        final TextView termTitleView = findViewById(R.id.termDetailTitle);
-        final TextView termStartDateView = findViewById(R.id.termDetailStartDate);
-        final TextView termEndDateView = findViewById(R.id.termDetailEndDate);
-        final RecyclerView termCourseRecyclerView = findViewById(R.id.termCoursesRecyclerView);
         viewModel.liveTerms.observe(this, terms -> {
             if (terms != null) {
                 termTitleView.setText(terms.getTermName());
@@ -114,7 +127,7 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
             coursesListData.addAll(courses);
             if (courseAdapter == null) {
                 courseAdapter = new CourseAdapter(coursesListData, TermDetailsActivity.this, RecyclerAdapter.CHILD, this);
-                termCourseRecyclerView.setAdapter(courseAdapter);
+                recyclerView.setAdapter(courseAdapter);
             } else {
                 courseAdapter.notifyDataSetChanged();
             }
@@ -137,11 +150,10 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
         viewModel.getUnassignedCourses().observe(this, unassignedObserver);
     }
 
-    private void initiateRecyclerView() {
-        final RecyclerView termCourseRecyclerView = findViewById(R.id.termCoursesRecyclerView);
-        termCourseRecyclerView.setHasFixedSize(true);
+    private void initiateRecyclerView(RecyclerView recyclerView) {
+        recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        termCourseRecyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     /**
@@ -153,7 +165,7 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
     public void onCourseSelected(int position, Courses course) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Remove Course from Term");
-        builder.setMessage("Would you like to remove this course from this term? \nThis will not delete the course, /\nonly remove it from this term and make it unassigned.");
+        builder.setMessage("Would you like to remove this course from this term? \nThis will not delete the course, \nonly remove it from this term and make it unassigned.");
         builder.setIcon(R.drawable.ic_action_delete);
         builder.setPositiveButton("Remove", (dialog, id) -> {
             dialog.dismiss();
