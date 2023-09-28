@@ -2,6 +2,7 @@ package com.pbarnhardt.abm2task1.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
 import com.pbarnhardt.abm2task1.Models.AssessmentModel;
 import com.pbarnhardt.abm2task1.R;
+import com.pbarnhardt.abm2task1.databinding.ActivityAssessmentListBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentListAssessmentsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,9 @@ public class AssessmentsListActivity extends AppCompatActivity implements Assess
     /** @noinspection FieldMayBeFinal*/
     private List<Assessments> assessmentsList = new ArrayList<>();
     private AssessmentAdapter assessmentAdapter;
+    private ActivityAssessmentListBinding activityBinding;
+    private ContentListAssessmentsBinding contentBinding;
+    private RecyclerView recyclerView;
 
     /**
      * On create.
@@ -32,15 +38,21 @@ public class AssessmentsListActivity extends AppCompatActivity implements Assess
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_assessment_list);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityAssessmentListBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        Toolbar toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
-        initializeRecyclerView();
+
         initializeViewModel();
 
+        //initialize the binding
+        contentBinding = activityBinding.contentInclude;
+        recyclerView = contentBinding.assessmentListRecyclerView;
+        initializeRecyclerView(recyclerView);
+
         // On click listener for add assessment button
-        final FloatingActionButton addAssessmentButton = findViewById(R.id.floatingAddAssessmentButton);
-        addAssessmentButton.setOnClickListener(view -> {
+        activityBinding.floatingAddAssessmentButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add Assessment");
             builder.setMessage("Are you sure you want to add an assessment?");
@@ -58,7 +70,6 @@ public class AssessmentsListActivity extends AppCompatActivity implements Assess
     }
 
     private void initializeViewModel() {
-        RecyclerView recyclerView = findViewById(R.id.assessmentListRecyclerView);
         final Observer<List<Assessments>> observer = assessments -> {
             assessmentsList.clear();
             assessmentsList.addAll(assessments);
@@ -73,8 +84,7 @@ public class AssessmentsListActivity extends AppCompatActivity implements Assess
         assessmentModel.assessments.observe(this, observer);
     }
 
-    private void initializeRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.assessmentListRecyclerView);
+    private void initializeRecyclerView(RecyclerView recyclerView) {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
