@@ -4,11 +4,13 @@ import static com.pbarnhardt.abm2task1.Utils.Constants.ASSESSMENT_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,8 +26,11 @@ import com.pbarnhardt.abm2task1.Enums.Types;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
+import com.pbarnhardt.abm2task1.databinding.ActivityAssessmentEditBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentEditAssessmentsBinding;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +40,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
     /**
      * Variables.
      */
+    int assessmentId;
     private boolean newAssessment;
     private boolean edit;
     private int courseId = -1;
@@ -44,6 +50,14 @@ public class AssessmentEditActivity extends AppCompatActivity {
     private ArrayAdapter<Types> typeAdapter;
     private String[] courseNames;
     private int[] courseIds;
+    private ActivityAssessmentEditBinding activityBinding;
+    private ContentEditAssessmentsBinding contentBinding;
+    private EditText assessmentTitle;
+    private EditText assessmentDescription;
+    private Button assessmentDueDate;
+    private CheckBox assessmentDueAlert;
+    private Spinner assessmentType;
+    private Spinner assignedCourse;
 
     /**
      * On create.
@@ -53,8 +67,10 @@ public class AssessmentEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_assessment_edit);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityAssessmentEditBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        Toolbar toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_action_check);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -63,21 +79,44 @@ public class AssessmentEditActivity extends AppCompatActivity {
             edit = savedInstanceState.getBoolean(EDIT_KEY);
         }
 
+        //initiate the bindings
+        contentBinding = activityBinding.contentInclude;
+        assessmentTitle = contentBinding.editTextAssessmentTitle;
+        assessmentDescription = contentBinding.assessmentDetailDescription;
+        assessmentDueDate = contentBinding.editTextAssessmentEndDate;
+        assessmentDueAlert = contentBinding.checkboxRemindMe;
+        assessmentType = contentBinding.spinnerAssessmentType;
+        assignedCourse = contentBinding.assessmentCourse;
+
+        //initiate the view model
         initiateViewModel();
+        addTypesToSpinner(assessmentType);
+        addCoursesToSpinner(assignedCourse);
+
+        //set the date button
+        assessmentDueDate.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            DatePickerDialog.OnDateSetListener date = (startView, year, month, day) -> {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, day);
+            };
+            new DatePickerDialog(AssessmentEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            //update the button text with the selected date
+            assessmentDueDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+            assessmentDueDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
+        });
     }
 
-    private Types getTypeSpinnerValue() {
-        final Spinner assessmentType = findViewById(R.id.spinner_assessment_type);
-        return (Types) assessmentType.getSelectedItem();
+    private Types getTypeSpinnerValue(Spinner spinner) {
+        return (Types) spinner.getSelectedItem();
     }
 
-    private String getCourseSpinnerValue() {
-        final Spinner assessmentAssignedCourse = findViewById(R.id.assessment_course);
-        return (String) assessmentAssignedCourse.getSelectedItem();
+    private String getCourseSpinnerValue(Spinner spinner) {
+        return (String) spinner.getSelectedItem();
     }
 
-    private void addCoursesToSpinner() {
-        final Spinner assessmentAssignedCourse = findViewById(R.id.assessment_course);
+    private void addCoursesToSpinner(Spinner spinner) {
         List<Courses> potentialCourses = collectCourseInfo();
         courseNames = new String[potentialCourses.size()];
         courseIds = new int[potentialCourses.size()];
@@ -87,8 +126,8 @@ public class AssessmentEditActivity extends AppCompatActivity {
             courseIds[i] = potentialCourses.get(i).getCourseId();
         }
         //set the course adapter
-        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, courseNames);
-        assessmentAssignedCourse.setAdapter(courseAdapter);
+        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, courseNames);
+        spinner.setAdapter(courseAdapter);
     }
 
     /**
@@ -97,23 +136,18 @@ public class AssessmentEditActivity extends AppCompatActivity {
      */
     private List<Courses> collectCourseInfo() {
         viewModel.coursesList.observe(this, courses -> courseList.addAll(courses));
+        //log courseList to see if it is empty
+        Log.v("courseList: ", courseList.toString());
         return courseList;
     }
 
-    private void addTypesToSpinner() {
-        final Spinner assessmentType = findViewById(R.id.spinner_assessment_type);
-        typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, Types.values());
-        assessmentType.setAdapter(typeAdapter);
+    private void addTypesToSpinner(Spinner spinner) {
+        typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, Types.values());
+        spinner.setAdapter(typeAdapter);
     }
 
     private void initiateViewModel() {
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
-        final EditText assessmentTitle = findViewById(R.id.editText_assessment_title);
-        final EditText assessmentDescription = findViewById(R.id.assessmentDetailDescription);
-        final Button assessmentDueDate = findViewById(R.id.editText_assessmentEndDate);
-        final CheckBox assessmentDueAlert = findViewById(R.id.checkbox_remindMe);
-        final Spinner assessmentType = findViewById(R.id.spinner_assessment_type);
-        final Spinner assessmentAssignedCourse = findViewById(R.id.assessment_course);
         viewModel.liveAssessments.observe(this, assessments -> {
             if (assessments != null && !edit) {
                 assessmentTitle.setText(assessments.getAssessmentName());
@@ -123,19 +157,19 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 int typePosition = getTypeSpinnerPosition(assessments.getAssessmentType());
                 assessmentType.setSelection(typePosition);
                 int coursePosition = getCourseSpinnerPosition(assessments.getAssessmentCourseId());
-                assessmentAssignedCourse.setSelection(coursePosition);
+                assignedCourse.setSelection(coursePosition);
             }
         });
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
-            setTitle("New Assessment");
+            setTitle(getString(R.string.new_assessment));
             newAssessment = true;
         } else if (extras.containsKey(COURSE_KEY)) {
             courseId = extras.getInt(COURSE_KEY);
-            setTitle("New Assessment");
+            setTitle(getString(R.string.new_assessment));
         } else {
-            setTitle("Edit Assessment");
-            int assessmentId = extras.getInt(ASSESSMENT_KEY);
+            setTitle(getString(R.string.edit_assessment));
+            assessmentId = extras.getInt(ASSESSMENT_KEY);
             viewModel.loadAssessment(assessmentId);
         }
 
@@ -147,18 +181,20 @@ public class AssessmentEditActivity extends AppCompatActivity {
         assessmentType.setAdapter(typeArrayAdapter);
 
         ArrayList<String> courseSpinnerArray = new ArrayList<>();
-        viewModel.liveCourses.observe(this, courses -> {
+        viewModel.coursesList.observe(this, courses -> {
             if (courses != null) {
-                courseList.addAll((Collection<? extends Courses>) courses);
+                courseList.addAll(courses);
                 for (Courses course : courseList) {
                     courseSpinnerArray.add(course.getCourseName());
                 }
                 ArrayAdapter<String> courseArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, courseSpinnerArray);
-                assessmentAssignedCourse.setAdapter(courseArrayAdapter);
+                assignedCourse.setAdapter(courseArrayAdapter);
+            } else {
+                Log.v("courseList: ", "courseList is null");
             }
         });
-        //log courseList to see if it is empty
-        Log.v("courseList: ", courseList.toString());
+        //log size of courseList
+        Log.v("courseList: ", String.valueOf(courseList.size()) + " courses");
     }
 
     private int getCourseSpinnerPosition(int assessmentCourseId) {
@@ -183,19 +219,15 @@ public class AssessmentEditActivity extends AppCompatActivity {
     }
 
     private void saveAndReturn() {
-        final EditText assessmentTitle = findViewById(R.id.editText_assessment_title);
-        final EditText assessmentDescription = findViewById(R.id.assessmentDetailDescription);
-        final Button assessmentDueDate = findViewById(R.id.editText_assessmentEndDate);
-        final CheckBox assessmentDueAlert = findViewById(R.id.checkbox_remindMe);
         try {
             String title = assessmentTitle.getText().toString().trim();
             String description = assessmentDescription.getText().toString().trim();
             Date dueDate = Formatting.dateFormat.parse(assessmentDueDate.getText().toString());
             boolean alert = assessmentDueAlert.isChecked();
-            Types type = getTypeSpinnerValue();
+            Types type = getTypeSpinnerValue(assessmentType);
             //match the spinner value to the course id
             for (int i = 0; i < courseNames.length; i++) {
-                if (courseNames[i].equals(getCourseSpinnerValue())) {
+                if (courseNames[i].equals(getCourseSpinnerValue(assignedCourse))) {
                     courseId = courseIds[i];
                 }
             }
