@@ -3,16 +3,16 @@ package com.pbarnhardt.abm2task1.Views;
 import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
@@ -20,13 +20,6 @@ import com.pbarnhardt.abm2task1.R;
 import java.util.Objects;
 
 public class MentorEditActivity extends AppCompatActivity {
-    /**
-     * Bind views.
-     */
-    EditText mentorNameView = findViewById(R.id.editText_mentor_title);
-    EditText mentorEmailView = findViewById(R.id.editText_mentor_email);
-    EditText mentorPhoneView = findViewById(R.id.editText_mentor_phone);
-
     /**
      * Variables.
      */
@@ -56,6 +49,9 @@ public class MentorEditActivity extends AppCompatActivity {
 
     private void initializeViewModel() {
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
+        final EditText mentorNameView = findViewById(R.id.editText_mentor_title);
+        final EditText mentorEmailView = findViewById(R.id.editText_mentor_email);
+        final EditText mentorPhoneView = findViewById(R.id.editText_mentor_phone);
         viewModel.liveMentors.observe(this, mentorEntity -> {
             if (mentorEntity != null && !edit) {
                 mentorNameView.setText(mentorEntity.getMentorName());
@@ -100,6 +96,9 @@ public class MentorEditActivity extends AppCompatActivity {
     }
 
     private void saveAndReturn() {
+        final EditText mentorNameView = findViewById(R.id.editText_mentor_title);
+        final EditText mentorEmailView = findViewById(R.id.editText_mentor_email);
+        final EditText mentorPhoneView = findViewById(R.id.editText_mentor_phone);
         String mentorName = mentorNameView.getText().toString().trim();
         String mentorEmail = mentorEmailView.getText().toString().trim();
         String mentorPhone = mentorPhoneView.getText().toString().trim();

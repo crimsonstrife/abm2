@@ -31,10 +31,6 @@ public class HomeModel extends AndroidViewModel {
         mentorsList = repository.getAllMentors();
     }
 
-    public LiveData<List<Terms>> getAllTerms() {
-        return repository.getAllTerms();
-    }
-
     public void addSampleDataset() {
         repository.addSampleDataset();
     }

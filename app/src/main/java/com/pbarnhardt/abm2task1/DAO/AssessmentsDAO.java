@@ -8,7 +8,6 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import com.pbarnhardt.abm2task1.Entity.Assessments;
 
@@ -25,7 +24,7 @@ public interface AssessmentsDAO {
      * @param assessment the Assessment
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertAssessments(Assessments assessment);
+    void insertAssessments(Assessments assessment);
 
     /**
      * Insert all Assessments.
@@ -33,7 +32,7 @@ public interface AssessmentsDAO {
      * @param assessments the Assessments
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertAll(List<Assessments> assessments);
+    void insertAll(List<Assessments> assessments);
 
     /**
      * Delete Assessments.
@@ -41,13 +40,13 @@ public interface AssessmentsDAO {
      * @param assessment the Assessment
      */
     @Delete
-    public void deleteAssessments(Assessments assessment);
+    void deleteAssessments(Assessments assessment);
 
     /**
      * Queries
      */
     @Query("SELECT * FROM " + ASSESSMENT_TABLE_NAME + " WHERE assessmentId = :id")
-    public Assessments getAssessmentsById(int id);
+    Assessments getAssessmentsById(int id);
     @Query("SELECT * FROM " + ASSESSMENT_TABLE_NAME + " ORDER BY assessmentDueDate DESC")
     LiveData<List<Assessments>> getAllAssessments();
     @Query("SELECT * FROM " + ASSESSMENT_TABLE_NAME + " WHERE courseId = :courseId")

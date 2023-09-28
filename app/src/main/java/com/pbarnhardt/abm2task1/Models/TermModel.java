@@ -13,12 +13,11 @@ import java.util.List;
 
 public class TermModel extends AndroidViewModel {
 
-    private CourseRepository courseRepository;
     public LiveData<List<Terms>> terms;
 
     public TermModel(@NonNull Application application) {
         super(application);
-        courseRepository = CourseRepository.getInstance(application.getApplicationContext());
+        CourseRepository courseRepository = CourseRepository.getInstance(application.getApplicationContext());
         terms = courseRepository.mAllTerms;
     }
 }

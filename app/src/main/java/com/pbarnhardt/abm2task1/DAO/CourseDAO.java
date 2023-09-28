@@ -8,7 +8,6 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import com.pbarnhardt.abm2task1.Entity.Courses;
 
@@ -25,7 +24,7 @@ public interface CourseDAO {
      * @param courses the Courses
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertCourses(Courses courses);
+    void insertCourses(Courses courses);
 
     /**
      * Insert all Courses
@@ -33,7 +32,7 @@ public interface CourseDAO {
      * @param courses the Courses
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertAll(List<Courses> courses);
+    void insertAll(List<Courses> courses);
 
 
     /**
@@ -42,13 +41,13 @@ public interface CourseDAO {
      * @param courses the Courses
      */
     @Delete
-    public void deleteCourses(Courses courses);
+    void deleteCourses(Courses courses);
 
     /**
      * Queries
      */
     @Query("SELECT * FROM " + COURSE_TABLE_NAME + " WHERE courseId = :id")
-    public Courses getCourseById(int id);
+    Courses getCourseById(int id);
     @Query("SELECT * FROM " + COURSE_TABLE_NAME + " ORDER BY courseName DESC")
     LiveData<List<Courses>> getAllCourses();
     @Query("SELECT * FROM " + COURSE_TABLE_NAME + " WHERE termId = :termId")

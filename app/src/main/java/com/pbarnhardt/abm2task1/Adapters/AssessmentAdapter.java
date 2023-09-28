@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -80,7 +81,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.Vi
         holder.assessmentDatesView.setText(Formatting.dateFormat.format(assessment.getAssessmentDueDate()));
         switch(recycler) {
             case MAIN:
-                holder.assessmentFloatingActionButton.setImageDrawable(theContext.getDrawable(R.drawable.ic_action_edit));
+                holder.assessmentFloatingActionButton.setImageDrawable(AppCompatResources.getDrawable(theContext, R.drawable.ic_action_edit));
                 holder.assessmentDetailsButton.setOnClickListener(v -> {
                     Intent intent = new Intent(theContext, AssessmentDetailsActivity.class);
                     intent.putExtra(ASSESSMENT_KEY, assessment.getAssessmentId());
@@ -93,7 +94,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.Vi
                 });
                 break;
             case CHILD:
-                holder.assessmentFloatingActionButton.setImageDrawable(theContext.getDrawable(R.drawable.ic_action_delete));
+                holder.assessmentFloatingActionButton.setImageDrawable(AppCompatResources.getDrawable(theContext, R.drawable.ic_action_delete));
                 holder.assessmentFloatingActionButton.setOnClickListener(v -> {
                     if(assessmentSelected != null) {
                         assessmentSelected.onAssessmentSelected(position, assessment);

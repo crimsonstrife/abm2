@@ -1,10 +1,8 @@
 package com.pbarnhardt.abm2task1.Entity;
 
 import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_TABLE_NAME;
-import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_COLUMN_ID;
 
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
@@ -161,28 +159,28 @@ public class Courses {
         return courseStatus;
     }
 
-    /**
-     * Gets course mentor name.
-     *
-     * @return the course mentor name
+    /*
+      Gets course mentor name.
+
+      @return the course mentor name
      */
     //public String getCourseMentorName() {
         //return courseMentorName;
     //}
 
-    /**
-     * Gets course mentor phone.
-     *
-     * @return the course mentor phone
+    /*
+      Gets course mentor phone.
+
+      @return the course mentor phone
      */
     //public String getCourseMentorPhone() {
         //return courseMentorPhone;
     //}
 
-    /**
-     * Gets course mentor email.
-     *
-     * @return the course mentor email
+    /*
+      Gets course mentor email.
+
+      @return the course mentor email
      */
     //public String getCourseMentorEmail() {
         //return courseMentorEmail;
@@ -204,15 +202,6 @@ public class Courses {
      */
     public int getCourseAssessmentsCount() {
         return courseAssessmentsCount;
-    }
-
-    /**
-     * Gets term id.
-     *
-     * @return the term id
-     */
-    public int getCourseTermId() {
-        return termId;
     }
 
     /**
@@ -269,28 +258,28 @@ public class Courses {
         this.courseStatus = courseStatus;
     }
 
-    /**
-     * Sets course mentor name.
-     *
-     * @param courseMentorName the course mentor name
+    /*
+      Sets course mentor name.
+
+      @param courseMentorName the course mentor name
      */
     //public void setCourseMentorName(String courseMentorName) {
         //this.courseMentorName = courseMentorName;
     //}
 
-    /**
-     * Sets course mentor phone.
-     *
-     * @param courseMentorPhone the course mentor phone
+    /*
+      Sets course mentor phone.
+
+      @param courseMentorPhone the course mentor phone
      */
     //public void setCourseMentorPhone(String courseMentorPhone) {
         //this.courseMentorPhone = courseMentorPhone;
     //}
 
-    /**
-     * Sets course mentor email.
-     *
-     * @param courseMentorEmail the course mentor email
+    /*
+      Sets course mentor email.
+
+      @param courseMentorEmail the course mentor email
      */
     //public void setCourseMentorEmail(String courseMentorEmail) {
         //this.courseMentorEmail = courseMentorEmail;
@@ -324,58 +313,12 @@ public class Courses {
     }
 
     /**
-     * Increment course notes count.
-     */
-    public void incrementCourseNotesCount() {
-        this.courseNotesCount++;
-    }
-
-    /**
-     * Increment course assessments count.
-     */
-    public void incrementCourseAssessmentsCount() {
-        this.courseAssessmentsCount++;
-    }
-
-    /**
-     * Decrement course notes count.
-     */
-    public void decrementCourseNotesCount() {
-        // only decrement if count is greater than 0
-        if (this.courseNotesCount > 0) {
-            this.courseNotesCount--;
-        }
-    }
-
-    /**
-     * Decrement course assessments count.
-     */
-    public void decrementCourseAssessmentsCount() {
-        // only decrement if count is greater than 0
-        if (this.courseAssessmentsCount > 0) {
-            this.courseAssessmentsCount--;
-        }
-    }
-
-    /**
      * Sets term id.
      *
      * @param termId the term id
      */
     public void setTermId(int termId) {
         this.termId = termId;
-    }
-
-    /**
-     * Get a list of all Courses and their IDs.
-     *
-     * @return an array of courses
-     */
-    public String[] getCourseList() {
-        String[] courseList = new String[2];
-        courseList[0] = Integer.toString(this.courseId);
-        courseList[1] = this.courseName;
-        return courseList;
     }
 
     /**

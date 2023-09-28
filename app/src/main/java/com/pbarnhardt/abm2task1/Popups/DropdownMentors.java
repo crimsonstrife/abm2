@@ -21,13 +21,12 @@ public class DropdownMentors extends PopupWindow {
      */
     private Context theContext;
     private List<Mentors> mentorsList;
-    private RecyclerView popupRecyclerView;
     private MentorPopperAdapter popperAdapter;
 
     /**
      * Constructor
-     * @param theContext
-     * @param mentorsList
+     * @param theContext Context
+     * @param mentorsList List of mentors
      */
     public DropdownMentors(Context theContext, List<Mentors> mentorsList) {
         super(theContext);
@@ -38,7 +37,7 @@ public class DropdownMentors extends PopupWindow {
 
     private void setupView() {
         View view = LayoutInflater.from(theContext).inflate(R.layout.menu_popup, null);
-        popupRecyclerView = view.findViewById(R.id.popupRecyclerView);
+        RecyclerView popupRecyclerView = view.findViewById(R.id.popupRecyclerView);
         popupRecyclerView.setHasFixedSize(true);
         popupRecyclerView.setLayoutManager(new LinearLayoutManager(theContext, LinearLayoutManager.VERTICAL, false));
         popupRecyclerView.addItemDecoration(new DividerItemDecoration(theContext, LinearLayoutManager.VERTICAL));

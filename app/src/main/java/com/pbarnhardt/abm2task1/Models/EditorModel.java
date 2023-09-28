@@ -1,7 +1,6 @@
 package com.pbarnhardt.abm2task1.Models;
 
 import android.app.Application;
-import android.util.Patterns;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -15,7 +14,6 @@ import com.pbarnhardt.abm2task1.Entity.Terms;
 import com.pbarnhardt.abm2task1.Enums.Status;
 import com.pbarnhardt.abm2task1.Enums.Types;
 
-import java.lang.reflect.Executable;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -23,7 +21,7 @@ import java.util.concurrent.Executors;
 
 public class EditorModel extends AndroidViewModel {
     /**
-     * Mutables
+     * Mutable
      */
     public MutableLiveData<Terms> liveTerms = new MutableLiveData<>();
     public MutableLiveData<Courses> liveCourses = new MutableLiveData<>();
@@ -47,7 +45,7 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Constructor
-     * @param application
+     * @param application - application
      */
     public EditorModel(Application application) {
         super(application);
@@ -60,7 +58,7 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Load Term Data
-     * @param termId
+     * @param termId - id of the term to load
      */
     public void loadTerm(final int termId) {
         executor.execute(() -> {
@@ -71,7 +69,7 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Load Course Data
-     * @param courseId
+     * @param courseId - id of the course to load
      */
     public void loadCourse(final int courseId) {
         executor.execute(() -> {
@@ -82,7 +80,7 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Load Assessment Data
-     * @param assessmentId
+     * @param assessmentId  - id of the assessment to load
      */
     public void loadAssessment(final int assessmentId) {
         executor.execute(() -> {
@@ -93,7 +91,7 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Load Mentor Data
-     * @param mentorId
+     * @param mentorId - id of the mentor to load
      */
     public void loadMentor(final int mentorId) {
         executor.execute(() -> {
@@ -104,9 +102,9 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Save Term
-     * @param termTitle
-     * @param startDate
-     * @param endDate
+     * @param termTitle - title of the term
+     * @param startDate - start date of the term
+     * @param endDate - end date of the term
      */
     public void saveTerm(String termTitle, Date startDate, Date endDate) {
         Terms terms = liveTerms.getValue();
@@ -125,15 +123,15 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Save Course
-     * @param courseTitle
-     * @param courseDescription
-     * @param startDate
-     * @param endDate
-     * @param startDateAlert
-     * @param endDateAlert
-     * @param courseStatus
-     * @param termId
-     * @param note
+     * @param courseTitle   - title of the course
+     * @param courseDescription - description of the course
+     * @param startDate - start date of the course
+     * @param endDate  - end date of the course
+     * @param startDateAlert - start date alert boolean
+     * @param endDateAlert - end date alert boolean
+     * @param courseStatus - status of the course
+     * @param termId - term id of the course
+     * @param note - notes of the course
      */
     public void saveCourse(String courseTitle, String courseDescription, Date startDate, Date endDate, boolean startDateAlert, boolean endDateAlert, Status courseStatus, int termId, String note) {
         Courses courses = liveCourses.getValue();
@@ -160,12 +158,12 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Save Assessment
-     * @param assessmentTitle
-     * @param assessmentDescription
-     * @param date
-     * @param assessmentType
-     * @param courseId
-     * @param alert
+     * @param assessmentTitle   - title of the assessment
+     * @param assessmentDescription - description of the assessment
+     * @param date - due date of the assessment
+     * @param assessmentType - type of the assessment
+     * @param courseId - course id of the assessment
+     * @param alert - alert boolean of the assessment
      */
     public void saveAssessment(String assessmentTitle, String assessmentDescription, Date date, Types assessmentType, int courseId, boolean alert) {
         Assessments assessments = liveAssessments.getValue();
@@ -189,10 +187,10 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Save Mentor
-     * @param mentorName
-     * @param mentorPhone
-     * @param mentorEmail
-     * @param courseId
+     * @param mentorName - name of the mentor
+     * @param mentorPhone - phone number of the mentor
+     * @param mentorEmail - email of the mentor
+     * @param courseId - course id of the mentor
      */
     public void saveMentor(String mentorName, String mentorPhone, String mentorEmail, int courseId) {
         Mentors mentors = liveMentors.getValue();
@@ -222,8 +220,8 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Overwrite Course
-     * @param courses
-     * @param termId
+     * @param courses - course to overwrite
+     * @param termId - term id of the course
      */
     public void overwriteCourse(Courses courses, int termId) {
         courses.setTermId(termId);
@@ -232,8 +230,8 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Overwrite Assessment
-     * @param assessments
-     * @param courseId
+     * @param assessments - assessment to overwrite
+     * @param courseId - course id of the assessment
      */
     public void overwriteAssessment(Assessments assessments, int courseId) {
         assessments.setAssessmentCourseId(courseId);
@@ -242,8 +240,8 @@ public class EditorModel extends AndroidViewModel {
 
     /**
      * Overwrite Mentor
-     * @param mentors
-     * @param courseId
+     * @param mentors - mentor to overwrite
+     * @param courseId - course id of the mentor
      */
     public void overwriteMentor(Mentors mentors, int courseId) {
         mentors.setCourseId(courseId);

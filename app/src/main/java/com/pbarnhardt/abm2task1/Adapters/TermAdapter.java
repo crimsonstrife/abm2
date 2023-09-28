@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.RoomSQLiteQuery;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pbarnhardt.abm2task1.Entity.Terms;

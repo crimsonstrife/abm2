@@ -3,13 +3,11 @@ package com.pbarnhardt.abm2task1.Views;
 import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_KEY;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -32,13 +30,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class TermEditActivity extends AppCompatActivity {
-    /**
-     * Bind views.
-     */
-    EditText termTitle = findViewById(R.id.termDetailTitle);
-    Button termStartDate = findViewById(R.id.termDetailEditStartDate);
-    Button termEndDate = findViewById(R.id.termDetailEditEndDate);
-
     /**
      * Variables.
      */
@@ -67,24 +58,56 @@ public class TermEditActivity extends AppCompatActivity {
             edit = savedInstanceState.getBoolean(EDIT_KEY);
         }
         initiateViewModel();
+        //set the date buttons
+        final Button termStartDate = findViewById(R.id.termDetailEditStartDate);
+        termStartDate.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            DatePickerDialog.OnDateSetListener date = (startView, year, month, day) -> {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, day);
+            };
+            new DatePickerDialog(TermEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            //update the button text with the selected date
+            termStartDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+            termStartDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
+        });
+        final Button termEndDate = findViewById(R.id.termDetailEditEndDate);
+        termEndDate.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            DatePickerDialog.OnDateSetListener date = (endView, year, month, day) -> {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, day);
+            };
+            new DatePickerDialog(TermEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            //update the button text with the selected date
+            termEndDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+            termEndDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
+        });
     }
 
     private void initiateViewModel() {
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
+        final EditText termTitle = findViewById(R.id.termDetailTitle);
+        final Button termStartDate = findViewById(R.id.termDetailEditStartDate);
+        final Button termEndDate = findViewById(R.id.termDetailEditEndDate);
         viewModel.liveTerms.observe(this, terms -> {
             if (terms != null && !edit) {
                 termTitle.setText(terms.getTermName());
                 termStartDate.setText(Formatting.dateFormat.format(terms.getTermStartDate()));
+                termStartDate.setHint(Formatting.dateFormat.format(terms.getTermStartDate()));
                 termEndDate.setText(Formatting.dateFormat.format(terms.getTermEndDate()));
+                termEndDate.setHint(Formatting.dateFormat.format(terms.getTermEndDate()));
             }
         });
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
-            setTitle("New Term");
+            setTitle(getString(R.string.new_term_title));
             newTerm = true;
         } else {
-            setTitle("Edit Term");
+            setTitle(getString(R.string.edit_term_title));
             termId = extras.getInt(TERM_KEY);
             viewModel.loadTerm(termId);
         }
@@ -104,37 +127,6 @@ public class TermEditActivity extends AppCompatActivity {
     }
 
     /**
-     * Onclick for the Start Date Picker
-     * @param view
-     */
-    public void startDatePickerClick(View view) {
-        final Calendar calendar = Calendar.getInstance();
-        DatePickerDialog.OnDateSetListener date = (startView, year, month, day) -> {
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, day);
-            //update the button text with the selected date
-            termStartDate.setText(Formatting.dateFormat.format(calendar.getTime()));
-        };
-        new DatePickerDialog(TermEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-    }
-    /**
-     * Onclick for the End Date Picker
-     * @param view
-     */
-    public void endDatePickerClick(View view) {
-        final Calendar calendar = Calendar.getInstance();
-        DatePickerDialog.OnDateSetListener date = (endView, year, month, day) -> {
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, day);
-            //update the button text with the selected date
-            termEndDate.setText(Formatting.dateFormat.format(calendar.getTime()));
-        };
-        new DatePickerDialog(TermEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-    }
-
-    /**
      * On back pressed.
      */
     @Override
@@ -147,6 +139,9 @@ public class TermEditActivity extends AppCompatActivity {
      * This method will save the term and return to the previous activity
      */
     public void saveAndReturn() {
+        final EditText termTitle = findViewById(R.id.termDetailTitle);
+        final Button termStartDate = findViewById(R.id.termDetailEditStartDate);
+        final Button termEndDate = findViewById(R.id.termDetailEditEndDate);
         try {
             Date startDate = Formatting.dateFormat.parse(termStartDate.getText().toString());
             Date endDate = Formatting.dateFormat.parse(termEndDate.getText().toString());

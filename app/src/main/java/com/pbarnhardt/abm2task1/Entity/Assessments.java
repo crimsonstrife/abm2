@@ -1,16 +1,12 @@
 package com.pbarnhardt.abm2task1.Entity;
 
 import static com.pbarnhardt.abm2task1.Utils.Constants.ASSESSMENT_TABLE_NAME;
-import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_COLUMN_ID;
 
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.pbarnhardt.abm2task1.Enums.Types;
-import com.pbarnhardt.abm2task1.Utils.Constants;
 
 import java.util.Date;
 
@@ -173,22 +169,6 @@ public class Assessments {
      */
     public void setAssessmentAlert(boolean assessmentAlert) {
         this.assessmentAlert = assessmentAlert;
-    }
-
-    /**
-     * Get all assessments for a course.
-     *
-     * @param courseId the course id
-     * @return array of Assessments with name, type, description, and due date
-     */
-    public String[] getAssessmentsForCourse(int courseId) {
-        String[] assessments = new String[5];
-        assessments[0] = Integer.toString(this.assessmentId);
-        assessments[1] = this.assessmentName;
-        assessments[2] = this.assessmentType.toString();
-        assessments[3] = this.assessmentDescription;
-        assessments[4] = this.assessmentDueDate.toString();
-        return assessments;
     }
 
     /**

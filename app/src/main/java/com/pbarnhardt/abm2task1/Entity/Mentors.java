@@ -1,10 +1,8 @@
 package com.pbarnhardt.abm2task1.Entity;
 
-import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_COLUMN_ID;
 import static com.pbarnhardt.abm2task1.Utils.Constants.MENTOR_TABLE_NAME;
 
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
@@ -26,10 +24,10 @@ public class Mentors {
     /**
      * Instantiates a new Mentor.
      *
-     * @param courseMentorName
-     * @param courseMentorPhone
-     * @param courseMentorEmail
-     * @param courseId
+     * @param courseMentorName the mentor name
+     * @param courseMentorPhone the mentor phone
+     * @param courseMentorEmail the mentor email
+     * @param courseId the course id
     */
     @Ignore
     public Mentors(int mentorId, String courseMentorName, String courseMentorPhone, String courseMentorEmail, int courseId){

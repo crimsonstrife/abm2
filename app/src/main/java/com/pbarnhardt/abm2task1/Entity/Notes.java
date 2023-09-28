@@ -1,10 +1,7 @@
 package com.pbarnhardt.abm2task1.Entity;
 
-import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_COLUMN_ID;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.ForeignKey;
 
 /**
  * The type Notes for courses in student tracker.
@@ -44,46 +41,6 @@ public class Notes {
      */
     public String getNoteContent() {
         return noteContent;
-    }
-
-    /**
-     * Gets course id.
-     *
-     * @return the course id
-     */
-    public int getNoteCourseId() {
-        return courseId;
-    }
-
-    /**
-     * Sets note content.
-     *
-     * @param noteContent the note content
-     */
-    public void setNoteContent(String noteContent) {
-        this.noteContent = noteContent;
-    }
-
-    /**
-     * Sets course id.
-     *
-     * @param courseId the course id
-     */
-    public void setNoteCourseId(int courseId) {
-        this.courseId = courseId;
-    }
-
-    /**
-     * Get all notes for a course.
-     *
-     * @param courseId the course id
-     * @return array of notes
-     */
-    public String[] getNotesForCourse(int courseId) {
-        String[] notes = new String[2];
-        notes[0] = Integer.toString(this.noteId);
-        notes[1] = this.noteContent;
-        return notes;
     }
 
     /**

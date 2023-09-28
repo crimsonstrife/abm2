@@ -1,5 +1,8 @@
 package com.pbarnhardt.abm2task1.Views;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -7,10 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pbarnhardt.abm2task1.Adapters.MentorAdapter;
 import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
@@ -22,15 +22,9 @@ import java.util.List;
 
 public class MentorsListActivity extends AppCompatActivity implements MentorAdapter.MentorSelectedListener {
     /**
-     * Bind the recycler view.
-     */
-    RecyclerView recyclerView = findViewById(R.id.mentorListRecyclerView);
-
-    /**
      * Variables
      */
     private MentorAdapter mentorAdapter;
-    private MentorModel mentorModel;
     private List<Mentors> mentorsList = new ArrayList<>();
 
     /**
@@ -46,9 +40,17 @@ public class MentorsListActivity extends AppCompatActivity implements MentorAdap
         setSupportActionBar(toolbar);
         initializeRecyclerView();
         initializeViewModel();
+
+        //on click listener for the floating action button
+        final FloatingActionButton addMentorFloatingButton = findViewById(R.id.floatingAddMentorButton);
+        addMentorFloatingButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MentorsListActivity.this, MentorEditActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void initializeViewModel() {
+        RecyclerView recyclerView = findViewById(R.id.mentorListRecyclerView);
         final Observer<List<Mentors>> observer = mentors -> {
             mentorsList.clear();
             mentorsList.addAll(mentors);
@@ -59,11 +61,12 @@ public class MentorsListActivity extends AppCompatActivity implements MentorAdap
                 mentorAdapter.notifyDataSetChanged();
             }
         };
-        mentorModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(MentorModel.class);
+        MentorModel mentorModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(MentorModel.class);
         mentorModel.mentors.observe(this, observer);
     }
 
     private void initializeRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.mentorListRecyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -72,10 +75,5 @@ public class MentorsListActivity extends AppCompatActivity implements MentorAdap
     @Override
     public void onMentorSelected(int position, Mentors mentor) {
 
-    }
-
-    public void addMentorFloatingButtonClicked(View view) {
-        Intent intent = new Intent(this, MentorEditActivity.class);
-        startActivity(intent);
     }
 }

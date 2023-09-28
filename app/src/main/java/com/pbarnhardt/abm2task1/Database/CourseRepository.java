@@ -14,7 +14,6 @@ import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Entity.Notes;
-import com.pbarnhardt.abm2task1.Enums.Status;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 import com.pbarnhardt.abm2task1.Utils.SampleDataSet;
 
@@ -31,33 +30,14 @@ public class CourseRepository {
      * The Db.
      */
     private CourseDatabase database;
-    /**
-     * The Terms dao.
-     */
-    private TermsDAO termsDao;
 
-    /**
-     * The Course dao.
-     */
-    private CourseDAO courseDao;
-
-    /**
-     * The Assessments dao.
-     */
-    private AssessmentsDAO assessmentsDao;
-
-    /**
-     * The Notes dao.
+    /*
+      The Notes dao.
      */
     //private NotesDAO notesDao;
 
-    /**
-     * The Mentors dao.
-     */
-    private MentorsDAO mentorsDao;
-
-    /**
-     * The Status dao.
+    /*
+      The Status dao.
      */
     //private StatusDAO statusDao;
 
@@ -86,13 +66,8 @@ public class CourseRepository {
      */
     public LiveData<List<Mentors>> mAllMentors;
 
-    /**
-     * The M all statuses.
-     */
-    private List<Status> mAllStatus;
-
-    /**
-     * Handle database operations on a background thread
+    /*
+      Handle database operations on a background thread
      */
     /**
      * The executor.
@@ -106,15 +81,27 @@ public class CourseRepository {
      */
     private CourseRepository(Context context) {
         database = CourseDatabase.getInstance(context);
-        termsDao = database.termDao();
+        /**
+         * The Terms dao.
+         */
+        TermsDAO termsDao = database.termDao();
         mAllTerms = getAllTerms();
-        courseDao = database.courseDao();
+        /**
+         * The Course dao.
+         */
+        CourseDAO courseDao = database.courseDao();
         mAllCourses = getAllCourses();
-        assessmentsDao = database.assessmentDao();
+        /**
+         * The Assessments dao.
+         */
+        AssessmentsDAO assessmentsDao = database.assessmentDao();
         mAllAssessments = getAllAssessments();
         //notesDao = mdatabase.notesDao();
         //mAllNotes = getAllNotes();
-        mentorsDao = database.mentorsDao();
+        /**
+         * The Mentors dao.
+         */
+        MentorsDAO mentorsDao = database.mentorsDao();
         mAllMentors = getAllMentors();
         //statusDao = mdatabase.statusDao();
         //mAllStatus = getAllStatus();

@@ -6,10 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +33,6 @@ import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.Utils.Alerts;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -48,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     private TermAdapter termAdapter;
     private HomeModel homeModel;
-    private TextView inspirationalQuote, inspirationalAuthor;
 
     /**
      * Variables
@@ -56,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Terms> termListData = new ArrayList<>();
     private List<Courses> courseListData = new ArrayList<>();
     private List<Assessments> assessmentListData = new ArrayList<>();
+    /** @noinspection MismatchedQueryAndUpdateOfCollection*/
     private List<Mentors> mentorListData = new ArrayList<>();
 
 
@@ -81,9 +79,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         initializeViewModel();
         //Initialize the views
-        inspirationalQuote = findViewById(R.id.text_quote);
-        inspirationalAuthor = findViewById(R.id.text_quote_author);
+        TextView inspirationalQuote = findViewById(R.id.text_quote);
+        TextView inspirationalAuthor = findViewById(R.id.text_quote_author);
         setDailyQuote(inspirationalQuote, inspirationalAuthor);
+
+        //Set the on click listeners for the buttons
+        final ImageButton termButton = findViewById(R.id.btn_terms);
+        final ImageButton courseButton = findViewById(R.id.btn_courses);
+        final ImageButton assessmentButton = findViewById(R.id.btn_assessments);
+        final ImageButton mentorButton = findViewById(R.id.btn_mentors);
+        termButton.setOnClickListener(v -> {
+            Intent termIntent = new Intent(MainActivity.this, TermsListActivity.class);
+            MainActivity.this.startActivity(termIntent);
+        });
+        courseButton.setOnClickListener(v -> {
+            Intent courseIntent = new Intent(MainActivity.this, CoursesListActivity.class);
+            MainActivity.this.startActivity(courseIntent);
+        });
+        assessmentButton.setOnClickListener(v -> {
+            Intent assessmentIntent = new Intent(MainActivity.this, AssessmentsListActivity.class);
+            MainActivity.this.startActivity(assessmentIntent);
+        });
+        mentorButton.setOnClickListener(v -> {
+            Intent mentorIntent = new Intent(MainActivity.this, MentorsListActivity.class);
+            MainActivity.this.startActivity(mentorIntent);
+        });
     }
 
     private void initializeViewModel() {
@@ -125,10 +145,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /**
      * Set a daily quote
-     *
      * Ideally this would be pulled from a database online that could be easily maintained, but for now it is just a random quote from an array
-     * @param quote
-     * @param author
+     * @param quote the daily quote string
+     * @param author the daily quote author string
      */
     private void setDailyQuote(TextView quote, TextView author) {
         //pull a random quote from an array, each item in the array contains the quote and the author separated by a comma
@@ -189,16 +208,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int assessmentsNavId = R.id.nav_assessments;
         int mentorsNavId = R.id.nav_mentors;
         if(itemId == termsNavId) {
-            Intent intent = new Intent(MainActivity.this, TermsListActivity.class);
+            Intent intent = new Intent(this, TermsListActivity.class);
             startActivity(intent);
         } else if(itemId == coursesNavId) {
-            Intent intent = new Intent(MainActivity.this, CoursesListActivity.class);
+            Intent intent = new Intent(this, CoursesListActivity.class);
             startActivity(intent);
         } else if(itemId == assessmentsNavId) {
-            Intent intent = new Intent(MainActivity.this, AssessmentsListActivity.class);
+            Intent intent = new Intent(this, AssessmentsListActivity.class);
             startActivity(intent);
         } else if(itemId == mentorsNavId) {
-            Intent intent = new Intent(MainActivity.this, MentorsListActivity.class);
+            Intent intent = new Intent(this, MentorsListActivity.class);
             startActivity(intent);
         }
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
@@ -262,45 +281,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private void deleteAllData() {
         homeModel.deleteAllData();
-    }
-
-    /**
-     * Show terms.
-     *
-     * @param view the view
-     */
-    public void showTerms(View view) {
-        Intent intent = new Intent(MainActivity.this, TermsListActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Show courses.
-     *
-     * @param view the view
-     */
-    public void showCourses(View view) {
-        Intent intent = new Intent(MainActivity.this, CoursesListActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Show assessments.
-     *
-     * @param view the view
-     */
-    public void showAssessments(View view) {
-        Intent intent = new Intent(MainActivity.this, AssessmentsListActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Show mentors.
-     *
-     * @param view the view
-     */
-    public void showMentors(View view) {
-        Intent intent = new Intent(MainActivity.this, MentorsListActivity.class);
-        startActivity(intent);
     }
 }

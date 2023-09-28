@@ -117,39 +117,6 @@ public class Terms {
     }
 
     /**
-     * Increment term course count.
-     *
-     * Description: This method is used to increase the course count for a term.
-     */
-    public void incrementCourseCount() {
-        this.termCourseCount++;
-    }
-
-    /**
-     * Decrement term course count.
-     *
-     * Description: This method is used to decrease the course count for a term.
-     */
-    public void decrementCourseCount() {
-        // only decrement if the count is greater than 0
-        if (this.termCourseCount > 0) {
-            this.termCourseCount--;
-        }
-    }
-
-    /**
-     * Get a list of all terms and their IDs.
-     *
-     * @return an array of terms
-     */
-    public String[] getTermsList() {
-        String[] termsList = new String[2];
-        termsList[0] = Integer.toString(this.termId);
-        termsList[1] = this.termName;
-        return termsList;
-    }
-
-    /**
      * Set term id.
      *
      * @param termId the term id

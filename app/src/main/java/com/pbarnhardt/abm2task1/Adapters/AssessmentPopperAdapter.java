@@ -1,14 +1,9 @@
 package com.pbarnhardt.abm2task1.Adapters;
 
-import static com.pbarnhardt.abm2task1.Enums.Types.OBJECTIVE;
-import static com.pbarnhardt.abm2task1.Enums.Types.PERFOREMANCE;
-
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.R;
-
-import org.w3c.dom.Entity;
 
 import java.util.List;
 
@@ -32,7 +25,7 @@ public class AssessmentPopperAdapter extends RecyclerView.Adapter<AssessmentPopp
 
     /**
      * Listener
-     * @param assessmentListener
+     * @param assessmentListener listener
      */
     public void setAssessmentListener(AssessmentListener assessmentListener) {
         this.assessmentListener = assessmentListener;
@@ -66,7 +59,7 @@ public class AssessmentPopperAdapter extends RecyclerView.Adapter<AssessmentPopp
             case OBJECTIVE:
                 assessmentType = "OA";
                 break;
-            case PERFOREMANCE:
+            case PERFORMANCE:
                 assessmentType = "PA";
                 break;
         }

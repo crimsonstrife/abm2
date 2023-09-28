@@ -20,7 +20,7 @@ public class CoursePopperAdapter  extends RecyclerView.Adapter<CoursePopperAdapt
 
     /**
      * Constructor
-     * @param coursesList
+     * @param coursesList List of courses
      */
     public CoursePopperAdapter(List<Courses> coursesList) {
         super();
@@ -29,7 +29,7 @@ public class CoursePopperAdapter  extends RecyclerView.Adapter<CoursePopperAdapt
 
     /**
      * Listener
-     * @param courseListener
+     * @param courseListener Listener
      */
     public void setCourseListener(CourseListener courseListener) {
         this.courseListener = courseListener;

@@ -2,16 +2,16 @@ package com.pbarnhardt.abm2task1.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
-import androidx.appcompat.widget.Toolbar;
-
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pbarnhardt.abm2task1.Adapters.TermAdapter;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
@@ -23,8 +23,6 @@ import java.util.List;
 
 public class TermsListActivity extends AppCompatActivity {
     private List<Terms> termsList = new ArrayList<>();
-    RecyclerView recyclerView = findViewById(R.id.termListRecyclerView);
-    private TermModel termModel;
     private TermAdapter termAdapter;
 
     /**
@@ -38,9 +36,28 @@ public class TermsListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         initializeRecyclerView();
         initializeViewModel();
+
+        // On click listener for add term button
+        final FloatingActionButton addTermButton = findViewById(R.id.floatingAddTermButton);
+        addTermButton.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Add Term");
+            builder.setMessage("Are you sure you want to add a term?");
+            builder.setIcon(R.drawable.ic_action_add);
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                Intent intent = new Intent(TermsListActivity.this, TermEditActivity.class);
+                startActivity(intent);
+            });
+            builder.setNegativeButton("No", (dialog, which) -> {
+                // Do nothing
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
     }
 
     private void initializeViewModel() {
+        RecyclerView recyclerView = findViewById(R.id.termListRecyclerView);
         final Observer<List<Terms>> observer = terms -> {
             termsList.clear();
             termsList.addAll(terms);
@@ -51,21 +68,14 @@ public class TermsListActivity extends AppCompatActivity {
                 termAdapter.notifyDataSetChanged();
             }
         };
-        termModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(TermModel.class);
+        TermModel termModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(TermModel.class);
         termModel.terms.observe(this, observer);
     }
 
     private void initializeRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.termListRecyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-    }
-
-    /**
-     * Add button click.
-     */
-    public void addTermFloatingButtonClicked(View view) {
-        Intent intent = new Intent(this, TermEditActivity.class);
-        startActivity(intent);
     }
 }

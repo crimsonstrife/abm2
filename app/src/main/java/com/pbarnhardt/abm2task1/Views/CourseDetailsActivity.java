@@ -5,7 +5,6 @@ import static com.pbarnhardt.abm2task1.Utils.Converters.fromCourseStatusToString
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,21 +34,6 @@ import java.util.List;
 
 public class CourseDetailsActivity extends AppCompatActivity implements MentorAdapter.MentorSelectedListener, AssessmentAdapter.AssessmentSelection {
     /**
-     * Bind views
-     */
-    TextView courseTitleView = findViewById(R.id.editText_course_title);
-    TextView courseDescriptionView = findViewById(R.id.courseDetailDescription);
-    TextView courseStatusView = findViewById(R.id.spinner_course_status);
-    TextView courseStartDateView = findViewById(R.id.termDetailStartDate);
-    TextView courseEndDateView = findViewById(R.id.termDetailEndDate);
-    TextView courseNotesView = findViewById(R.id.editText_course_note);
-    RecyclerView courseAssessmentRecyclerView = findViewById(R.id.course_assessmentsRecyclerView);
-    RecyclerView courseMentorRecyclerView = findViewById(R.id.course_mentorsRecyclerView);
-    FloatingActionButton courseEditButton = findViewById(R.id.floatingEditCourseButton);
-    FloatingActionButton courseAddMentorButton = findViewById(R.id.floatingAddMentorButton);
-    FloatingActionButton courseAddAssessmentButton = findViewById(R.id.floatingAddAssessmentButton);
-
-    /**
      * Variables
      */
     private Toolbar toolbar;
@@ -65,7 +49,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
 
     /**
      * On create method
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,15 +59,104 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
         initiateViewModel();
         initiateMentorRecyclerView();
         initiateAssessmentRecyclerView();
+
+        //setup buttons
+        final FloatingActionButton courseEditButton = findViewById(R.id.floatingEditCourseButton);
+        courseEditButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CourseEditActivity.class);
+            intent.putExtra(COURSE_KEY, courseId);
+            this.startActivity(intent);
+            finish();
+        });
+        final FloatingActionButton courseAddMentorButton = findViewById(R.id.floatingAddMentorButton);
+        courseAddMentorButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Add Mentor");
+            builder.setMessage("Add a new or existing Mentor to this course?");
+            builder.setIcon(R.drawable.ic_action_add);
+            builder.setPositiveButton("New", (dialog, which) -> {
+                Intent intent = new Intent(this, MentorEditActivity.class);
+                intent.putExtra(COURSE_KEY, courseId);
+                this.startActivity(intent);
+            });
+            builder.setNegativeButton("Existing", (dialog, which) -> {
+                //verify there are unassigned mentors
+                if (unassignedMentorsList.size() >= 1) {
+                    final DropdownMentors dropdownMentors = new DropdownMentors(this, unassignedMentorsList);
+                    dropdownMentors.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+                    dropdownMentors.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+                    dropdownMentors.showAsDropDown(courseAddMentorButton);
+                    dropdownMentors.setOutsideTouchable(true);
+                    dropdownMentors.setFocusable(true);
+                    dropdownMentors.setSelectedMentorListener((position, mentor) -> {
+                        mentor.setCourseId(courseId);
+                        viewModel.overwriteMentor(mentor, courseId);
+                        dropdownMentors.dismiss();
+                    });
+                } else {
+                    //no unassigned mentors, show toast
+                    Toast.makeText(this, "No unassigned mentors to add.", Toast.LENGTH_SHORT).show();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        });
+        final FloatingActionButton courseAddAssessmentButton = findViewById(R.id.floatingAddAssessmentButton);
+        courseAddAssessmentButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Add Assessment");
+            builder.setMessage("Add a new or existing Assessment to this course?");
+            builder.setIcon(R.drawable.ic_action_add);
+            builder.setPositiveButton("New", (dialog, which) -> {
+                Intent intent = new Intent(this, AssessmentEditActivity.class);
+                intent.putExtra(COURSE_KEY, courseId);
+                this.startActivity(intent);
+            });
+            builder.setNegativeButton("Existing", (dialog, which) -> {
+                //verify there are unassigned assessments
+                if (unassignedAssessmentsList.size() >= 1) {
+                    final DropdownAssessments dropdownAssessments = new DropdownAssessments(this, unassignedAssessmentsList);
+                    dropdownAssessments.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+                    dropdownAssessments.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+                    dropdownAssessments.showAsDropDown(courseAddAssessmentButton);
+                    dropdownAssessments.setOutsideTouchable(true);
+                    dropdownAssessments.setFocusable(true);
+                    dropdownAssessments.setSelectedAssessmentListener((position, assessment) -> {
+                        assessment.setAssessmentCourseId(courseId);
+                        viewModel.overwriteAssessment(assessment, courseId);
+                        dropdownAssessments.dismiss();
+                    });
+                } else {
+                    //no unassigned assessments, show toast
+                    Toast.makeText(this, "No unassigned assessments to add.", Toast.LENGTH_SHORT).show();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+            final FloatingActionButton notesShareButton = findViewById(R.id.shareButton);
+            final TextView courseTitleView = findViewById(R.id.editText_course_title);
+            final TextView courseNotesView = findViewById(R.id.editText_course_note);
+            notesShareButton.setOnClickListener(v1 -> {
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.setType("text/plain");
+                String shareHeader = "Course: " + courseTitleView.getText().toString() + "Notes";
+                String shareMessage = "Notes: " + courseNotesView.getText().toString();
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, shareHeader);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+                startActivity(Intent.createChooser(sendIntent, "Share Course Notes with"));
+            });
+        });
     }
 
     private void initiateAssessmentRecyclerView() {
+        final RecyclerView courseAssessmentRecyclerView = findViewById(R.id.course_assessmentsRecyclerView);
         courseAssessmentRecyclerView.setHasFixedSize(true);
         LinearLayoutManager assessmentLayoutManager = new LinearLayoutManager(this);
         courseAssessmentRecyclerView.setLayoutManager(assessmentLayoutManager);
     }
 
     private void initiateMentorRecyclerView() {
+        final RecyclerView courseMentorRecyclerView = findViewById(R.id.course_mentorsRecyclerView);
         courseMentorRecyclerView.setHasFixedSize(true);
         LinearLayoutManager mentorLayoutManager = new LinearLayoutManager(this);
         courseMentorRecyclerView.setLayoutManager(mentorLayoutManager);
@@ -91,6 +164,14 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
 
     private void initiateViewModel() {
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
+        final TextView courseTitleView = findViewById(R.id.editText_course_title);
+        final TextView courseDescriptionView = findViewById(R.id.courseDetailDescription);
+        final TextView courseStatusView = findViewById(R.id.spinner_course_status);
+        final TextView courseStartDateView = findViewById(R.id.termDetailStartDate);
+        final TextView courseEndDateView = findViewById(R.id.termDetailEndDate);
+        final TextView courseNotesView = findViewById(R.id.editText_course_note);
+        final RecyclerView courseAssessmentRecyclerView = findViewById(R.id.course_assessmentsRecyclerView);
+        final RecyclerView courseMentorRecyclerView = findViewById(R.id.course_mentorsRecyclerView);
         viewModel.liveCourses.observe(this, courses -> {
             if(courses != null) {
                 courseId = courses.getCourseId();
@@ -190,81 +271,5 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         AlertDialog alert = builder.create();
         alert.show();
-    }
-
-    public void addAssessmentFloatingButtonClicked(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add Assessment");
-        builder.setMessage("Add a new or existing Assessment to this course?");
-        builder.setIcon(R.drawable.ic_action_add);
-        builder.setPositiveButton("New", (dialog, which) -> {
-            Intent intent = new Intent(this, AssessmentEditActivity.class);
-            intent.putExtra(COURSE_KEY, courseId);
-            this.startActivity(intent);
-        });
-        builder.setNegativeButton("Existing", (dialog, which) -> {
-            //verify there are unassigned assessments
-            if (unassignedAssessmentsList.size() >= 1) {
-                final DropdownAssessments dropdownAssessments = new DropdownAssessments(this, unassignedAssessmentsList);
-                dropdownAssessments.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                dropdownAssessments.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                dropdownAssessments.showAsDropDown(courseAddAssessmentButton);
-                dropdownAssessments.setOutsideTouchable(true);
-                dropdownAssessments.setFocusable(true);
-                dropdownAssessments.setSelectedAssessmentListener((position, assessment) -> {
-                    assessment.setAssessmentCourseId(courseId);
-                    viewModel.overwriteAssessment(assessment, courseId);
-                    dropdownAssessments.dismiss();
-                });
-            } else {
-                //no unassigned assessments, show toast
-                Toast.makeText(this, "No unassigned assessments to add.", Toast.LENGTH_SHORT).show();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public void addMentorFloatingButtonClicked(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add Mentor");
-        builder.setMessage("Add a new or existing Mentor to this course?");
-        builder.setIcon(R.drawable.ic_action_add);
-        builder.setPositiveButton("New", (dialog, which) -> {
-            Intent intent = new Intent(this, MentorEditActivity.class);
-            intent.putExtra(COURSE_KEY, courseId);
-            this.startActivity(intent);
-        });
-        builder.setNegativeButton("Existing", (dialog, which) -> {
-            //verify there are unassigned mentors
-            if (unassignedMentorsList.size() >= 1) {
-                final DropdownMentors dropdownMentors = new DropdownMentors(this, unassignedMentorsList);
-                dropdownMentors.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                dropdownMentors.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                dropdownMentors.showAsDropDown(courseAddMentorButton);
-                dropdownMentors.setOutsideTouchable(true);
-                dropdownMentors.setFocusable(true);
-                dropdownMentors.setSelectedMentorListener((position, mentor) -> {
-                    mentor.setCourseId(courseId);
-                    viewModel.overwriteMentor(mentor, courseId);
-                    dropdownMentors.dismiss();
-                });
-            } else {
-                //no unassigned mentors, show toast
-                Toast.makeText(this, "No unassigned mentors to add.", Toast.LENGTH_SHORT).show();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public void shareButtonClicked(View view) {
-        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-        sendIntent.setType("text/plain");
-        String shareHeader = "Course: " + courseTitleView.getText().toString() + "Notes";
-        String shareMessage = "Notes: " + courseNotesView.getText().toString();
-        sendIntent.putExtra(Intent.EXTRA_SUBJECT, shareHeader);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-        startActivity(Intent.createChooser(sendIntent, "Share Course Notes with"));
     }
 }

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
 
@@ -27,11 +28,10 @@ public class MentorDetailsActivity extends AppCompatActivity {
      */
     private int mentorId;
     private Toolbar toolbar;
-    private EditorModel viewModel;
 
     /**
      * On create method
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +40,22 @@ public class MentorDetailsActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initiateViewModel();
+
+        //on click listener for the floating button
+        final FloatingActionButton editMentorBtn = findViewById(R.id.floatingEditMentorButton);
+        editMentorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MentorDetailsActivity.this, MentorEditActivity.class);
+                intent.putExtra(MENTOR_KEY, mentorId);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void initiateViewModel() {
-        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
+        EditorModel viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
         viewModel.liveMentors.observe(this, mentors -> {
             mentorNameView.setText(mentors.getMentorName());
             mentorEmailView.setText(mentors.getMentorEmail());
@@ -57,12 +69,5 @@ public class MentorDetailsActivity extends AppCompatActivity {
         } else {
             finish();
         }
-    }
-
-    public void editMentorFloatingButtonClicked(View view) {
-        Intent intent = new Intent(this, MentorEditActivity.class);
-        intent.putExtra(MENTOR_KEY, mentorId);
-        this.startActivity(intent);
-        finish();
     }
 }

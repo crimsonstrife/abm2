@@ -8,7 +8,6 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import com.pbarnhardt.abm2task1.Entity.Terms;
 
@@ -25,7 +24,7 @@ public interface TermsDAO {
      * @param term the term
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertTerms(Terms term);
+    void insertTerms(Terms term);
 
     /**
      * Insert all.
@@ -33,7 +32,7 @@ public interface TermsDAO {
      * @param terms the terms
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertAll(List<Terms> terms);
+    void insertAll(List<Terms> terms);
 
     /**
      * Delete terms.
@@ -41,13 +40,13 @@ public interface TermsDAO {
      * @param term the term
      */
     @Delete
-    public void deleteTerms(Terms term);
+    void deleteTerms(Terms term);
 
     /**
      * Queries
      */
     @Query("SELECT * FROM " + TERM_TABLE_NAME + " WHERE termId = :id")
-    public Terms getTermById(int id);
+    Terms getTermById(int id);
     @Query("SELECT * FROM " + TERM_TABLE_NAME + " ORDER BY termStartDate DESC")
     LiveData<List<Terms>> getAll();
     @Query("DELETE FROM " + TERM_TABLE_NAME)

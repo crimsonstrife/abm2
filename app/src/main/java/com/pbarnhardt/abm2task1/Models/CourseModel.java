@@ -13,11 +13,10 @@ import java.util.List;
 
 public class CourseModel extends AndroidViewModel {
     public LiveData<List<Courses>> courses;
-    private CourseRepository repository;
 
     public CourseModel(@NonNull Application application) {
         super(application);
-        repository = CourseRepository.getInstance(application.getApplicationContext());
+        CourseRepository repository = CourseRepository.getInstance(application.getApplicationContext());
         courses = repository.mAllCourses;
     }
 }

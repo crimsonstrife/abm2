@@ -13,11 +13,10 @@ import java.util.List;
 
 public class MentorModel extends AndroidViewModel {
     public LiveData<List<Mentors>> mentors;
-    private CourseRepository repository;
 
     public MentorModel(@NonNull Application application) {
         super(application);
-        repository = CourseRepository.getInstance(application.getApplicationContext());
+        CourseRepository repository = CourseRepository.getInstance(application.getApplicationContext());
         mentors = repository.mAllMentors;
     }
 }

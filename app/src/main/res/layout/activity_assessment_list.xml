@@ -33,7 +33,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="72dp"
         android:clickable="true"
-        android:onClick="addAssessmentFloatingButtonClicked"
         android:layout_gravity="bottom|end"
         android:tooltipText="Add an Assessment"
         app:backgroundTint="@color/colorAccent"

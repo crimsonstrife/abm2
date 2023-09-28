@@ -24,7 +24,7 @@ public class MentorPopperAdapter extends RecyclerView.Adapter<MentorPopperAdapte
 
     /**
      * Constructor
-     * @param mentorsList
+     * @param mentorsList List of mentors
      */
     public MentorPopperAdapter(List<Mentors> mentorsList) {
         super();
@@ -33,7 +33,7 @@ public class MentorPopperAdapter extends RecyclerView.Adapter<MentorPopperAdapte
 
     /**
      * Listener
-     * @param mentorListener
+     * @param mentorListener Listener
      */
     public void setMentorListener(MentorListener mentorListener) {
         this.mentorListener = mentorListener;

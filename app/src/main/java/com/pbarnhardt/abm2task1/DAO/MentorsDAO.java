@@ -8,7 +8,6 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import com.pbarnhardt.abm2task1.Entity.Mentors;
 
@@ -25,7 +24,7 @@ public interface MentorsDAO {
      * @param mentor the mentor
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertMentors(Mentors mentor);
+    void insertMentors(Mentors mentor);
 
     /**
      * Insert all.
@@ -33,7 +32,7 @@ public interface MentorsDAO {
      * @param mentors the mentors
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertAll(List<Mentors> mentors);
+    void insertAll(List<Mentors> mentors);
 
     /**
      * Delete mentors.
@@ -41,13 +40,13 @@ public interface MentorsDAO {
      * @param mentor the mentor
      */
     @Delete
-    public void deleteMentors(Mentors mentor);
+    void deleteMentors(Mentors mentor);
 
     /**
      * The Queries
      */
     @Query("SELECT * FROM " + MENTOR_TABLE_NAME + " WHERE mentorId = :id")
-    public Mentors getMentorsById(int id);
+    Mentors getMentorsById(int id);
     @Query("SELECT * FROM " + MENTOR_TABLE_NAME + " ORDER BY courseMentorName DESC")
     LiveData<List<Mentors>> getAllMentors();
     @Query("SELECT * FROM " + MENTOR_TABLE_NAME + " WHERE courseId = :courseId")

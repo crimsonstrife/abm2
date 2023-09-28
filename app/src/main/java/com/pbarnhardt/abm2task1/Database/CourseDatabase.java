@@ -74,7 +74,7 @@ public abstract class CourseDatabase extends RoomDatabase {
             synchronized (LOCK) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            CourseDatabase.class, DATABASE_NAME).fallbackToDestructiveMigration().build();
+                            CourseDatabase.class, DATABASE_NAME).allowMainThreadQueries().fallbackToDestructiveMigration().build();
                 }
             }
         }

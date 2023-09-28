@@ -23,7 +23,7 @@ public interface NotesDAO {
      */
     // @Query("SELECT * FROM CourseNotes ORDER BY courseId")
     @Query("SELECT * FROM CourseNotes")
-    public List<Notes> getNotes();
+    List<Notes> getNotes();
 
     /**
      * Insert Notes.
@@ -31,7 +31,7 @@ public interface NotesDAO {
      * @param note the Note
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertNotes(Notes note);
+    void insertNotes(Notes note);
 
     /**
      * Delete Notes.
@@ -39,7 +39,7 @@ public interface NotesDAO {
      * @param note the Note
      */
     @Delete
-    public void deleteNotes(Notes note);
+    void deleteNotes(Notes note);
 
     /**
      * Update Notes.
@@ -47,13 +47,13 @@ public interface NotesDAO {
      * @param note the Note
      */
     @Update
-    public void updateNotes(Notes note);
+    void updateNotes(Notes note);
 
     /**
      * Delete all Notes.
      */
     @Query("DELETE FROM CourseNotes")
-    public void deleteAllNotes();
+    void deleteAllNotes();
 
     /**
      * Gets Notes by course id.
@@ -62,5 +62,5 @@ public interface NotesDAO {
      * @return the Notes by course id
      */
     @Query("SELECT * FROM CourseNotes WHERE courseId = :courseId")
-    public List<Notes> getNotesByCourseId(int courseId);
+    List<Notes> getNotesByCourseId(int courseId);
 }

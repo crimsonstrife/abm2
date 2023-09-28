@@ -28,6 +28,10 @@
         <activity
             android:name=".Views.AssessmentEditActivity"
             android:exported="true" />
+        <activity android:name=".Views.CourseEditActivity"
+            android:exported="true" />
+        <activity android:name=".Views.TermEditActivity"
+            android:exported="true" />
         <activity
             android:name=".Views.HelpActivity"
             android:exported="true" />
