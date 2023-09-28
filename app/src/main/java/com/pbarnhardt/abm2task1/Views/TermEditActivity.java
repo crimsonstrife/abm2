@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -21,6 +22,8 @@ import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
+import com.pbarnhardt.abm2task1.databinding.ActivityTermEditBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentEditTermsBinding;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -36,9 +39,13 @@ public class TermEditActivity extends AppCompatActivity {
     private boolean newTerm;
     private boolean edit;
     int termId;
-
     private EditorModel viewModel;
     private List<Courses> courseList = new ArrayList<>();
+    private ActivityTermEditBinding activityBinding;
+    private ContentEditTermsBinding contentBinding;
+    private EditText termTitle;
+    private Button termStartDate;
+    private Button termEndDate;
 
     /**
      * On create.
@@ -48,18 +55,29 @@ public class TermEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_term_edit);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityTermEditBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        Toolbar toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_action_check);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         //check the instance state to see if we are editing or creating a new term
         if (savedInstanceState != null) {
             edit = savedInstanceState.getBoolean(EDIT_KEY);
         }
+
+        //initialize the binding
+        contentBinding = activityBinding.contentInclude;
+        termTitle = contentBinding.termDetailTitle;
+        termStartDate = contentBinding.termDetailEditStartDate;
+        termEndDate = contentBinding.termDetailEditEndDate;
+
+        //initialize the view model
         initiateViewModel();
+
         //set the date buttons
-        final Button termStartDate = findViewById(R.id.termDetailEditStartDate);
         termStartDate.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             DatePickerDialog.OnDateSetListener date = (startView, year, month, day) -> {
@@ -72,7 +90,6 @@ public class TermEditActivity extends AppCompatActivity {
             termStartDate.setText(Formatting.dateFormat.format(calendar.getTime()));
             termStartDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
         });
-        final Button termEndDate = findViewById(R.id.termDetailEditEndDate);
         termEndDate.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             DatePickerDialog.OnDateSetListener date = (endView, year, month, day) -> {
@@ -89,9 +106,6 @@ public class TermEditActivity extends AppCompatActivity {
 
     private void initiateViewModel() {
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
-        final EditText termTitle = findViewById(R.id.termDetailTitle);
-        final Button termStartDate = findViewById(R.id.termDetailEditStartDate);
-        final Button termEndDate = findViewById(R.id.termDetailEditEndDate);
         viewModel.liveTerms.observe(this, terms -> {
             if (terms != null && !edit) {
                 termTitle.setText(terms.getTermName());
@@ -139,16 +153,7 @@ public class TermEditActivity extends AppCompatActivity {
      * This method will save the term and return to the previous activity
      */
     public void saveAndReturn() {
-        final EditText termTitle = findViewById(R.id.termDetailTitle);
-        final Button termStartDate = findViewById(R.id.termDetailEditStartDate);
-        final Button termEndDate = findViewById(R.id.termDetailEditEndDate);
-        try {
-            Date startDate = Formatting.dateFormat.parse(termStartDate.getText().toString());
-            Date endDate = Formatting.dateFormat.parse(termEndDate.getText().toString());
-            viewModel.saveTerm(termTitle.getText().toString(), startDate, endDate);
-        } catch (ParseException e) {
-            Log.v("Exception: ", Objects.requireNonNull(e.getLocalizedMessage()));
-        }
+        doSave();
         finish();
     }
 
@@ -169,7 +174,17 @@ public class TermEditActivity extends AppCompatActivity {
             saveAndReturn();
             return true;
         } else if(item.getItemId() == R.id.action_delete) {
-            doDelete();
+            //if editing, cancel out of the activity
+            if(!newTerm) {
+                doDelete();
+            } else {
+                finish();
+            }
+        } else if(item.getItemId() == R.id.action_save) {
+            doSave();
+            finish();
+        } else if(item.getItemId() == R.id.action_help) {
+            //TODO: add help
         }
         return super.onOptionsItemSelected(item);
     }
@@ -205,6 +220,20 @@ public class TermEditActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
+        }
+    }
+
+    /**
+     * Do save of the term
+     *
+     */
+    private void doSave() {
+        try {
+            Date startDate = Formatting.dateFormat.parse(termStartDate.getText().toString());
+            Date endDate = Formatting.dateFormat.parse(termEndDate.getText().toString());
+            viewModel.saveTerm(termTitle.getText().toString(), startDate, endDate);
+        } catch (ParseException e) {
+            Log.v("Exception: ", Objects.requireNonNull(e.getLocalizedMessage()));
         }
     }
 }
