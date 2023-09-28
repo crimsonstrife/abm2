@@ -10,7 +10,9 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="end">
 
-        <include layout="@layout/menu_toolbar"
+        <include
+            android:id="@+id/toolbarInclude"
+            layout="@layout/menu_toolbar"
             android:layout_height="match_parent"
             android:layout_width="match_parent" />
 
