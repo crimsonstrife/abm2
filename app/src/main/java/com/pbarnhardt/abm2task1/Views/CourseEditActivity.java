@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -26,6 +27,8 @@ import com.pbarnhardt.abm2task1.Enums.Status;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
+import com.pbarnhardt.abm2task1.databinding.ActivityCourseEditBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentEditCoursesBinding;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -38,9 +41,19 @@ public class CourseEditActivity extends AppCompatActivity {
     private boolean newCourse;
     private boolean edit;
     private int termId = -1;
-
+    int courseId;
     private EditorModel viewModel;
     private ArrayAdapter<Status> statusAdapter;
+    private ActivityCourseEditBinding activityBinding;
+    private ContentEditCoursesBinding contentBinding;
+    private EditText courseTitle;
+    private EditText courseDescription;
+    private EditText courseNote;
+    private Button courseStartDate;
+    private Button courseEndDate;
+    private CheckBox courseStartAlert;
+    private CheckBox courseEndAlert;
+    private Spinner courseStatus;
 
     /**
      * On create.
@@ -50,43 +63,60 @@ public class CourseEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_edit);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityCourseEditBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        Toolbar toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_action_check);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //check if the activity is being created for a new course or an existing course
         if (savedInstanceState != null) {
             edit = savedInstanceState.getBoolean(EDIT_KEY);
         }
 
+        //initiate the binding
+        contentBinding = activityBinding.contentInclude;
+        courseTitle = contentBinding.editTextCourseTitle;
+        courseDescription = contentBinding.courseDetailDescription;
+        courseNote = contentBinding.editTextCourseNote;
+        courseStartDate = contentBinding.editTextStartDate;
+        courseEndDate = contentBinding.editTextEndDate;
+        courseStartAlert = contentBinding.checkBoxStartDate;
+        courseEndAlert = contentBinding.checkBoxEndDate;
+        courseStatus = contentBinding.spinnerCourseStatus;
+
+        //initiate the view model
         initiateViewModel();
-        addStatusToSpinner();
+        addStatusToSpinner(courseStatus);
 
         //set the onclick listener for the start date button
-        final Button courseStart = findViewById(R.id.editText_start_date);
-        courseStart.setOnClickListener(v -> {
+        contentBinding.editTextStartDate.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             DatePickerDialog.OnDateSetListener date = (startView, year, month, day) -> {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
                 //update the button text with the selected date
-                courseStart.setText(Formatting.dateFormat.format(calendar.getTime()));
+                courseStartDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+                //set the hint to the selected date
+                courseStartDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
             };
             new DatePickerDialog(CourseEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
 
         //set the onclick listener for the end date button
-        final Button courseEnd = findViewById(R.id.editText_end_date);
-        courseEnd.setOnClickListener(v -> {
+        contentBinding.editTextEndDate.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             DatePickerDialog.OnDateSetListener date = (endView, year, month, day) -> {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
                 //update the button text with the selected date
-                courseEnd.setText(Formatting.dateFormat.format(calendar.getTime()));
+                courseEndDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+                //update the button hint
+                courseEndDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
             };
             new DatePickerDialog(CourseEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
@@ -98,35 +128,25 @@ public class CourseEditActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private Status getStatusFromSpinner() {
-        final Spinner courseStatus = findViewById(R.id.spinner_course_status);
-        return (Status) courseStatus.getSelectedItem();
+    private Status getStatusFromSpinner(Spinner spinner) {
+        return (Status) spinner.getSelectedItem();
     }
 
-    private void addStatusToSpinner() {
-        final Spinner courseStatus = findViewById(R.id.spinner_course_status);
-        statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, Status.values());
-        courseStatus.setAdapter(statusAdapter);
+    private void addStatusToSpinner(Spinner spinner) {
+        statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, Status.values());
+        spinner.setAdapter(statusAdapter);
     }
 
     private void initiateViewModel() {
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
-        final EditText courseTitle = findViewById(R.id.editText_course_title);
-        final EditText courseDescription = findViewById(R.id.courseDetailDescription);
-        final EditText courseNote = findViewById(R.id.editText_course_note);
-        final Spinner courseStatus = findViewById(R.id.spinner_course_status);
-        final Button courseStart = findViewById(R.id.editText_start_date);
-        final Button courseEnd = findViewById(R.id.editText_end_date);
-        final CheckBox courseStartAlert = findViewById(R.id.checkBox_start_date);
-        final CheckBox courseEndAlert = findViewById(R.id.checkBox_end_date);
         viewModel.liveCourses.observe(this, courses -> {
             if (courses != null && !edit) {
                 newCourse = false;
                 courseTitle.setText(courses.getCourseName());
                 courseDescription.setText(courses.getCourseDescription());
                 courseNote.setText(courses.getCourseNote());
-                courseStart.setText(Formatting.dateFormat.format(courses.getCourseStartDate()));
-                courseEnd.setText(Formatting.dateFormat.format(courses.getCourseEndDate()));
+                courseStartDate.setText(Formatting.dateFormat.format(courses.getCourseStartDate()));
+                courseEndDate.setText(Formatting.dateFormat.format(courses.getCourseEndDate()));
                 courseStartAlert.setChecked(courses.getCourseStartAlert());
                 courseEndAlert.setChecked(courses.getCourseEndAlert());
                 courseStatus.setSelection(statusAdapter.getPosition(courses.getCourseStatus()));
@@ -142,7 +162,7 @@ public class CourseEditActivity extends AppCompatActivity {
             setTitle("New Course");
         } else {
             setTitle("Edit Course");
-            int courseId = extras.getInt(COURSE_KEY);
+            courseId = extras.getInt(COURSE_KEY);
             viewModel.loadCourse(courseId);
         }
     }
@@ -153,20 +173,13 @@ public class CourseEditActivity extends AppCompatActivity {
     }
 
     private void saveAndReturn() {
-        final EditText courseTitle = findViewById(R.id.editText_course_title);
-        final EditText courseDescription = findViewById(R.id.courseDetailDescription);
-        final EditText courseNote = findViewById(R.id.editText_course_note);
-        final CheckBox courseStartAlert = findViewById(R.id.checkBox_start_date);
-        final CheckBox courseEndAlert = findViewById(R.id.checkBox_end_date);
-        final Button courseStart = findViewById(R.id.editText_start_date);
-        final Button courseEnd = findViewById(R.id.editText_end_date);
         try {
-            String courseName = courseTitle.getText().toString().trim();
+            String courseNameString = courseTitle.getText().toString().trim();
             String courseDescriptionString = courseDescription.getText().toString().trim();
             String courseNoteString = courseNote.getText().toString().trim();
             boolean bCourseStartAlert = courseStartAlert.isChecked();
             boolean bCourseEndAlert = courseEndAlert.isChecked();
-            Status courseStatus = getStatusFromSpinner();
+            Status courseStatusValue = getStatusFromSpinner(courseStatus);
             //validate the course start and end dates are within the assigned term start and end dates if a term is assigned
             if (termId != -1) {
                 //get the term object from the database
@@ -175,19 +188,16 @@ public class CourseEditActivity extends AppCompatActivity {
                 Date termStartDate = assignedTerm.getTermStartDate();
                 Date termEndDate = assignedTerm.getTermEndDate();
                 //get the start and end dates from the course object
-                Date courseStartDate = Formatting.dateFormat.parse(courseStart.getText().toString());
-                Date courseEndDate = Formatting.dateFormat.parse(courseEnd.getText().toString());
-                //check if the course start date or end date is before the term start date or after the term end date, if so throw a warning alert
-                assert courseStartDate != null;
-                assert courseEndDate != null;
-                if (courseStartDate.before(termStartDate) || courseStartDate.after(termEndDate) || courseEndDate.before(termStartDate) || courseEndDate.after(termEndDate)) {
+                Date courseStartDateValue = courseStartDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(courseStartDate.getText().toString());
+                Date courseEndDateValue = courseEndDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(courseEndDate.getText().toString());
+                if (courseStartDateValue.before(termStartDate) || courseStartDateValue.after(termEndDate) || courseEndDateValue.before(termStartDate) || courseEndDateValue.after(termEndDate)) {
                     //build the alert and show it
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Warning");
                     builder.setMessage("The course start and/or end dates are not within the assigned term start and/or end dates.\nDo you want to continue?");
                     builder.setPositiveButton("Yes", (dialog, which) -> {
                         //if the user clicks yes, save the course and return to the previous activity
-                        viewModel.saveCourse(courseName, courseDescriptionString, courseStartDate, courseEndDate, bCourseStartAlert, bCourseEndAlert, courseStatus, termId, courseNoteString);
+                        viewModel.saveCourse(courseNameString, courseDescriptionString, courseStartDateValue, courseEndDateValue, bCourseStartAlert, bCourseEndAlert, courseStatusValue, termId, courseNoteString);
                         finish();
                     });
                     builder.setNegativeButton("No", (dialog, which) -> {
@@ -195,14 +205,14 @@ public class CourseEditActivity extends AppCompatActivity {
                     });
                 } else {
                     //if the course start and end dates are within the term start and end dates, save the course and return to the previous activity
-                    viewModel.saveCourse(courseName, courseDescriptionString, courseStartDate, courseEndDate, bCourseStartAlert, bCourseEndAlert, courseStatus, termId, courseNoteString);
+                    viewModel.saveCourse(courseNameString, courseDescriptionString, courseStartDateValue, courseEndDateValue, bCourseStartAlert, bCourseEndAlert, courseStatusValue, termId, courseNoteString);
                     finish();
                 }
             } else {
                 //if no term is assigned, save the course and return to the previous activity
-                Date courseStartDate = Formatting.dateFormat.parse(courseStart.getText().toString());
-                Date courseEndDate = Formatting.dateFormat.parse(courseEnd.getText().toString());
-                viewModel.saveCourse(courseName, courseDescriptionString, courseStartDate, courseEndDate, bCourseStartAlert, bCourseEndAlert, courseStatus, termId, courseNoteString);
+                Date courseStartDateValue = courseStartDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(courseStartDate.getText().toString());
+                Date courseEndDateValue = courseEndDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(courseEndDate.getText().toString());
+                viewModel.saveCourse(courseNameString, courseDescriptionString, courseStartDateValue, courseEndDateValue, bCourseStartAlert, bCourseEndAlert, courseStatusValue, termId, courseNoteString);
                 finish();
             }
         } catch (Exception e) {
@@ -228,6 +238,11 @@ public class CourseEditActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.action_delete) {
             viewModel.deleteCourse();
             finish();
+        } else if (item.getItemId() == R.id.action_help) {
+            //TODO: add help
+        } else if (item.getItemId() == R.id.action_save) {
+            saveAndReturn();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
