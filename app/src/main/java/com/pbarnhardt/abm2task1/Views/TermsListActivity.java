@@ -2,6 +2,7 @@ package com.pbarnhardt.abm2task1.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import com.pbarnhardt.abm2task1.Entity.Terms;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
 import com.pbarnhardt.abm2task1.Models.TermModel;
 import com.pbarnhardt.abm2task1.R;
+import com.pbarnhardt.abm2task1.databinding.ActivityTermListBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentListTermsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,9 @@ import java.util.List;
 public class TermsListActivity extends AppCompatActivity {
     private List<Terms> termsList = new ArrayList<>();
     private TermAdapter termAdapter;
+    private ActivityTermListBinding activityBinding;
+    private ContentListTermsBinding contentBinding;
+    private RecyclerView recyclerView;
 
     /**
      * On create.
@@ -31,15 +37,21 @@ public class TermsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_term_list);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityTermListBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        Toolbar toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
-        initializeRecyclerView();
+
         initializeViewModel();
 
+        //initialize the binding
+        contentBinding = activityBinding.contentInclude;
+        recyclerView = contentBinding.termListRecyclerView;
+        initializeRecyclerView(recyclerView);
+
         // On click listener for add term button
-        final FloatingActionButton addTermButton = findViewById(R.id.floatingAddTermButton);
-        addTermButton.setOnClickListener(view -> {
+        activityBinding.floatingAddTermButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add Term");
             builder.setMessage("Are you sure you want to add a term?");
@@ -57,7 +69,6 @@ public class TermsListActivity extends AppCompatActivity {
     }
 
     private void initializeViewModel() {
-        RecyclerView recyclerView = findViewById(R.id.termListRecyclerView);
         final Observer<List<Terms>> observer = terms -> {
             termsList.clear();
             termsList.addAll(terms);
@@ -72,8 +83,7 @@ public class TermsListActivity extends AppCompatActivity {
         termModel.terms.observe(this, observer);
     }
 
-    private void initializeRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.termListRecyclerView);
+    private void initializeRecyclerView(RecyclerView recyclerView) {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
