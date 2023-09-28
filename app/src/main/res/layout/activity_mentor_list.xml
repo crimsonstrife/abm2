@@ -24,7 +24,9 @@
             app:title="@string/nav_mentorTitle">
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-    <include layout="@layout/content_list_mentors" />
+    <include
+        android:id="@+id/contentInclude"
+        layout="@layout/content_list_mentors" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingAddMentorButton"
         android:layout_width="wrap_content"
