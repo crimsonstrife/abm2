@@ -122,22 +122,48 @@ public class CourseRepository {
 
     /**
      * Delete all data to start fresh
+     * @return - true if successful, false if not
      */
-    public void deleteAllData() {
+    public boolean deleteAllData() {
         executor.execute(() -> database.termDao().deleteAll());
         executor.execute(() -> database.courseDao().deleteAll());
         executor.execute(() -> database.assessmentDao().deleteAll());
         executor.execute(() -> database.mentorsDao().deleteAll());
+        //check if all data was deleted
+        if(database.termDao().getCount() != 0 || database.courseDao().getCount() != 0 ||
+                database.assessmentDao().getCount() != 0 || database.mentorsDao().getCount() != 0) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * Add sample data to the database
+     * @return - true if successful, false if not
      */
-    public void addSampleDataset() {
+    public boolean addSampleDataset() {
         executor.execute(() -> database.termDao().insertAll(SampleDataSet.getTerms()));
         executor.execute(() -> database.courseDao().insertAll(SampleDataSet.getCourses()));
         executor.execute(() -> database.assessmentDao().insertAll(SampleDataSet.getAssessments()));
         executor.execute(() -> database.mentorsDao().insertAll(SampleDataSet.getMentors()));
+        //check if all data was added
+        if(database.termDao().getCount() != SampleDataSet.getTerms().size() ||
+                database.courseDao().getCount() != SampleDataSet.getCourses().size() ||
+                database.assessmentDao().getCount() != SampleDataSet.getAssessments().size() ||
+                database.mentorsDao().getCount() != SampleDataSet.getMentors().size()) {
+            //if they don't match, see if they are larger
+            if(database.termDao().getCount() > SampleDataSet.getTerms().size() ||
+                    database.courseDao().getCount() > SampleDataSet.getCourses().size() ||
+                    database.assessmentDao().getCount() > SampleDataSet.getAssessments().size() ||
+                    database.mentorsDao().getCount() > SampleDataSet.getMentors().size()) {
+                //if they are larger, return true
+                return true;
+            } else {
+                //if they are smaller, return false
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
