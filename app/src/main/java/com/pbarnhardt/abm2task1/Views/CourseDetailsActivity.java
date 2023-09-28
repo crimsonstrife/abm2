@@ -5,6 +5,7 @@ import static com.pbarnhardt.abm2task1.Utils.Converters.fromCourseStatusToString
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,11 +24,15 @@ import com.pbarnhardt.abm2task1.Adapters.MentorAdapter;
 import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
+import com.pbarnhardt.abm2task1.Models.AssessmentModel;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
+import com.pbarnhardt.abm2task1.Models.MentorModel;
 import com.pbarnhardt.abm2task1.Popups.DropdownAssessments;
 import com.pbarnhardt.abm2task1.Popups.DropdownMentors;
 import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
+import com.pbarnhardt.abm2task1.databinding.ActivityCourseDetailsBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentDetailsCoursesBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +50,16 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
     private List<Mentors> mentorsListData = new ArrayList<>();
     private List<Assessments> unassignedAssessmentsList = new ArrayList<>();
     private List<Mentors> unassignedMentorsList = new ArrayList<>();
+    private ActivityCourseDetailsBinding activityBinding;
+    private ContentDetailsCoursesBinding contentBinding;
+    private RecyclerView courseAssessmentsRecyclerView;
+    private RecyclerView courseMentorsRecyclerView;
+    private TextView courseTitleView;
+    private TextView courseDescriptionView;
+    private TextView courseStatusView;
+    private TextView courseStartDateView;
+    private TextView courseEndDateView;
+    private TextView courseNotesView;
 
 
     /**
@@ -53,23 +68,37 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_details);
-        toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityCourseDetailsBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
+
         initiateViewModel();
-        initiateMentorRecyclerView();
-        initiateAssessmentRecyclerView();
+
+        //initialize the binding
+        contentBinding = activityBinding.contentInclude;
+        courseTitleView = contentBinding.editTextCourseTitle;
+        courseDescriptionView = contentBinding.courseDetailDescription;
+        courseStatusView = contentBinding.spinnerCourseStatus;
+        courseStartDateView = contentBinding.termDetailStartDate;
+        courseEndDateView = contentBinding.termDetailEndDate;
+        courseNotesView = contentBinding.editTextCourseNote;
+        courseAssessmentsRecyclerView = contentBinding.courseAssessmentsRecyclerView;
+        courseMentorsRecyclerView = contentBinding.courseMentorsRecyclerView;
+
+
+        initializeRecyclerView(courseAssessmentsRecyclerView);
+        initializeRecyclerView(courseMentorsRecyclerView);
 
         //setup buttons
-        final FloatingActionButton courseEditButton = findViewById(R.id.floatingEditCourseButton);
-        courseEditButton.setOnClickListener(v -> {
+        activityBinding.floatingEditCourseButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, CourseEditActivity.class);
             intent.putExtra(COURSE_KEY, courseId);
             this.startActivity(intent);
             finish();
         });
-        final FloatingActionButton courseAddMentorButton = findViewById(R.id.floatingAddMentorButton);
-        courseAddMentorButton.setOnClickListener(v -> {
+        contentBinding.floatingAddMentorToCourseButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add Mentor");
             builder.setMessage("Add a new or existing Mentor to this course?");
@@ -84,8 +113,8 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
                 if (unassignedMentorsList.size() >= 1) {
                     final DropdownMentors dropdownMentors = new DropdownMentors(this, unassignedMentorsList);
                     dropdownMentors.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                    dropdownMentors.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                    dropdownMentors.showAsDropDown(courseAddMentorButton);
+                    dropdownMentors.setWidth(WindowManager.LayoutParams.MATCH_PARENT);
+                    dropdownMentors.showAsDropDown(contentBinding.floatingAddMentorToCourseButton);
                     dropdownMentors.setOutsideTouchable(true);
                     dropdownMentors.setFocusable(true);
                     dropdownMentors.setSelectedMentorListener((position, mentor) -> {
@@ -101,8 +130,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
             AlertDialog alert = builder.create();
             alert.show();
         });
-        final FloatingActionButton courseAddAssessmentButton = findViewById(R.id.floatingAddAssessmentButton);
-        courseAddAssessmentButton.setOnClickListener(v -> {
+        contentBinding.floatingAddAssessmentToCourseButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add Assessment");
             builder.setMessage("Add a new or existing Assessment to this course?");
@@ -117,8 +145,8 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
                 if (unassignedAssessmentsList.size() >= 1) {
                     final DropdownAssessments dropdownAssessments = new DropdownAssessments(this, unassignedAssessmentsList);
                     dropdownAssessments.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                    dropdownAssessments.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-                    dropdownAssessments.showAsDropDown(courseAddAssessmentButton);
+                    dropdownAssessments.setWidth(WindowManager.LayoutParams.MATCH_PARENT);
+                    dropdownAssessments.showAsDropDown(contentBinding.floatingAddAssessmentToCourseButton);
                     dropdownAssessments.setOutsideTouchable(true);
                     dropdownAssessments.setFocusable(true);
                     dropdownAssessments.setSelectedAssessmentListener((position, assessment) -> {
@@ -133,14 +161,11 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
             });
             AlertDialog alert = builder.create();
             alert.show();
-            final FloatingActionButton notesShareButton = findViewById(R.id.shareButton);
-            final TextView courseTitleView = findViewById(R.id.editText_course_title);
-            final TextView courseNotesView = findViewById(R.id.editText_course_note);
-            notesShareButton.setOnClickListener(v1 -> {
+            contentBinding.shareButton.setOnClickListener(v1 -> {
                 Intent sendIntent = new Intent(Intent.ACTION_SEND);
                 sendIntent.setType("text/plain");
-                String shareHeader = "Course: " + courseTitleView.getText().toString() + "Notes";
-                String shareMessage = "Notes: " + courseNotesView.getText().toString();
+                String shareHeader = "Course: " + contentBinding.editTextCourseTitle.getText().toString() + "Notes";
+                String shareMessage = "Notes: " + contentBinding.editTextCourseNote.getText().toString();
                 sendIntent.putExtra(Intent.EXTRA_SUBJECT, shareHeader);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(sendIntent, "Share Course Notes with"));
@@ -148,39 +173,23 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
         });
     }
 
-    private void initiateAssessmentRecyclerView() {
-        final RecyclerView courseAssessmentRecyclerView = findViewById(R.id.course_assessmentsRecyclerView);
-        courseAssessmentRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager assessmentLayoutManager = new LinearLayoutManager(this);
-        courseAssessmentRecyclerView.setLayoutManager(assessmentLayoutManager);
-    }
-
-    private void initiateMentorRecyclerView() {
-        final RecyclerView courseMentorRecyclerView = findViewById(R.id.course_mentorsRecyclerView);
-        courseMentorRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager mentorLayoutManager = new LinearLayoutManager(this);
-        courseMentorRecyclerView.setLayoutManager(mentorLayoutManager);
+    private void initializeRecyclerView (RecyclerView recyclerView) {
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     private void initiateViewModel() {
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
-        final TextView courseTitleView = findViewById(R.id.editText_course_title);
-        final TextView courseDescriptionView = findViewById(R.id.courseDetailDescription);
-        final TextView courseStatusView = findViewById(R.id.spinner_course_status);
-        final TextView courseStartDateView = findViewById(R.id.termDetailStartDate);
-        final TextView courseEndDateView = findViewById(R.id.termDetailEndDate);
-        final TextView courseNotesView = findViewById(R.id.editText_course_note);
-        final RecyclerView courseAssessmentRecyclerView = findViewById(R.id.course_assessmentsRecyclerView);
-        final RecyclerView courseMentorRecyclerView = findViewById(R.id.course_mentorsRecyclerView);
         viewModel.liveCourses.observe(this, courses -> {
             if(courses != null) {
                 courseId = courses.getCourseId();
-                courseTitleView.setText(courses.getCourseName());
-                courseDescriptionView.setText(courses.getCourseDescription());
-                courseStatusView.setText(fromCourseStatusToString(courses.getCourseStatus()));
-                courseStartDateView.setText(Formatting.dateFormat.format(courses.getCourseStartDate()));
-                courseEndDateView.setText(Formatting.dateFormat.format(courses.getCourseEndDate()));
-                courseNotesView.setText(courses.getCourseNote());
+                contentBinding.editTextCourseTitle.setText(courses.getCourseName());
+                contentBinding.courseDetailDescription.setText(courses.getCourseDescription());
+                contentBinding.spinnerCourseStatus.setText(fromCourseStatusToString(courses.getCourseStatus()));
+                contentBinding.termDetailStartDate.setText(Formatting.dateFormat.format(courses.getCourseStartDate()));
+                contentBinding.termDetailEndDate.setText(Formatting.dateFormat.format(courses.getCourseEndDate()));
+                contentBinding.editTextCourseNote.setText(courses.getCourseNote());
                 toolbar.setTitle(courses.getCourseName());
             }
         });
@@ -191,7 +200,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
             mentorsListData.addAll(mentors);
             if(mentorAdapter == null) {
                 mentorAdapter = new MentorAdapter(mentorsListData, this, RecyclerAdapter.CHILD, this);
-                courseMentorRecyclerView.setAdapter(mentorAdapter);
+                courseMentorsRecyclerView.setAdapter(mentorAdapter);
             } else {
                 mentorAdapter.notifyDataSetChanged();
             }
@@ -209,7 +218,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
             assessmentsListData.addAll(assessments);
             if(assessmentAdapter == null) {
                 assessmentAdapter = new AssessmentAdapter(assessmentsListData, this, RecyclerAdapter.CHILD, this);
-                courseAssessmentRecyclerView.setAdapter(assessmentAdapter);
+                courseAssessmentsRecyclerView.setAdapter(assessmentAdapter);
             } else {
                 assessmentAdapter.notifyDataSetChanged();
             }
