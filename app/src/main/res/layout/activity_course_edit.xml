@@ -32,6 +32,8 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_edit_courses"/>
+    <include
+        android:id="@+id/contentInclude"
+        layout="@layout/content_edit_courses"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
