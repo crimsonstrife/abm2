@@ -24,7 +24,9 @@
             app:title="@string/nav_courseTitle">
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-    <include layout="@layout/content_list_courses" />
+    <include
+        android:id="@+id/contentInclude"
+        layout="@layout/content_list_courses" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingAddCourseButton"
         android:layout_width="wrap_content"
