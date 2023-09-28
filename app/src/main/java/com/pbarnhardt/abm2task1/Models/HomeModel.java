@@ -31,11 +31,29 @@ public class HomeModel extends AndroidViewModel {
         mentorsList = repository.getAllMentors();
     }
 
-    public void addSampleDataset() {
-        repository.addSampleDataset();
+    /**
+     * Adds a sample dataset to the database
+     * @return - true if successful, false if not
+     */
+    public boolean addSampleDataset() {
+        boolean success = repository.addSampleDataset();
+        if (success) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void deleteAllData() {
-        repository.deleteAllData();
+    /**
+     * Deletes all data from the database
+     * @return - true if successful, false if not
+     */
+    public boolean deleteAllData() {
+        boolean success = repository.deleteAllData();
+        if (success) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
