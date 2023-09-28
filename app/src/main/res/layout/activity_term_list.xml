@@ -26,7 +26,9 @@
             app:title="@string/nav_termTitle">
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-    <include layout="@layout/content_list_terms" />
+    <include
+        android:id="@+id/contentInclude"
+        layout="@layout/content_list_terms" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingAddTermButton"
         android:layout_width="wrap_content"
