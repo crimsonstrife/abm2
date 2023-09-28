@@ -77,4 +77,7 @@
     <string name="helpFAQTitle">Application Help</string>
     <string name="new_term_title">New Term</string>
     <string name="edit_term_title">Edit Term</string>
+    <string name="no_course_assigned">No course assigned</string>
+    <string name="edit_assessment">Edit Assessment</string>
+    <string name="new_assessment">New Assessment</string>
 </resources>
