@@ -2,20 +2,26 @@ package com.pbarnhardt.abm2task1.Views;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
@@ -28,9 +34,12 @@ import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
+import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.Models.HomeModel;
 import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.Utils.Alerts;
+import com.pbarnhardt.abm2task1.databinding.ActivityMainBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentHomeBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     private TermAdapter termAdapter;
     private HomeModel homeModel;
+    private EditorModel editorModel;
+    private ActivityMainBinding activityBinding;
+    private ContentHomeBinding contentBinding;
 
     /**
      * Variables
@@ -65,11 +77,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        Toolbar toolbar = activityBinding.toolbarInclude.toolbar;
         setSupportActionBar(toolbar);
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.navigation_view);
+        drawerLayout = activityBinding.drawerLayout;
+        navigationView = activityBinding.navigationView;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_navigation, R.string.close_navigation);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -78,31 +92,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         initializeViewModel();
-        //Initialize the views
-        TextView inspirationalQuote = findViewById(R.id.text_quote);
-        TextView inspirationalAuthor = findViewById(R.id.text_quote_author);
-        setDailyQuote(inspirationalQuote, inspirationalAuthor);
+
+        //Initialize the binding
+        contentBinding = activityBinding.toolbarInclude.contentInclude;
+
+        //Set the daily quote
+        //pull a random quote from an array, each item in the array contains the quote and the author separated by a comma
+        String[] quotes = getResources().getStringArray(R.array.dailyInspiration);
+        String[] quoteAndAuthor = quotes[(int) (Math.random() * quotes.length)].split(",");
+        contentBinding.textQuote.setText(quoteAndAuthor[0]);
+        contentBinding.textQuoteAuthor.setText(quoteAndAuthor[1]);
 
         //Set the on click listeners for the buttons
-        final ImageButton termButton = findViewById(R.id.btn_terms);
-        final ImageButton courseButton = findViewById(R.id.btn_courses);
-        final ImageButton assessmentButton = findViewById(R.id.btn_assessments);
-        final ImageButton mentorButton = findViewById(R.id.btn_mentors);
-        termButton.setOnClickListener(v -> {
-            Intent termIntent = new Intent(MainActivity.this, TermsListActivity.class);
-            MainActivity.this.startActivity(termIntent);
+        contentBinding.btnTerms.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TermsListActivity.class);
+            startActivity(intent);
         });
-        courseButton.setOnClickListener(v -> {
-            Intent courseIntent = new Intent(MainActivity.this, CoursesListActivity.class);
-            MainActivity.this.startActivity(courseIntent);
+        contentBinding.btnCourses.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CoursesListActivity.class);
+            startActivity(intent);
         });
-        assessmentButton.setOnClickListener(v -> {
-            Intent assessmentIntent = new Intent(MainActivity.this, AssessmentsListActivity.class);
-            MainActivity.this.startActivity(assessmentIntent);
+        contentBinding.btnAssessments.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AssessmentsListActivity.class);
+            startActivity(intent);
         });
-        mentorButton.setOnClickListener(v -> {
-            Intent mentorIntent = new Intent(MainActivity.this, MentorsListActivity.class);
-            MainActivity.this.startActivity(mentorIntent);
+        contentBinding.btnMentors.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MentorsListActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -144,38 +160,74 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * Set a daily quote
-     * Ideally this would be pulled from a database online that could be easily maintained, but for now it is just a random quote from an array
-     * @param quote the daily quote string
-     * @param author the daily quote author string
-     */
-    private void setDailyQuote(TextView quote, TextView author) {
-        //pull a random quote from an array, each item in the array contains the quote and the author separated by a comma
-        String[] quotes = getResources().getStringArray(R.array.dailyInspiration);
-        String[] quoteAndAuthor = quotes[(int) (Math.random() * quotes.length)].split(",");
-        quote.setText(quoteAndAuthor[0]);
-        author.setText(quoteAndAuthor[1]);
-    }
-
-    /**
      * Handle Alerts
      *
      */
     private void alertHandler() {
         ArrayList<String> alerts = new ArrayList<>();
+        boolean courseStartAlert = false;
+        boolean courseEndAlert = false;
+        boolean assessmentAlert = false;
+        ArrayList<Courses> coursesWithAlerts = new ArrayList<>();
+        ArrayList<Assessments> assessmentsWithAlerts = new ArrayList<>();
         //loop through the courses to find reminders set for the start and end dates
         for(Courses course: courseListData) {
             if(DateUtils.isToday(course.getCourseStartDate().getTime())) {
-                alerts.add("Course: " + course.getCourseName() + " begins today!");
+                //is the alert set for the start date?
+                if(course.getCourseStartAlert()) {
+                    courseStartAlert = true;
+                    //add the course to the list of courses with alerts if it is not there
+                    if(!coursesWithAlerts.contains(course)) {
+                        coursesWithAlerts.add(course);
+                    }
+                    alerts.add("Course: " + course.getCourseName() + " begins today!");
+                } else {
+                    //make sure the alert is set to false
+                    courseStartAlert = false;
+                    //remove the course from the list of courses with alerts if it is there and the end date alert is not set
+                    if(coursesWithAlerts.contains(course) && !courseEndAlert) {
+                        coursesWithAlerts.remove(course);
+                    }
+                }
             } else if(DateUtils.isToday(course.getCourseEndDate().getTime())) {
-                alerts.add("Course: " + course.getCourseName() + " ends today!");
+                //is the alert set for the end date?
+                if(course.getCourseEndAlert()) {
+                    courseEndAlert = true;
+                    //add the course to the list of courses with alerts if it is not there
+                    if(!coursesWithAlerts.contains(course)) {
+                        coursesWithAlerts.add(course);
+                    }
+                    alerts.add("Course: " + course.getCourseName() + " ends today!");
+                } else {
+                    //make sure the alert is set to false
+                    courseEndAlert = false;
+                    //remove the course from the list of courses with alerts if it is there and the start date alert is not set
+                    if(coursesWithAlerts.contains(course) && !courseStartAlert) {
+                        coursesWithAlerts.remove(course);
+                    }
+                }
             }
         }
 
         //loop through the assessments to find reminders set for due dates
         for(Assessments assessment: assessmentListData) {
             if(DateUtils.isToday(assessment.getAssessmentDueDate().getTime())) {
-                alerts.add("Assessment: " + assessment.getAssessmentName() + " is due today!");
+                //is the alert set for the due date?
+                if(assessment.getAssessmentAlert()) {
+                    assessmentAlert = true;
+                    //add the assessment to the list of assessments with alerts if it is not there
+                    if(!assessmentsWithAlerts.contains(assessment)) {
+                        assessmentsWithAlerts.add(assessment);
+                    }
+                    alerts.add("Assessment: " + assessment.getAssessmentName() + " is due today!");
+                } else {
+                    //make sure the alert is set to false
+                    assessmentAlert = false;
+                    //remove the assessment from the list of assessments with alerts if it is there
+                    if(assessmentsWithAlerts.contains(assessment)) {
+                        assessmentsWithAlerts.remove(assessment);
+                    }
+                }
             }
         }
 
@@ -185,12 +237,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 Alerts alerting = new Alerts();
                 IntentFilter filter = new IntentFilter("ALARM_ACTION");
-                registerReceiver(alerting, filter);
+                registerReceiver(alerting, filter, Context.RECEIVER_NOT_EXPORTED);
                 Intent intent = new Intent("ALARM_ACTION");
                 intent.putExtra("param", alert);
                 PendingIntent operation = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + Toast.LENGTH_SHORT, operation);
+
+                //for each course with an alert, set the alert to false and remove it from the list of courses with alerts - then update the database
+                for(Courses course: coursesWithAlerts) {
+                    //if the alert contains the course name, set the alert to false and remove it from the list of courses with alerts
+                    if(alert.contains(course.getCourseName())) {
+                        //check if the alert is for the start date or the end date
+                        if(alert.contains("begins")) {
+                            course.setCourseStartAlert(false);
+                            //update the database
+                            //editorModel.overwriteCourse(course, course.getTermId());
+                            //remove the course from the list of courses with alerts if the end date alert is not set
+                            if(!course.getCourseEndAlert()) {
+                                coursesWithAlerts.remove(course);
+                            }
+                        } else {
+                            course.setCourseEndAlert(false);
+                            //update the database
+                            //editorModel.overwriteCourse(course, course.getTermId());
+                            //remove the course from the list of courses with alerts if the start date alert is not set
+                            if(!course.getCourseStartAlert()) {
+                                coursesWithAlerts.remove(course);
+                            }
+                        }
+                    }
+                }
+
+                //for each assessment with an alert, set the alert to false and remove it from the list of assessments with alerts - then update the database
+                for(Assessments assessment: assessmentsWithAlerts) {
+                    //if the alert contains the assessment name, set the alert to false and remove it from the list of assessments with alerts
+                    if (alert.contains(assessment.getAssessmentName())) {
+                        assessment.setAssessmentAlert(false);
+                        //update the database
+                        //editorModel.overwriteAssessment(assessment, assessment.getCourseId());
+                        //remove the assessment from the list of assessments with alerts
+                        assessmentsWithAlerts.remove(assessment);
+                    }
+                }
             }
+        } else {
+            //these are only day-of notifications, if there are no alerts, clear any existing notifications as they are no longer needed
+            //this should mostly be garbage data if there was any at all
+            //clear any stored courses with alerts
+            coursesWithAlerts.clear();
+            //clear any stored assessments with alerts
+            assessmentsWithAlerts.clear();
         }
     }
 
@@ -253,9 +349,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int aboutId = R.id.action_about;
         int helpId = R.id.action_help;
         if(id == deleteAllDataId) {
-            deleteAllData();
+            //show an alert dialog to confirm the delete
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Delete All Data");
+            builder.setMessage("Are you sure you want to delete all data?");
+            builder.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_dialog_alert));
+            builder.setPositiveButton("Yes", (dialog, id1) -> {
+                deleteAllData();
+                dialog.dismiss();
+            });
+            builder.setNegativeButton("Cancel", (dialog, id12) -> dialog.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
         } else if(id == addSampleDataId) {
-            addSampleData();
+            //show an alert dialog to confirm the delete
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Add Sample Data");
+            builder.setMessage("Are you sure you want to add sample data? \nThis may conflict with existing data or duplicate data.");
+            builder.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_dialog_alert));
+            builder.setPositiveButton("Yes", (dialog, id13) -> {
+                addSampleData();
+                dialog.dismiss();
+            });
+            builder.setNegativeButton("Cancel", (dialog, id14) -> dialog.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
         } else if(id == settingsId) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -273,13 +391,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Add sample data.
      */
     private void addSampleData() {
-        homeModel.addSampleDataset();
+        boolean success = homeModel.addSampleDataset();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add Sample Data");
+        if(!success) {
+            builder.setMessage("Sample data has been added");
+            builder.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_dialog_info));
+            builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+        } else {
+            builder.setMessage("There was an error adding sample data");
+            builder.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_dialog_alert));
+            builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+        }
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**
      * Delete all data.
      */
     private void deleteAllData() {
-        homeModel.deleteAllData();
+        boolean success = homeModel.deleteAllData();
+        //log the value of success for debugging
+        Log.v("DEBUG", "Delete all data success: " + success);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete All Data");
+        if(!success) {
+            builder.setMessage("All data has been deleted");
+            builder.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_dialog_info));
+            builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+        } else {
+            builder.setMessage("There was an error deleting data");
+            builder.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_dialog_alert));
+            builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+        }
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
