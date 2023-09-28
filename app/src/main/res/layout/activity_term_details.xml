@@ -42,7 +42,9 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:ignore="SpeakableTextPresentCheck">
 
-        <include layout="@layout/content_details_terms" />
+        <include
+            android:id="@+id/contentInclude"
+            layout="@layout/content_details_terms" />
 
     </androidx.core.widget.NestedScrollView>
 
