@@ -14,20 +14,21 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
+import com.pbarnhardt.abm2task1.databinding.ActivityMentorDetailsBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentDetailsMentorsBinding;
 
 public class MentorDetailsActivity extends AppCompatActivity {
-    /**
-     * Assign views by id
-     */
-    TextView mentorNameView = findViewById(R.id.editText_mentor_title);
-    TextView mentorEmailView = findViewById(R.id.editText_mentor_email);
-    TextView mentorPhoneView = findViewById(R.id.editText_mentor_phone);
-
     /**
      * Variables
      */
     private int mentorId;
     private Toolbar toolbar;
+    private EditorModel viewModel;
+    private TextView mentorNameView;
+    private TextView mentorEmailView;
+    private TextView mentorPhoneView;
+    private ActivityMentorDetailsBinding activityBinding;
+    private ContentDetailsMentorsBinding contentBinding;
 
     /**
      * On create method
@@ -36,14 +37,22 @@ public class MentorDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mentor_details);
-        toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityMentorDetailsBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
+
+        //initialize the binding
+        contentBinding = activityBinding.contentInclude;
+        mentorNameView = contentBinding.editTextMentorTitle;
+        mentorEmailView = contentBinding.editTextMentorEmail;
+        mentorPhoneView = contentBinding.editTextMentorPhone;
+
         initiateViewModel();
 
         //on click listener for the floating button
-        final FloatingActionButton editMentorBtn = findViewById(R.id.floatingEditMentorButton);
-        editMentorBtn.setOnClickListener(new View.OnClickListener() {
+        activityBinding.floatingEditMentorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MentorDetailsActivity.this, MentorEditActivity.class);
@@ -55,7 +64,7 @@ public class MentorDetailsActivity extends AppCompatActivity {
     }
 
     private void initiateViewModel() {
-        EditorModel viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
+        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
         viewModel.liveMentors.observe(this, mentors -> {
             mentorNameView.setText(mentors.getMentorName());
             mentorEmailView.setText(mentors.getMentorEmail());
