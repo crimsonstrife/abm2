@@ -2,11 +2,13 @@ package com.pbarnhardt.abm2task1.Views;
 
 import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
+import static com.pbarnhardt.abm2task1.Utils.Constants.MENTOR_KEY;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,7 +18,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
+import com.pbarnhardt.abm2task1.databinding.ActivityMentorEditBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentEditMentorsBinding;
 
+import java.text.ParseException;
 import java.util.Objects;
 
 public class MentorEditActivity extends AppCompatActivity {
@@ -26,7 +31,13 @@ public class MentorEditActivity extends AppCompatActivity {
     private boolean newMentor;
     private boolean edit;
     private int courseId = -1;
+    int mentorId;
     private EditorModel viewModel;
+    private ActivityMentorEditBinding activityBinding;
+    private ContentEditMentorsBinding contentBinding;
+    private EditText mentorName;
+    private EditText mentorEmail;
+    private EditText mentorPhone;
 
     /**
      * On create.
@@ -36,29 +47,39 @@ public class MentorEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mentor_edit);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityMentorEditBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        Toolbar toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_action_check);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //check the instance state to see if we are editing or creating a new mentor
         if (savedInstanceState != null) {
             edit = savedInstanceState.getBoolean(EDIT_KEY);
         }
+
+        //initialize the binding
+        contentBinding = activityBinding.contentInclude;
+        mentorName = contentBinding.editTextMentorTitle;
+        mentorEmail = contentBinding.editTextMentorEmail;
+        mentorPhone = contentBinding.editTextMentorPhone;
+
+        //initialize the view model
         initializeViewModel();
     }
 
     private void initializeViewModel() {
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(EditorModel.class);
-        final EditText mentorNameView = findViewById(R.id.editText_mentor_title);
-        final EditText mentorEmailView = findViewById(R.id.editText_mentor_email);
-        final EditText mentorPhoneView = findViewById(R.id.editText_mentor_phone);
         viewModel.liveMentors.observe(this, mentorEntity -> {
             if (mentorEntity != null && !edit) {
-                mentorNameView.setText(mentorEntity.getMentorName());
-                mentorEmailView.setText(mentorEntity.getMentorEmail());
-                mentorPhoneView.setText(mentorEntity.getMentorPhone());
+                mentorName.setText(mentorEntity.getMentorName());
+                mentorEmail.setText(mentorEntity.getMentorEmail());
+                mentorPhone.setText(mentorEntity.getMentorPhone());
             }
         });
+
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             setTitle("New Mentor");
@@ -79,7 +100,7 @@ public class MentorEditActivity extends AppCompatActivity {
             courseId = extras.getInt(COURSE_KEY);
         } else {
             setTitle("Edit Mentor");
-            int mentorId = extras.getInt(COURSE_KEY);
+            mentorId = extras.getInt(MENTOR_KEY);
             viewModel.loadMentor(mentorId);
         }
     }
@@ -96,37 +117,7 @@ public class MentorEditActivity extends AppCompatActivity {
     }
 
     private void saveAndReturn() {
-        final EditText mentorNameView = findViewById(R.id.editText_mentor_title);
-        final EditText mentorEmailView = findViewById(R.id.editText_mentor_email);
-        final EditText mentorPhoneView = findViewById(R.id.editText_mentor_phone);
-        String mentorName = mentorNameView.getText().toString().trim();
-        String mentorEmail = mentorEmailView.getText().toString().trim();
-        String mentorPhone = mentorPhoneView.getText().toString().trim();
-        //validate the input
-        if (mentorName.isEmpty()) {
-            mentorNameView.setError("Please enter a name");
-            return;
-        }
-        if (mentorEmail.isEmpty()) {
-            mentorEmailView.setError("Please enter an email");
-            return;
-        }
-        if (mentorPhone.isEmpty()) {
-            mentorPhoneView.setError("Please enter a phone number");
-            return;
-        }
-        //check that the email is valid
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(mentorEmail).matches()) {
-            mentorEmailView.setError("Please enter a valid email address");
-            return;
-        }
-        //check that the phone number is valid
-        if (!android.util.Patterns.PHONE.matcher(mentorPhone).matches()) {
-            mentorPhoneView.setError("Please enter a valid phone number");
-            return;
-        }
-        //if no errors, save the mentor
-        viewModel.saveMentor(mentorName, mentorEmail, mentorPhone, courseId);
+        doSave();
         finish();
     }
 
@@ -145,9 +136,50 @@ public class MentorEditActivity extends AppCompatActivity {
             saveAndReturn();
             return true;
         } else if (item.getItemId() == R.id.action_delete) {
-            viewModel.deleteMentor();
+            //if editing, cancel out of the activity
+            if (!newMentor) {
+                doDelete();
+            } else {
+                finish();
+            }
+        } else if (item.getItemId() == R.id.action_save) {
+            doSave();
             finish();
+        } else if (item.getItemId() == R.id.action_help) {
+            //TODO: add help
         }
         return super.onOptionsItemSelected(item);
     }
-}
+
+
+    /**
+     * Do save.
+     */
+    private void doSave() {
+        String mentorNameString = mentorName.getText().toString().trim();
+        String mentorEmailString = mentorEmail.getText().toString().trim();
+        String mentorPhoneString = mentorPhone.getText().toString().trim();
+        viewModel.saveMentor(mentorNameString, mentorEmailString, mentorPhoneString, courseId);
+    }
+
+    /**
+     * Do delete.
+     */
+    private void doDelete() {
+        if (viewModel.liveMentors.getValue() != null) {
+            String title = viewModel.liveMentors.getValue().getMentorName();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Delete " + title + "?");
+            builder.setMessage("Are you sure you want to delete mentor '" + title + "'?");
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setPositiveButton("Yes", (dialog, id) -> {
+                dialog.dismiss();
+                viewModel.deleteMentor();
+                finish();
+            });
+            builder.setNegativeButton("Cancel", (dialog, id) -> dialog.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
+    }
