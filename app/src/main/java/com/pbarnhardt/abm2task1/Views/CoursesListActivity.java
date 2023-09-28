@@ -2,6 +2,7 @@ package com.pbarnhardt.abm2task1.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
 import com.pbarnhardt.abm2task1.Models.CourseModel;
 import com.pbarnhardt.abm2task1.R;
+import com.pbarnhardt.abm2task1.databinding.ActivityCourseListBinding;
+import com.pbarnhardt.abm2task1.databinding.ContentListCoursesBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,9 @@ public class CoursesListActivity extends AppCompatActivity implements CourseAdap
      */
     private CourseAdapter courseAdapter;
     private List<Courses> coursesList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private ActivityCourseListBinding activityBinding;
+    private ContentListCoursesBinding contentBinding;
 
     /**
      * On create.
@@ -34,15 +40,21 @@ public class CoursesListActivity extends AppCompatActivity implements CourseAdap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_list);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        activityBinding = ActivityCourseListBinding.inflate(getLayoutInflater());
+        View view = activityBinding.getRoot();
+        setContentView(view);
+        Toolbar toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
-        initializeRecyclerView();
+
         initializeViewModel();
 
+        //initialize the binding
+        contentBinding = activityBinding.contentInclude;
+        recyclerView = contentBinding.courseListRecyclerView;
+        initializeRecyclerView(recyclerView);
+
         //on click listener for the floating action button
-        final FloatingActionButton addCourseButton = findViewById(R.id.floatingAddCourseButton);
-        addCourseButton.setOnClickListener(view -> {
+        activityBinding.floatingAddCourseButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add Course");
             builder.setMessage("Are you sure you want to add a course?");
@@ -60,7 +72,6 @@ public class CoursesListActivity extends AppCompatActivity implements CourseAdap
     }
 
     private void initializeViewModel() {
-        RecyclerView recyclerView = findViewById(R.id.courseListRecyclerView);
         final Observer<List<Courses>> observer = courses -> {
             coursesList.clear();
             coursesList.addAll(courses);
@@ -75,8 +86,7 @@ public class CoursesListActivity extends AppCompatActivity implements CourseAdap
         courseModel.courses.observe(this, observer);
     }
 
-    private void initializeRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.courseListRecyclerView);
+    private void initializeRecyclerView(RecyclerView recyclerView) {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -84,29 +94,6 @@ public class CoursesListActivity extends AppCompatActivity implements CourseAdap
 
     @Override
     public void onCourseSelected(int position, Courses course) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("Edit or Delete Course");
-//        builder.setMessage("What would you like to do?");
-//        builder.setPositiveButton("Edit", (dialog, which) -> {
-//            Intent intent = new Intent(CoursesListActivity.this, CourseEditActivity.class);
-//            intent.putExtra("courseId", course.getCourseId());
-//            startActivity(intent);
-//        });
-//        builder.setNegativeButton("Delete", (dialog, which) -> {
-//            //setup confirmation dialog
-//            AlertDialog.Builder deleteBuilder = new AlertDialog.Builder(this);
-//            deleteBuilder.setTitle("Delete Course");
-//            deleteBuilder.setMessage("Are you sure you want to delete this course?");
-//            deleteBuilder.setPositiveButton("Yes", (deleteDialog, deleteWhich) -> {
-//                EditorModel editorModel = new EditorModel(getApplication());
-//                editorModel.deleteCourse();
-//            });
-//            deleteBuilder.setNegativeButton("No", (deleteDialog, deleteWhich) -> {
-//                // Do nothing
-//            });
-//        });
-//        builder.setNeutralButton("Cancel", (dialog, which) -> {
-//            // Do nothing
-//        });
+
     }
 }
