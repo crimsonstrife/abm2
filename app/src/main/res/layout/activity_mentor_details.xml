@@ -35,7 +35,9 @@
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:ignore="SpeakableTextPresentCheck">
-        <include layout="@layout/content_details_mentors"/>
+        <include
+            android:id="@+id/contentInclude"
+            layout="@layout/content_details_mentors"/>
     </androidx.core.widget.NestedScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingEditMentorButton"
