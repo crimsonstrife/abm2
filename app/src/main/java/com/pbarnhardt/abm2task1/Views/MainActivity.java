@@ -212,13 +212,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for(Assessments assessment: assessmentListData) {
             if(DateUtils.isToday(assessment.getAssessmentDueDate().getTime())) {
                 //is the alert set for the due date?
-                if(assessment.getAssessmentAlert()) {
+                if(assessment.getAssessmentDueAlert()) {
+                    assessmentAlert = true;
+                    //add the assessment to the list of assessments with alerts if it is not there
+                    if (!assessmentsWithAlerts.contains(assessment)) {
+                        assessmentsWithAlerts.add(assessment);
+                    }
+                    alerts.add("Assessment: " + assessment.getAssessmentName() + " is due today!");
+                } else {
+                    //make sure the alert is set to false
+                    assessmentAlert = false;
+                    //remove the assessment from the list of assessments with alerts if it is there
+                    if(assessmentsWithAlerts.contains(assessment)) {
+                        assessmentsWithAlerts.remove(assessment);
+                    }
+                }
+            } else if (DateUtils.isToday(assessment.getAssessmentStartDate().getTime())) {
+                //is the alert set for the start date?
+                if(assessment.getAssessmentStartAlert()) {
                     assessmentAlert = true;
                     //add the assessment to the list of assessments with alerts if it is not there
                     if(!assessmentsWithAlerts.contains(assessment)) {
                         assessmentsWithAlerts.add(assessment);
                     }
-                    alerts.add("Assessment: " + assessment.getAssessmentName() + " is due today!");
+                    alerts.add("Assessment: " + assessment.getAssessmentName() + " begins today!");
                 } else {
                     //make sure the alert is set to false
                     assessmentAlert = false;
@@ -271,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 for(Assessments assessment: assessmentsWithAlerts) {
                     //if the alert contains the assessment name, set the alert to false and remove it from the list of assessments with alerts
                     if (alert.contains(assessment.getAssessmentName())) {
-                        assessment.setAssessmentAlert(false);
+                        assessment.setAssessmentDueAlert(false);
                         //update the database
                         //editorModel.overwriteAssessment(assessment, assessment.getCourseId());
                         //remove the assessment from the list of assessments with alerts
