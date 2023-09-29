@@ -1,5 +1,17 @@
 package com.pbarnhardt.abm2task1.Adapters;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_DESCRIPTION;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_END_ALARM;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_END_DATE;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_ID;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_KEY;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_NAME;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_NOTES;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_START_ALARM;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_START_DATE;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_STATUS;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_TERM_ID;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
 import com.pbarnhardt.abm2task1.R;
+import com.pbarnhardt.abm2task1.Utils.Converters;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
 import com.pbarnhardt.abm2task1.Views.CourseDetailsActivity;
 import com.pbarnhardt.abm2task1.Views.CourseEditActivity;
@@ -40,23 +53,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         this.courseSelected = courseSelected;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         //bind views here
         TextView courseTitleView = itemView.findViewById(R.id.course_title);
         TextView courseDatesView = itemView.findViewById(R.id.course_dates);
         //bind button
         FloatingActionButton courseFloatingActionButton = itemView.findViewById(R.id.course_floatingEditButton);
         ImageButton courseDetailsButton = itemView.findViewById(R.id.courseDetails);
-        CourseSelection courseSelected;
-        public ViewHolder(@NonNull View itemView, CourseSelection courseSelected) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.courseSelected = courseSelected;
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            courseSelected.onCourseSelected(getAdapterPosition(), listedCourses.get(getAdapterPosition()));
         }
     }
 
@@ -65,7 +70,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.card_list_courses, parent, false);
-        return new ViewHolder(view, courseSelected);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -80,12 +85,32 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                 holder.courseFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(theContext, R.drawable.ic_action_edit));
                 holder.courseDetailsButton.setOnClickListener(v -> {
                     Intent intent = new Intent(theContext, CourseDetailsActivity.class);
-                    intent.putExtra("COURSE_ID", course.getCourseId());
+                    intent.putExtra(COURSE_KEY, course.getCourseId());
+                    intent.putExtra(COURSE_ID, course.getCourseId());
+                    intent.putExtra(COURSE_NAME, course.getCourseName());
+                    intent.putExtra(COURSE_START_DATE, Formatting.dateFormat.format(course.getCourseStartDate()));
+                    intent.putExtra(COURSE_END_DATE, Formatting.dateFormat.format(course.getCourseEndDate()));
+                    intent.putExtra(COURSE_STATUS, Converters.fromCourseStatusToString(course.getCourseStatus()));
+                    intent.putExtra(COURSE_NOTES, course.getCourseNote());
+                    intent.putExtra(COURSE_TERM_ID, course.getTermId());
+                    intent.putExtra(COURSE_DESCRIPTION, course.getCourseDescription());
+                    intent.putExtra(COURSE_START_ALARM, course.getCourseStartAlert());
+                    intent.putExtra(COURSE_END_ALARM, course.getCourseEndAlert());
                     theContext.startActivity(intent);
                 });
                 holder.courseFloatingActionButton.setOnClickListener(v -> {
                     Intent intent = new Intent(theContext, CourseEditActivity.class);
-                    intent.putExtra("COURSE_ID", course.getCourseId());
+                    intent.putExtra(COURSE_KEY, course.getCourseId());
+                    intent.putExtra(COURSE_ID, course.getCourseId());
+                    intent.putExtra(COURSE_NAME, course.getCourseName());
+                    intent.putExtra(COURSE_START_DATE, Formatting.dateFormat.format(course.getCourseStartDate()));
+                    intent.putExtra(COURSE_END_DATE, Formatting.dateFormat.format(course.getCourseEndDate()));
+                    intent.putExtra(COURSE_STATUS, Converters.fromCourseStatusToString(course.getCourseStatus()));
+                    intent.putExtra(COURSE_NOTES, course.getCourseNote());
+                    intent.putExtra(COURSE_TERM_ID, course.getTermId());
+                    intent.putExtra(COURSE_DESCRIPTION, course.getCourseDescription());
+                    intent.putExtra(COURSE_START_ALARM, course.getCourseStartAlert());
+                    intent.putExtra(COURSE_END_ALARM, course.getCourseEndAlert());
                     theContext.startActivity(intent);
                 });
                 break;

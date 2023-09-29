@@ -4,6 +4,7 @@ import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_KEY;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,7 +42,7 @@ public class TermEditActivity extends AppCompatActivity {
     private boolean edit;
     int termId;
     private EditorModel viewModel;
-    private List<Courses> courseList = new ArrayList<>();
+    private final List<Courses> courseList = new ArrayList<>();
     private ActivityTermEditBinding activityBinding;
     private ContentEditTermsBinding contentBinding;
     private EditText termTitle;
@@ -153,7 +155,30 @@ public class TermEditActivity extends AppCompatActivity {
      * This method will save the term and return to the previous activity
      */
     public void saveAndReturn() {
-        doSave();
+        final EditText termTitle = findViewById(R.id.termDetailTitle);
+        final Button termStartDate = findViewById(R.id.termDetailEditStartDate);
+        final Button termEndDate = findViewById(R.id.termDetailEditEndDate);
+        try {
+            Date startDate = Formatting.dateFormat.parse(termStartDate.getText().toString());
+            Date endDate = Formatting.dateFormat.parse(termEndDate.getText().toString());
+            viewModel.saveTerm(termTitle.getText().toString(), startDate, endDate);
+            //notify the user that the term was saved
+            Toast.makeText(this, "Term Saved", Toast.LENGTH_SHORT).show();
+            //navigate back to the term list
+            Intent intent = new Intent(this, TermsListActivity.class);
+            startActivity(intent);
+            finish();
+        } catch (ParseException e) {
+            Log.v("Exception: ", Objects.requireNonNull(e.getLocalizedMessage()));
+            //notify the user that the term could not be saved
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Error saving term");
+            builder.setMessage("There was an error saving the term.  Please check your entries and try again.");
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
         finish();
     }
 
@@ -181,8 +206,8 @@ public class TermEditActivity extends AppCompatActivity {
                 finish();
             }
         } else if(item.getItemId() == R.id.action_save) {
-            doSave();
-            finish();
+            saveAndReturn();
+            return true;
         } else if(item.getItemId() == R.id.action_help) {
             //TODO: add help
         }
@@ -220,20 +245,6 @@ public class TermEditActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
-        }
-    }
-
-    /**
-     * Do save of the term
-     *
-     */
-    private void doSave() {
-        try {
-            Date startDate = Formatting.dateFormat.parse(termStartDate.getText().toString());
-            Date endDate = Formatting.dateFormat.parse(termEndDate.getText().toString());
-            viewModel.saveTerm(termTitle.getText().toString(), startDate, endDate);
-        } catch (ParseException e) {
-            Log.v("Exception: ", Objects.requireNonNull(e.getLocalizedMessage()));
         }
     }
 }

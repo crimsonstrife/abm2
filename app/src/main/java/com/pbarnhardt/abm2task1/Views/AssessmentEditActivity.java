@@ -4,7 +4,11 @@ import static com.pbarnhardt.abm2task1.Utils.Constants.ASSESSMENT_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
 
+import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,22 +20,24 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.pbarnhardt.abm2task1.Entity.Courses;
+import com.pbarnhardt.abm2task1.Enums.Status;
 import com.pbarnhardt.abm2task1.Enums.Types;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
+import com.pbarnhardt.abm2task1.Utils.Alerts;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
 import com.pbarnhardt.abm2task1.databinding.ActivityAssessmentEditBinding;
 import com.pbarnhardt.abm2task1.databinding.ContentEditAssessmentsBinding;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -45,7 +51,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
     private boolean edit;
     private int courseId = -1;
 
-    private List<Courses> courseList = new ArrayList<>();
+    private final List<Courses> courseList = new ArrayList<>();
     private EditorModel viewModel;
     private ArrayAdapter<Types> typeAdapter;
     private String[] courseNames;
@@ -58,6 +64,14 @@ public class AssessmentEditActivity extends AppCompatActivity {
     private CheckBox assessmentDueAlert;
     private Spinner assessmentType;
     private Spinner assignedCourse;
+    private String newCourseTitle;
+    private String newCourseDescription;
+    private String newCourseNote;
+    private Date newCourseStartDate;
+    private Date newCourseEndDate;
+    private boolean newCourseStartAlert;
+    private boolean newCourseEndAlert;
+    private Status newCourseStatus;
 
     /**
      * On create.
@@ -72,6 +86,8 @@ public class AssessmentEditActivity extends AppCompatActivity {
         setContentView(view);
         Toolbar toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
+        //set toolbar color
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_action_check);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -135,7 +151,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
      * Should just need to store the course name and id.
      */
     private List<Courses> collectCourseInfo() {
-        viewModel.coursesList.observe(this, courses -> courseList.addAll(courses));
+        viewModel.coursesList.observe(this, courseList::addAll);
         //log courseList to see if it is empty
         Log.v("courseList: ", courseList.toString());
         return courseList;
@@ -194,7 +210,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
             }
         });
         //log size of courseList
-        Log.v("courseList: ", String.valueOf(courseList.size()) + " courses");
+        Log.v("courseList: ", courseList.size() + " courses");
     }
 
     private int getCourseSpinnerPosition(int assessmentCourseId) {
@@ -232,9 +248,19 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 }
             }
             viewModel.saveAssessment(title, description, dueDate, type, courseId, alert);
+            //notify the user that the assessment was saved
+            Toast.makeText(AssessmentEditActivity.this, "Assessment saved", Toast.LENGTH_SHORT).show();
+            //navigate back to the assessment list
+            Intent intent = new Intent(this, AssessmentsListActivity.class);
+            startActivity(intent);
             finish();
         } catch (Exception e) {
             Log.v("Exception: ", Objects.requireNonNull(e.getLocalizedMessage()));
+            //notify the user that the assessment was not saved
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("The assessment was not saved. Please try again.");
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
         }
         finish();
     }
@@ -257,10 +283,57 @@ public class AssessmentEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            saveAndReturn();
+            //ask the user if they want to save before exiting
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Do you want to save?");
+            builder.setIcon(getDrawable(R.drawable.ic_question_mark));
+            builder.setPositiveButton("Yes", (dialog, id) -> {
+                dialog.dismiss();
+                saveAndReturn();
+                finish();
+            });
+            builder.setNegativeButton("No", (dialog, id) -> {
+                dialog.dismiss();
+                finish();
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
             return true;
         } else if (item.getItemId() == R.id.action_delete) {
-            viewModel.deleteAssessment();
+            //ask the user if they want to delete the assessment
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure you want to delete this assessment?");
+            builder.setIcon(getDrawable(R.drawable.ic_question_mark));
+            builder.setPositiveButton("Yes", (dialog, id) -> {
+                dialog.dismiss();
+                viewModel.deleteAssessment();
+                Toast.makeText(AssessmentEditActivity.this, "Assessment deleted", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, AssessmentsListActivity.class);
+                startActivity(intent);
+                finish();
+            });
+            builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
+        } else if (item.getItemId() == R.id.action_save) {
+            saveAndReturn();
+            return true;
+        } else if (item.getItemId() == R.id.action_help) {
+            //TODO: add help dialog
+        } else if (item.getItemId() == R.id.action_notify) {
+            Intent intent = new Intent(this, Alerts.class);
+            //current assessment id
+            int currentId = viewModel.liveAssessments.getValue().getAssessmentId();
+            if (currentId > 0) {
+                Date currentDate = viewModel.liveAssessments.getValue().getAssessmentDueDate();
+                Long trigger = currentDate.getTime();
+                intent.putExtra("notification", assessmentTitle.getText().toString() + " is due today!");
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
+                //set the alarm
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
+            }
             finish();
         }
         return super.onOptionsItemSelected(item);

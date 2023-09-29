@@ -1,10 +1,20 @@
 package com.pbarnhardt.abm2task1.Views;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_DESCRIPTION;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_END_ALARM;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_END_DATE;
 import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_KEY;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_NAME;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_NOTES;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_START_ALARM;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_START_DATE;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_STATUS;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_TERM_ID;
 import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_KEY;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +26,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,12 +37,14 @@ import com.pbarnhardt.abm2task1.Entity.Terms;
 import com.pbarnhardt.abm2task1.Enums.Status;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
+import com.pbarnhardt.abm2task1.Utils.Converters;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
 import com.pbarnhardt.abm2task1.databinding.ActivityCourseEditBinding;
 import com.pbarnhardt.abm2task1.databinding.ContentEditCoursesBinding;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class CourseEditActivity extends AppCompatActivity {
@@ -46,14 +59,24 @@ public class CourseEditActivity extends AppCompatActivity {
     private ArrayAdapter<Status> statusAdapter;
     private ActivityCourseEditBinding activityBinding;
     private ContentEditCoursesBinding contentBinding;
-    private EditText courseTitle;
-    private EditText courseDescription;
-    private EditText courseNote;
-    private Button courseStartDate;
-    private Button courseEndDate;
-    private CheckBox courseStartAlert;
-    private CheckBox courseEndAlert;
-    private Spinner courseStatus;
+    private EditText editCourseTitle;
+    private EditText editCourseDescription;
+    private EditText editCourseNote;
+    private Button editCourseStartDate;
+    private Button editCourseEndDate;
+    private CheckBox editCourseStartAlert;
+    private CheckBox editCourseEndAlert;
+    private Spinner editCourseStatus;
+    private String newCourseTitle;
+    private String newCourseDescription;
+    private String newCourseNote;
+    private Date newCourseStartDate;
+    private Date newCourseEndDate;
+    private boolean newCourseStartAlert;
+    private boolean newCourseEndAlert;
+    private Status newCourseStatus;
+    private String currentDate = Formatting.dateFormat.format(Calendar.getInstance(Locale.getDefault()).getTime());
+    private String endDate;
 
     /**
      * On create.
@@ -78,47 +101,131 @@ public class CourseEditActivity extends AppCompatActivity {
 
         //initiate the binding
         contentBinding = activityBinding.contentInclude;
-        courseTitle = contentBinding.editTextCourseTitle;
-        courseDescription = contentBinding.courseDetailDescription;
-        courseNote = contentBinding.editTextCourseNote;
-        courseStartDate = contentBinding.editTextStartDate;
-        courseEndDate = contentBinding.editTextEndDate;
-        courseStartAlert = contentBinding.checkBoxStartDate;
-        courseEndAlert = contentBinding.checkBoxEndDate;
-        courseStatus = contentBinding.spinnerCourseStatus;
+        editCourseTitle = contentBinding.editTextCourseTitle;
+        editCourseDescription = contentBinding.courseDetailDescription;
+        editCourseNote = contentBinding.editTextCourseNote;
+        editCourseStartDate = contentBinding.editTextStartDate;
+        editCourseEndDate = contentBinding.editTextEndDate;
+        editCourseStartAlert = contentBinding.checkBoxStartDate;
+        editCourseEndAlert = contentBinding.checkBoxEndDate;
+        editCourseStatus = contentBinding.spinnerCourseStatus;
+
+        //retrieve and set the existing information if there is any
+        courseId = getIntent().getIntExtra(COURSE_KEY, -1);
+        newCourseTitle = getIntent().getStringExtra(COURSE_NAME);
+        newCourseDescription = getIntent().getStringExtra(COURSE_DESCRIPTION);
+        newCourseNote = getIntent().getStringExtra(COURSE_NOTES);
+        if (TERM_KEY != null) {
+            termId = getIntent().getIntExtra(COURSE_TERM_ID, -1);
+        }
+        String startDateString = getIntent().getStringExtra(COURSE_START_DATE);
+        String endDateString = getIntent().getStringExtra(COURSE_END_DATE);
+        //if the start and end dates are not null, convert them to date objects
+        if (startDateString != null && endDateString != null) {
+            try {
+                newCourseStartDate = Formatting.dateFormat.parse(startDateString);
+                newCourseEndDate = Formatting.dateFormat.parse(endDateString);
+            } catch (Exception e) {
+                Log.v("Exception", Objects.requireNonNull(e.getLocalizedMessage()));
+            }
+        } else {
+            newCourseStartDate = null;
+            newCourseEndDate = null;
+        }
+        newCourseStartAlert = getIntent().getBooleanExtra(COURSE_START_ALARM, false);
+        newCourseEndAlert = getIntent().getBooleanExtra(COURSE_END_ALARM, false);
+
+        //if the COURSE_STATUS is null, then check the status of the course by course ID
+        if (COURSE_KEY != null) {
+            newCourseStatus = Converters.fromStringToCourseStatus(getIntent().getStringExtra(COURSE_STATUS));
+        } else {
+            courseId = getIntent().getIntExtra(COURSE_KEY, -1);
+            if (courseId != -1) {
+                newCourseStatus = viewModel.getCourseById(courseId).getCourseStatus();
+            } else {
+                newCourseStatus = Status.PLANNED;
+            }
+        }
+
+        //calculate the end date for the course in case this is a new course
+        currentDate = Formatting.dateFormat.format(Calendar.getInstance(Locale.getDefault()).getTime());
+        //increment the current date by 1 month
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        endDate = Formatting.dateFormat.format(calendar.getTime());
+
+        //if the new course start date is null, set it to the current date
+        if (newCourseStartDate == null) {
+            newCourseStartDate = Calendar.getInstance(Locale.getDefault()).getTime();
+        }
+        //if the new course end date is null, set it to the end date
+        if (newCourseEndDate == null) {
+            calendar.add(Calendar.MONTH, 1);
+            newCourseEndDate = calendar.getTime();
+        }
 
         //initiate the view model
         initiateViewModel();
-        addStatusToSpinner(courseStatus);
+        addStatusToSpinner(editCourseStatus);
+
+        //set the existing information if there is any
+        if (courseId != -1) {
+            editCourseTitle.setText(newCourseTitle);
+            editCourseDescription.setText(newCourseDescription);
+            editCourseNote.setText(newCourseNote);
+            editCourseStartDate.setText(Formatting.dateFormat.format(newCourseStartDate));
+            editCourseEndDate.setText(Formatting.dateFormat.format(newCourseEndDate));
+            editCourseStartAlert.setChecked(newCourseStartAlert);
+            editCourseEndAlert.setChecked(newCourseEndAlert);
+            editCourseStatus.setSelection(statusAdapter.getPosition(newCourseStatus));
+        } else if (COURSE_KEY != null) {
+            editCourseTitle.setText(newCourseTitle);
+            editCourseDescription.setText(newCourseDescription);
+            editCourseNote.setText(newCourseNote);
+            editCourseStartDate.setText(Formatting.dateFormat.format(newCourseStartDate));
+            editCourseEndDate.setText(Formatting.dateFormat.format(newCourseEndDate));
+            editCourseStartAlert.setChecked(newCourseStartAlert);
+            editCourseEndAlert.setChecked(newCourseEndAlert);
+            editCourseStatus.setSelection(statusAdapter.getPosition(newCourseStatus));
+        } else {
+            editCourseTitle.setText("");
+            editCourseDescription.setText("");
+            editCourseNote.setText("");
+            editCourseStartDate.setText(currentDate);
+            editCourseEndDate.setText(endDate);
+            editCourseStartAlert.setChecked(false);
+            editCourseEndAlert.setChecked(false);
+            editCourseStatus.setSelection(0);
+        }
 
         //set the onclick listener for the start date button
         contentBinding.editTextStartDate.setOnClickListener(v -> {
-            final Calendar calendar = Calendar.getInstance();
+            final Calendar calendar1 = Calendar.getInstance();
             DatePickerDialog.OnDateSetListener date = (startView, year, month, day) -> {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, day);
+                calendar1.set(Calendar.YEAR, year);
+                calendar1.set(Calendar.MONTH, month);
+                calendar1.set(Calendar.DAY_OF_MONTH, day);
                 //update the button text with the selected date
-                courseStartDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+                editCourseStartDate.setText(Formatting.dateFormat.format(calendar1.getTime()));
                 //set the hint to the selected date
-                courseStartDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
+                editCourseStartDate.setHint(Formatting.dateFormat.format(calendar1.getTime()));
             };
-            new DatePickerDialog(CourseEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            new DatePickerDialog(CourseEditActivity.this, date, calendar1.get(Calendar.YEAR), calendar1.get(Calendar.MONTH), calendar1.get(Calendar.DAY_OF_MONTH)).show();
         });
 
         //set the onclick listener for the end date button
         contentBinding.editTextEndDate.setOnClickListener(v -> {
-            final Calendar calendar = Calendar.getInstance();
+            final Calendar calendar2 = Calendar.getInstance();
             DatePickerDialog.OnDateSetListener date = (endView, year, month, day) -> {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, day);
+                calendar2.set(Calendar.YEAR, year);
+                calendar2.set(Calendar.MONTH, month);
+                calendar2.set(Calendar.DAY_OF_MONTH, day);
                 //update the button text with the selected date
-                courseEndDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+                editCourseEndDate.setText(Formatting.dateFormat.format(calendar2.getTime()));
                 //update the button hint
-                courseEndDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
+                editCourseEndDate.setHint(Formatting.dateFormat.format(calendar2.getTime()));
             };
-            new DatePickerDialog(CourseEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            new DatePickerDialog(CourseEditActivity.this, date, calendar2.get(Calendar.YEAR), calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DAY_OF_MONTH)).show();
         });
     }
 
@@ -142,14 +249,24 @@ public class CourseEditActivity extends AppCompatActivity {
         viewModel.liveCourses.observe(this, courses -> {
             if (courses != null && !edit) {
                 newCourse = false;
-                courseTitle.setText(courses.getCourseName());
-                courseDescription.setText(courses.getCourseDescription());
-                courseNote.setText(courses.getCourseNote());
-                courseStartDate.setText(Formatting.dateFormat.format(courses.getCourseStartDate()));
-                courseEndDate.setText(Formatting.dateFormat.format(courses.getCourseEndDate()));
-                courseStartAlert.setChecked(courses.getCourseStartAlert());
-                courseEndAlert.setChecked(courses.getCourseEndAlert());
-                courseStatus.setSelection(statusAdapter.getPosition(courses.getCourseStatus()));
+                editCourseTitle.setText(newCourseTitle);
+                editCourseDescription.setText(newCourseDescription);
+                editCourseNote.setText(newCourseNote);
+                editCourseStartDate.setText(Formatting.dateFormat.format(newCourseStartDate));
+                editCourseEndDate.setText(Formatting.dateFormat.format(newCourseEndDate));
+                editCourseStartAlert.setChecked(newCourseStartAlert);
+                editCourseEndAlert.setChecked(newCourseEndAlert);
+                editCourseStatus.setSelection(statusAdapter.getPosition(newCourseStatus));
+            } else {
+                newCourse = true;
+                editCourseTitle.setText("");
+                editCourseDescription.setText("");
+                editCourseNote.setText("");
+                editCourseStartDate.setText(Formatting.dateFormat.format(currentDate));
+                editCourseEndDate.setText(Formatting.dateFormat.format(endDate));
+                editCourseStartAlert.setChecked(false);
+                editCourseEndAlert.setChecked(false);
+                editCourseStatus.setSelection(0);
             }
         });
 
@@ -174,12 +291,12 @@ public class CourseEditActivity extends AppCompatActivity {
 
     private void saveAndReturn() {
         try {
-            String courseNameString = courseTitle.getText().toString().trim();
-            String courseDescriptionString = courseDescription.getText().toString().trim();
-            String courseNoteString = courseNote.getText().toString().trim();
-            boolean bCourseStartAlert = courseStartAlert.isChecked();
-            boolean bCourseEndAlert = courseEndAlert.isChecked();
-            Status courseStatusValue = getStatusFromSpinner(courseStatus);
+            String courseNameString = editCourseTitle.getText().toString().trim();
+            String courseDescriptionString = editCourseDescription.getText().toString().trim();
+            String courseNoteString = editCourseNote.getText().toString().trim();
+            boolean bCourseStartAlert = editCourseStartAlert.isChecked();
+            boolean bCourseEndAlert = editCourseEndAlert.isChecked();
+            Status courseStatusValue = getStatusFromSpinner(editCourseStatus);
             //validate the course start and end dates are within the assigned term start and end dates if a term is assigned
             if (termId != -1) {
                 //get the term object from the database
@@ -188,9 +305,9 @@ public class CourseEditActivity extends AppCompatActivity {
                 Date termStartDate = assignedTerm.getTermStartDate();
                 Date termEndDate = assignedTerm.getTermEndDate();
                 //get the start and end dates from the course object
-                Date courseStartDateValue = courseStartDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(courseStartDate.getText().toString());
-                Date courseEndDateValue = courseEndDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(courseEndDate.getText().toString());
-                if (courseStartDateValue.before(termStartDate) || courseStartDateValue.after(termEndDate) || courseEndDateValue.before(termStartDate) || courseEndDateValue.after(termEndDate)) {
+                Date courseStartDateValue = editCourseStartDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(editCourseStartDate.getText().toString());
+                Date courseEndDateValue = editCourseEndDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(editCourseEndDate.getText().toString());
+                if (Objects.requireNonNull(courseStartDateValue).before(termStartDate) || Objects.requireNonNull(courseStartDateValue).after(termEndDate) || Objects.requireNonNull(courseEndDateValue).before(termStartDate) || Objects.requireNonNull(courseEndDateValue).after(termEndDate)) {
                     //build the alert and show it
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Warning");
@@ -198,6 +315,11 @@ public class CourseEditActivity extends AppCompatActivity {
                     builder.setPositiveButton("Yes", (dialog, which) -> {
                         //if the user clicks yes, save the course and return to the previous activity
                         viewModel.saveCourse(courseNameString, courseDescriptionString, courseStartDateValue, courseEndDateValue, bCourseStartAlert, bCourseEndAlert, courseStatusValue, termId, courseNoteString);
+                        //notify the user that the course was saved
+                        Toast.makeText(CourseEditActivity.this, "Course Saved", Toast.LENGTH_SHORT).show();
+                        //navigate back to the course list
+                        Intent intent = new Intent(CourseEditActivity.this, CoursesListActivity.class);
+                        startActivity(intent);
                         finish();
                     });
                     builder.setNegativeButton("No", (dialog, which) -> {
@@ -206,17 +328,34 @@ public class CourseEditActivity extends AppCompatActivity {
                 } else {
                     //if the course start and end dates are within the term start and end dates, save the course and return to the previous activity
                     viewModel.saveCourse(courseNameString, courseDescriptionString, courseStartDateValue, courseEndDateValue, bCourseStartAlert, bCourseEndAlert, courseStatusValue, termId, courseNoteString);
+                    //notify the user that the course was saved
+                    Toast.makeText(CourseEditActivity.this, "Course Saved", Toast.LENGTH_SHORT).show();
+                    //navigate back to the course list
+                    Intent intent = new Intent(CourseEditActivity.this, CoursesListActivity.class);
+                    startActivity(intent);
                     finish();
                 }
             } else {
                 //if no term is assigned, save the course and return to the previous activity
-                Date courseStartDateValue = courseStartDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(courseStartDate.getText().toString());
-                Date courseEndDateValue = courseEndDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(courseEndDate.getText().toString());
+                Date courseStartDateValue = editCourseStartDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(editCourseStartDate.getText().toString());
+                Date courseEndDateValue = editCourseEndDate.getText().toString().isEmpty() ? null : Formatting.dateFormat.parse(editCourseEndDate.getText().toString());
                 viewModel.saveCourse(courseNameString, courseDescriptionString, courseStartDateValue, courseEndDateValue, bCourseStartAlert, bCourseEndAlert, courseStatusValue, termId, courseNoteString);
+                //notify the user that the course was saved
+                Toast.makeText(CourseEditActivity.this, "Course Saved", Toast.LENGTH_SHORT).show();
+                //navigate back to the course list
+                Intent intent = new Intent(CourseEditActivity.this, CoursesListActivity.class);
+                startActivity(intent);
                 finish();
             }
         } catch (Exception e) {
             Log.v("Exception", Objects.requireNonNull(e.getLocalizedMessage()));
+            //notify the user that there was an error saving the course
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Error");
+            builder.setMessage("There was an error saving the course.  Please try again.");
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                //if the user clicks ok, close the alert
+            });
         }
         finish();
     }

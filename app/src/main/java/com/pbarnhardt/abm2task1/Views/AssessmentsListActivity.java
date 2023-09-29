@@ -2,6 +2,9 @@ package com.pbarnhardt.abm2task1.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
@@ -12,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pbarnhardt.abm2task1.Adapters.AssessmentAdapter;
 import com.pbarnhardt.abm2task1.Entity.Assessments;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
@@ -23,6 +25,7 @@ import com.pbarnhardt.abm2task1.databinding.ContentListAssessmentsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AssessmentsListActivity extends AppCompatActivity implements AssessmentAdapter.AssessmentSelection {
     /** @noinspection FieldMayBeFinal*/
@@ -43,6 +46,10 @@ public class AssessmentsListActivity extends AppCompatActivity implements Assess
         setContentView(view);
         Toolbar toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
+        //set toolbar color
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_action_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initializeViewModel();
 
@@ -77,7 +84,8 @@ public class AssessmentsListActivity extends AppCompatActivity implements Assess
                 assessmentAdapter = new AssessmentAdapter(assessmentsList, AssessmentsListActivity.this, RecyclerAdapter.MAIN, this);
                 recyclerView.setAdapter(assessmentAdapter);
             } else {
-                assessmentAdapter.notifyDataSetChanged();
+                //notify just the item that was changed
+                assessmentAdapter.notifyItemRangeChanged(0, assessmentsList.size());
             }
         };
         AssessmentModel assessmentModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(AssessmentModel.class);
@@ -93,5 +101,21 @@ public class AssessmentsListActivity extends AppCompatActivity implements Assess
     @Override
     public void onAssessmentSelected(int position, Assessments assessment) {
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_list, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return true;
     }
 }

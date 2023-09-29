@@ -4,12 +4,15 @@ import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.MENTOR_KEY;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +24,6 @@ import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.databinding.ActivityMentorEditBinding;
 import com.pbarnhardt.abm2task1.databinding.ContentEditMentorsBinding;
 
-import java.text.ParseException;
 import java.util.Objects;
 
 public class MentorEditActivity extends AppCompatActivity {
@@ -117,7 +119,28 @@ public class MentorEditActivity extends AppCompatActivity {
     }
 
     private void saveAndReturn() {
-        doSave();
+        try {
+            String name = mentorName.getText().toString();
+            String email = mentorEmail.getText().toString();
+            String phone = mentorPhone.getText().toString();
+            //save the mentor
+            viewModel.saveMentor(name, email, phone, courseId);
+            //notify the user that the mentor was saved
+            Toast.makeText(this, "Mentor Saved", Toast.LENGTH_SHORT).show();
+            //navigate back to the mentor list
+            Intent intent = new Intent(this, MentorsListActivity.class);
+            startActivity(intent);
+            finish();
+        } catch (Exception e) {
+            Log.e("MentorEditActivity", Objects.requireNonNull(e.getMessage()));
+            //notify the user that there was an error saving the mentor
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("There was an error saving the mentor. \nPlease try again.");
+            builder.setPositiveButton("OK", (dialog, id) -> {
+                // User clicked OK button
+                dialog.dismiss();
+            });
+        }
         finish();
     }
 
@@ -143,24 +166,14 @@ public class MentorEditActivity extends AppCompatActivity {
                 finish();
             }
         } else if (item.getItemId() == R.id.action_save) {
-            doSave();
-            finish();
+            saveAndReturn();
+            return true;
         } else if (item.getItemId() == R.id.action_help) {
             //TODO: add help
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    /**
-     * Do save.
-     */
-    private void doSave() {
-        String mentorNameString = mentorName.getText().toString().trim();
-        String mentorEmailString = mentorEmail.getText().toString().trim();
-        String mentorPhoneString = mentorPhone.getText().toString().trim();
-        viewModel.saveMentor(mentorNameString, mentorEmailString, mentorPhoneString, courseId);
-    }
 
     /**
      * Do delete.

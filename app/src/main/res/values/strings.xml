@@ -80,4 +80,5 @@
     <string name="no_course_assigned">No course assigned</string>
     <string name="edit_assessment">Edit Assessment</string>
     <string name="new_assessment">New Assessment</string>
+    <string name="notify">Notify</string>
 </resources>

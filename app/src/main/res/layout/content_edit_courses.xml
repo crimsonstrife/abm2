@@ -87,11 +87,13 @@
         <Spinner
             android:id="@+id/spinner_course_status"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="30dp"
             android:entries="@array/statusArray"
             android:spinnerMode="dropdown"
-            app:layout_constraintStart_toEndOf="@+id/text_course_status"
+            android:layout_height="48dp"
+            android:maxWidth="250dp"
+            android:minWidth="250dp"
+            android:minHeight="48dp"
+            app:layout_constraintStart_toStartOf="@+id/editText_course_title"
             app:layout_constraintTop_toTopOf="@+id/text_course_status" />
 
         <TextView

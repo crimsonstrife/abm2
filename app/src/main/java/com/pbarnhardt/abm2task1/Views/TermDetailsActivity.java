@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pbarnhardt.abm2task1.Adapters.CourseAdapter;
 import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
@@ -33,8 +32,8 @@ import java.util.List;
 
 public class TermDetailsActivity extends AppCompatActivity implements CourseAdapter.CourseSelection {
     private int termId;
-    private List<Courses> coursesListData = new ArrayList<>();
-    private List<Courses> unassignedCoursesList = new ArrayList<>();
+    private final List<Courses> coursesListData = new ArrayList<>();
+    private final List<Courses> unassignedCoursesList = new ArrayList<>();
     private CourseAdapter courseAdapter;
     private Toolbar toolbar;
     private EditorModel viewModel;
@@ -129,7 +128,7 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
                 courseAdapter = new CourseAdapter(coursesListData, TermDetailsActivity.this, RecyclerAdapter.CHILD, this);
                 recyclerView.setAdapter(courseAdapter);
             } else {
-                courseAdapter.notifyDataSetChanged();
+                courseAdapter.notifyItemRangeChanged(0, coursesListData.size());
             }
         };
         //load unassigned courses (courses not assigned to a term), so they can potentially be added to this term
@@ -170,7 +169,8 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
         builder.setPositiveButton("Remove", (dialog, id) -> {
             dialog.dismiss();
             viewModel.overwriteCourse(course, -1);
-            courseAdapter.notifyDataSetChanged();
+            courseAdapter.notifyItemRangeChanged(0, coursesListData.size());
+            courseAdapter.notifyItemChanged(position);
         });
         builder.setNegativeButton("Cancel", (dialog, id) -> dialog.dismiss());
         AlertDialog dialog = builder.create();

@@ -33,7 +33,7 @@ public class SampleDataSet {
      */
     private static Date getDate(int diff) {
         GregorianCalendar cal = new GregorianCalendar();
-        cal.add(Calendar.MILLISECOND, diff);
+        cal.add(Calendar.MONTH, diff);
         return cal.getTime();
     }
 
@@ -42,7 +42,7 @@ public class SampleDataSet {
      */
     public static List<Terms> getTerms() {
         List<Terms> term = new ArrayList<>();
-        term.add(new Terms(1, SAMPLE_TITLE, getDate(0), (getDate(10))));
+        term.add(new Terms(1, SAMPLE_TITLE, getDate(0), (getDate(6))));
         return term;
     }
 
@@ -51,7 +51,7 @@ public class SampleDataSet {
      */
     public static List<Courses> getCourses() {
         List<Courses> course = new ArrayList<>();
-        course.add(new Courses(1, SAMPLE_COURSE_TITLE, SAMPLE_COURSE_DESCRIPTION, true, getDate(0),true, (getDate(10)), Status.PROGRESS, SAMPLE_COURSE_NOTE, 1));
+        course.add(new Courses(1, SAMPLE_COURSE_TITLE, SAMPLE_COURSE_DESCRIPTION, false, getDate(0),true, getDate(3), Status.PROGRESS, SAMPLE_COURSE_NOTE, 1));
         return course;
     }
 
@@ -60,7 +60,7 @@ public class SampleDataSet {
      */
     public static List<Assessments> getAssessments() {
         List<Assessments> assessment = new ArrayList<>();
-        assessment.add(new Assessments(1, SAMPLE_ASSESSMENT_TITLE, Types.OBJECTIVE, SAMPLE_ASSESSMENT_DESCRIPTION, getDate(10), true, 1));
+        assessment.add(new Assessments(1, SAMPLE_ASSESSMENT_TITLE, Types.OBJECTIVE, SAMPLE_ASSESSMENT_DESCRIPTION, getDate(3), true, 1));
         return assessment;
     }
 

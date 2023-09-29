@@ -8,12 +8,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -62,11 +59,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /**
      * Variables
      */
-    private List<Terms> termListData = new ArrayList<>();
-    private List<Courses> courseListData = new ArrayList<>();
-    private List<Assessments> assessmentListData = new ArrayList<>();
+    private final List<Terms> termListData = new ArrayList<>();
+    private final List<Courses> courseListData = new ArrayList<>();
+    private final List<Assessments> assessmentListData = new ArrayList<>();
     /** @noinspection MismatchedQueryAndUpdateOfCollection*/
-    private List<Mentors> mentorListData = new ArrayList<>();
+    private final List<Mentors> mentorListData = new ArrayList<>();
 
 
     /**
@@ -82,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(view);
         Toolbar toolbar = activityBinding.toolbarInclude.toolbar;
         setSupportActionBar(toolbar);
+        //set toolbar color
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         drawerLayout = activityBinding.drawerLayout;
         navigationView = activityBinding.navigationView;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_navigation, R.string.close_navigation);
@@ -130,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(termAdapter == null) {
                 termAdapter = new TermAdapter(termListData, MainActivity.this, RecyclerAdapter.MAIN);
             } else {
-                termAdapter.notifyDataSetChanged();
+                termAdapter.notifyItemRangeChanged(0, termAdapter.getItemCount());
             }
         };
         //Observer for the courses

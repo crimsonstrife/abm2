@@ -31,8 +31,8 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.Vi
     private final List<Assessments> assessmentList;
     private final Context theContext;
     private final RecyclerAdapter recycler;
-
     private AssessmentSelection assessmentSelected;
+
 
     public AssessmentAdapter(List<Assessments> assessmentList, Context context, RecyclerAdapter recycler, AssessmentSelection assessmentSelected) {
         this.assessmentList = assessmentList;

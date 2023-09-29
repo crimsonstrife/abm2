@@ -11,9 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
-import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.databinding.ActivityMentorDetailsBinding;
 import com.pbarnhardt.abm2task1.databinding.ContentDetailsMentorsBinding;
 
@@ -52,14 +50,11 @@ public class MentorDetailsActivity extends AppCompatActivity {
         initiateViewModel();
 
         //on click listener for the floating button
-        activityBinding.floatingEditMentorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MentorDetailsActivity.this, MentorEditActivity.class);
-                intent.putExtra(MENTOR_KEY, mentorId);
-                startActivity(intent);
-                finish();
-            }
+        activityBinding.floatingEditMentorButton.setOnClickListener(view1 -> {
+            Intent intent = new Intent(MentorDetailsActivity.this, MentorEditActivity.class);
+            intent.putExtra(MENTOR_KEY, mentorId);
+            startActivity(intent);
+            finish();
         });
     }
 

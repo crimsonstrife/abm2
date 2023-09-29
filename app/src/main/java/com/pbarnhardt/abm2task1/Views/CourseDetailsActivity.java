@@ -1,12 +1,28 @@
 package com.pbarnhardt.abm2task1.Views;
 
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_DESCRIPTION;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_END_ALARM;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_END_DATE;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_ID;
 import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_KEY;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_NAME;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_NOTES;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_START_ALARM;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_START_DATE;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_STATUS;
+import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_TERM_ID;
 import static com.pbarnhardt.abm2task1.Utils.Converters.fromCourseStatusToString;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,24 +34,25 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pbarnhardt.abm2task1.Adapters.AssessmentAdapter;
 import com.pbarnhardt.abm2task1.Adapters.MentorAdapter;
 import com.pbarnhardt.abm2task1.Entity.Assessments;
+import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Enums.RecyclerAdapter;
-import com.pbarnhardt.abm2task1.Models.AssessmentModel;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
-import com.pbarnhardt.abm2task1.Models.MentorModel;
 import com.pbarnhardt.abm2task1.Popups.DropdownAssessments;
 import com.pbarnhardt.abm2task1.Popups.DropdownMentors;
 import com.pbarnhardt.abm2task1.R;
+import com.pbarnhardt.abm2task1.Utils.Alerts;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
 import com.pbarnhardt.abm2task1.databinding.ActivityCourseDetailsBinding;
 import com.pbarnhardt.abm2task1.databinding.ContentDetailsCoursesBinding;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class CourseDetailsActivity extends AppCompatActivity implements MentorAdapter.MentorSelectedListener, AssessmentAdapter.AssessmentSelection {
     /**
@@ -46,20 +63,23 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
     private int courseId;
     private AssessmentAdapter assessmentAdapter;
     private MentorAdapter mentorAdapter;
-    private List<Assessments> assessmentsListData = new ArrayList<>();
-    private List<Mentors> mentorsListData = new ArrayList<>();
-    private List<Assessments> unassignedAssessmentsList = new ArrayList<>();
-    private List<Mentors> unassignedMentorsList = new ArrayList<>();
+    private final List<Assessments> assessmentsListData = new ArrayList<>();
+    private final List<Mentors> mentorsListData = new ArrayList<>();
+    private final List<Assessments> unassignedAssessmentsList = new ArrayList<>();
+    private final List<Mentors> unassignedMentorsList = new ArrayList<>();
     private ActivityCourseDetailsBinding activityBinding;
     private ContentDetailsCoursesBinding contentBinding;
     private RecyclerView courseAssessmentsRecyclerView;
     private RecyclerView courseMentorsRecyclerView;
+    private CheckBox editCourseStartAlert;
+    private CheckBox editCourseEndAlert;
     private TextView courseTitleView;
     private TextView courseDescriptionView;
     private TextView courseStatusView;
     private TextView courseStartDateView;
     private TextView courseEndDateView;
     private TextView courseNotesView;
+    private Courses course;
 
 
     /**
@@ -73,6 +93,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
         setContentView(view);
         toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
+        //set toolbar color
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_action_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initiateViewModel();
 
@@ -87,7 +111,6 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
         courseAssessmentsRecyclerView = contentBinding.courseAssessmentsRecyclerView;
         courseMentorsRecyclerView = contentBinding.courseMentorsRecyclerView;
 
-
         initializeRecyclerView(courseAssessmentsRecyclerView);
         initializeRecyclerView(courseMentorsRecyclerView);
 
@@ -95,6 +118,16 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
         activityBinding.floatingEditCourseButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, CourseEditActivity.class);
             intent.putExtra(COURSE_KEY, courseId);
+            intent.putExtra(COURSE_ID, courseId);
+            intent.putExtra(COURSE_NAME, courseTitleView.getText().toString());
+            intent.putExtra(COURSE_START_DATE, courseStartDateView.getText().toString());
+            intent.putExtra(COURSE_END_DATE, courseEndDateView.getText().toString());
+            intent.putExtra(COURSE_STATUS, courseStatusView.getText().toString());
+            intent.putExtra(COURSE_NOTES, courseNotesView.getText().toString());
+            intent.putExtra(COURSE_TERM_ID, Objects.requireNonNull(viewModel.liveCourses.getValue()).getTermId());
+            intent.putExtra(COURSE_DESCRIPTION, courseDescriptionView.getText().toString());
+            intent.putExtra(COURSE_START_ALARM, viewModel.liveCourses.getValue().getCourseStartAlert());
+            intent.putExtra(COURSE_END_ALARM, viewModel.liveCourses.getValue().getCourseEndAlert());
             this.startActivity(intent);
             finish();
         });
@@ -184,12 +217,12 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
         viewModel.liveCourses.observe(this, courses -> {
             if(courses != null) {
                 courseId = courses.getCourseId();
-                contentBinding.editTextCourseTitle.setText(courses.getCourseName());
-                contentBinding.courseDetailDescription.setText(courses.getCourseDescription());
-                contentBinding.spinnerCourseStatus.setText(fromCourseStatusToString(courses.getCourseStatus()));
-                contentBinding.termDetailStartDate.setText(Formatting.dateFormat.format(courses.getCourseStartDate()));
-                contentBinding.termDetailEndDate.setText(Formatting.dateFormat.format(courses.getCourseEndDate()));
-                contentBinding.editTextCourseNote.setText(courses.getCourseNote());
+                courseTitleView.setText(courses.getCourseName());
+                courseDescriptionView.setText(courses.getCourseDescription());
+                courseStatusView.setText(fromCourseStatusToString(courses.getCourseStatus()));
+                courseStartDateView.setText(Formatting.dateFormat.format(courses.getCourseStartDate()));
+                courseEndDateView.setText(Formatting.dateFormat.format(courses.getCourseEndDate()));
+                courseNotesView.setText(courses.getCourseNote());
                 toolbar.setTitle(courses.getCourseName());
             }
         });
@@ -202,7 +235,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
                 mentorAdapter = new MentorAdapter(mentorsListData, this, RecyclerAdapter.CHILD, this);
                 courseMentorsRecyclerView.setAdapter(mentorAdapter);
             } else {
-                mentorAdapter.notifyDataSetChanged();
+                mentorAdapter.notifyItemRangeChanged(0, mentorsListData.size());
             }
         };
 
@@ -220,7 +253,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
                 assessmentAdapter = new AssessmentAdapter(assessmentsListData, this, RecyclerAdapter.CHILD, this);
                 courseAssessmentsRecyclerView.setAdapter(assessmentAdapter);
             } else {
-                assessmentAdapter.notifyDataSetChanged();
+                assessmentAdapter.notifyItemRangeChanged(0, assessmentsListData.size());
             }
         };
 
@@ -255,7 +288,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
             viewModel.overwriteMentor(mentor, -1);
             //delete mentor
             viewModel.deleteMentor();
-            mentorAdapter.notifyDataSetChanged();
+            mentorAdapter.notifyItemRangeChanged(0, mentorsListData.size());
             dialog.dismiss();
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
@@ -274,11 +307,80 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
             viewModel.overwriteAssessment(assessment, -1);
             //delete assessment
             viewModel.deleteAssessment();
-            assessmentAdapter.notifyDataSetChanged();
+            assessmentAdapter.notifyItemRangeChanged(0, assessmentsListData.size());
             dialog.dismiss();
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+           MenuInflater inflater = getMenuInflater();
+           inflater.inflate(R.menu.menu_details, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else if (item.getItemId() == R.id.action_delete) {
+            //ask user to confirm delete action of course
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Delete Course");
+            builder.setMessage("Are you sure you want to delete this course? \nThis will leave unassigned assessments and/or mentors.");
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                //reassign any assessments or mentors to -1
+                int thisCourseId = viewModel.liveCourses.getValue().getCourseId();
+                List<Assessments> assessments = viewModel.assessmentsList.getValue();
+                List<Mentors> mentors = viewModel.mentorsList.getValue();
+                //if there are assessments, for each assessment, if the course id matches, set it to -1
+                if (assessments != null) {
+                    for (Assessments assessment : assessments) {
+                        if (assessment.getAssessmentCourseId() == thisCourseId) {
+                            assessment.setAssessmentCourseId(-1);
+                            viewModel.overwriteAssessment(assessment, -1);
+                        }
+                    }
+                }
+                //if there are mentors, for each mentor, if the course id matches, set it to -1
+                if (mentors != null) {
+                    for (Mentors mentor : mentors) {
+                        if (mentor.getCourseId() == thisCourseId) {
+                            mentor.setCourseId(-1);
+                            viewModel.overwriteMentor(mentor, -1);
+                        }
+                    }
+                }
+                //delete course
+                viewModel.deleteCourse();
+                dialog.dismiss();
+                finish();
+            });
+        } else if (item.getItemId() == R.id.action_help) {
+            //TODO: add help dialog
+        } else if (item.getItemId() == R.id.action_notify) {
+            Intent intent = new Intent(this, Alerts.class);
+            //current course id
+            int currentId = viewModel.liveCourses.getValue().getCourseId();
+            if (currentId > 0) {
+                Date currentDate = viewModel.liveCourses.getValue().getCourseEndDate();
+                Long trigger = currentDate.getTime();
+                intent.putExtra("notification", courseTitleView.getText().toString() + " ends today!");
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
+                //set the alarm
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
+            }
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
