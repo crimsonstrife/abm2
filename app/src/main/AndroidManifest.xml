@@ -80,7 +80,13 @@
         </activity>
         <receiver android:name=".Utils.Alerts"
             android:enabled="true"
-            android:exported="true"/>
+            android:process=":remote"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.action.DISPLAY_NOTIFICATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
