@@ -98,6 +98,50 @@
             app:layout_constraintTop_toTopOf="@+id/text_assessment_type" />
 
         <TextView
+            android:id="@+id/text_assessment_start_date"
+            style="@style/FieldNameText"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:labelFor="@id/editText_assessmentEndDate"
+            android:text="@string/assessmentStartDateLabel"
+            android:textAlignment="viewEnd"
+            app:layout_constraintEnd_toEndOf="@+id/text_assessment_type"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_assessment_type" />
+
+        <TextView
+            android:id="@+id/termDetailStartDate"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:textColor="@color/colorText"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:autoSizeTextType="uniform"
+            android:text="@string/date_format_dummy"
+            app:layout_constraintStart_toStartOf="@id/assessmentDetailDescription"
+            app:layout_constraintTop_toTopOf="@id/text_assessment_start_date"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+        <CheckBox
+            android:id="@+id/checkbox_remindMeStart"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/remind_me"
+            app:layout_constraintStart_toEndOf="@+id/termDetailStartDate"
+            app:layout_constraintTop_toTopOf="@+id/termDetailStartDate" />
+
+        <Button
+            android:id="@+id/editText_assessmentStartDate"
+            style="@style/button_date"
+            android:layout_height="48dp"
+            android:layout_marginTop="5dp"
+            android:textColorHint="#757575"
+            app:layout_constraintStart_toStartOf="@+id/termDetailStartDate"
+            app:layout_constraintTop_toBottomOf="@+id/termDetailStartDate"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+        <TextView
             android:id="@+id/text_assessment_goal_date"
             style="@style/FieldNameText"
             android:layout_width="85dp"
@@ -107,16 +151,29 @@
             android:text="@string/assessmentDueDateLabel"
             android:textAlignment="viewEnd"
             app:layout_constraintEnd_toEndOf="@+id/text_assessment_type"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_assessment_type" />
+            app:layout_constraintTop_toBottomOf="@+id/editText_assessmentStartDate" />
+
+        <TextView
+            android:id="@+id/termDetailDueDate"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:textColor="@color/colorText"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:autoSizeTextType="uniform"
+            android:text="@string/date_format_dummy"
+            app:layout_constraintStart_toStartOf="@id/assessmentDetailDescription"
+            app:layout_constraintTop_toTopOf="@id/text_assessment_goal_date"
+            tools:ignore="DuplicateSpeakableTextCheck" />
 
         <Button
             android:id="@+id/editText_assessmentEndDate"
             style="@style/button_date"
             android:layout_height="48dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:textColorHint="#757575"
-            app:layout_constraintStart_toEndOf="@+id/text_assessment_goal_date"
-            app:layout_constraintTop_toTopOf="@+id/text_assessment_goal_date"
+            app:layout_constraintStart_toStartOf="@+id/termDetailDueDate"
+            app:layout_constraintTop_toBottomOf="@+id/termDetailDueDate"
             tools:ignore="DuplicateSpeakableTextCheck" />
 
         <CheckBox
@@ -125,8 +182,8 @@
             android:layout_height="48dp"
             android:layout_marginStart="20dp"
             android:text="@string/remind_me"
-            app:layout_constraintStart_toEndOf="@+id/editText_assessmentEndDate"
-            app:layout_constraintTop_toTopOf="@+id/editText_assessmentEndDate" />
+            app:layout_constraintStart_toEndOf="@+id/termDetailDueDate"
+            app:layout_constraintTop_toTopOf="@+id/termDetailDueDate" />
 
         <TextView
             android:id="@+id/text_assessment_course"
@@ -138,7 +195,7 @@
             android:labelFor="@id/assessment_course"
             android:textAlignment="viewEnd"
             app:layout_constraintEnd_toEndOf="@+id/text_assessment_goal_date"
-            app:layout_constraintTop_toBottomOf="@+id/checkbox_remindMe"  />
+            app:layout_constraintTop_toBottomOf="@+id/editText_assessmentEndDate"  />
 
         <Spinner
             android:id="@+id/assessment_course"
