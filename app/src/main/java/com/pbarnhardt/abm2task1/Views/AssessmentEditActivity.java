@@ -20,12 +20,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.pbarnhardt.abm2task1.Adapters.AssessmentAdapter;
 import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Enums.Status;
 import com.pbarnhardt.abm2task1.Enums.Types;
@@ -60,7 +63,11 @@ public class AssessmentEditActivity extends AppCompatActivity {
     private ContentEditAssessmentsBinding contentBinding;
     private EditText assessmentTitle;
     private EditText assessmentDescription;
+    private Button assessmentStartDate;
     private Button assessmentDueDate;
+    private TextView assessmentStartDateText;
+    private TextView assessmentDueDateText;
+    private CheckBox assessmentStartAlert;
     private CheckBox assessmentDueAlert;
     private Spinner assessmentType;
     private Spinner assignedCourse;
@@ -72,6 +79,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
     private boolean newCourseStartAlert;
     private boolean newCourseEndAlert;
     private Status newCourseStatus;
+    private AssessmentAdapter adapter;
 
     /**
      * On create.
@@ -100,7 +108,11 @@ public class AssessmentEditActivity extends AppCompatActivity {
         assessmentTitle = contentBinding.editTextAssessmentTitle;
         assessmentDescription = contentBinding.assessmentDetailDescription;
         assessmentDueDate = contentBinding.editTextAssessmentEndDate;
+        assessmentDueDateText = contentBinding.termDetailDueDate;
+        assessmentStartDate = contentBinding.editTextAssessmentStartDate;
+        assessmentStartDateText = contentBinding.termDetailStartDate;
         assessmentDueAlert = contentBinding.checkboxRemindMe;
+        assessmentStartAlert = contentBinding.checkboxRemindMeStart;
         assessmentType = contentBinding.spinnerAssessmentType;
         assignedCourse = contentBinding.assessmentCourse;
 
@@ -116,11 +128,29 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
+
+                //update the button text with the selected date
+                assessmentDueDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+                assessmentDueDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
+                assessmentDueDateText.setText(Formatting.dateFormat.format(calendar.getTime()));
             };
             new DatePickerDialog(AssessmentEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-            //update the button text with the selected date
-            assessmentDueDate.setText(Formatting.dateFormat.format(calendar.getTime()));
-            assessmentDueDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
+        });
+
+        //set the start date button
+        assessmentStartDate.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            DatePickerDialog.OnDateSetListener date = (startView, year, month, day) -> {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, day);
+
+                //update the button text with the selected date
+                assessmentStartDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+                assessmentStartDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
+                assessmentStartDateText.setText(Formatting.dateFormat.format(calendar.getTime()));
+            };
+            new DatePickerDialog(AssessmentEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
     }
 
@@ -168,8 +198,10 @@ public class AssessmentEditActivity extends AppCompatActivity {
             if (assessments != null && !edit) {
                 assessmentTitle.setText(assessments.getAssessmentName());
                 assessmentDescription.setText(assessments.getAssessmentDescription());
+                assessmentStartDate.setText(Formatting.dateFormat.format(assessments.getAssessmentStartDate()));
                 assessmentDueDate.setText(Formatting.dateFormat.format(assessments.getAssessmentDueDate()));
-                assessmentDueAlert.setChecked(assessments.getAssessmentAlert());
+                assessmentStartAlert.setChecked(assessments.getAssessmentStartAlert());
+                assessmentDueAlert.setChecked(assessments.getAssessmentDueAlert());
                 int typePosition = getTypeSpinnerPosition(assessments.getAssessmentType());
                 assessmentType.setSelection(typePosition);
                 int coursePosition = getCourseSpinnerPosition(assessments.getAssessmentCourseId());
@@ -239,7 +271,9 @@ public class AssessmentEditActivity extends AppCompatActivity {
             String title = assessmentTitle.getText().toString().trim();
             String description = assessmentDescription.getText().toString().trim();
             Date dueDate = Formatting.dateFormat.parse(assessmentDueDate.getText().toString());
-            boolean alert = assessmentDueAlert.isChecked();
+            Date startDate = Formatting.dateFormat.parse(assessmentStartDate.getText().toString());
+            boolean startAlert = assessmentStartAlert.isChecked();
+            boolean dueAlert = assessmentDueAlert.isChecked();
             Types type = getTypeSpinnerValue(assessmentType);
             //match the spinner value to the course id
             for (int i = 0; i < courseNames.length; i++) {
@@ -247,12 +281,10 @@ public class AssessmentEditActivity extends AppCompatActivity {
                     courseId = courseIds[i];
                 }
             }
-            viewModel.saveAssessment(title, description, dueDate, type, courseId, alert);
+            viewModel.saveAssessment(title, description, startDate, dueDate, type, courseId, startAlert, dueAlert);
             //notify the user that the assessment was saved
             Toast.makeText(AssessmentEditActivity.this, "Assessment saved", Toast.LENGTH_SHORT).show();
             //navigate back to the assessment list
-            Intent intent = new Intent(this, AssessmentsListActivity.class);
-            startActivity(intent);
             finish();
         } catch (Exception e) {
             Log.v("Exception: ", Objects.requireNonNull(e.getLocalizedMessage()));
@@ -286,7 +318,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
             //ask the user if they want to save before exiting
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Do you want to save?");
-            builder.setIcon(getDrawable(R.drawable.ic_question_mark));
+            builder.setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_question_mark));
             builder.setPositiveButton("Yes", (dialog, id) -> {
                 dialog.dismiss();
                 saveAndReturn();
@@ -303,13 +335,11 @@ public class AssessmentEditActivity extends AppCompatActivity {
             //ask the user if they want to delete the assessment
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Are you sure you want to delete this assessment?");
-            builder.setIcon(getDrawable(R.drawable.ic_question_mark));
+            builder.setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_question_mark));
             builder.setPositiveButton("Yes", (dialog, id) -> {
                 dialog.dismiss();
                 viewModel.deleteAssessment();
                 Toast.makeText(AssessmentEditActivity.this, "Assessment deleted", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, AssessmentsListActivity.class);
-                startActivity(intent);
                 finish();
             });
             builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
@@ -319,22 +349,83 @@ public class AssessmentEditActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.action_help) {
             //TODO: add help dialog
         } else if (item.getItemId() == R.id.action_notify) {
-            Intent intent = new Intent(this, Alerts.class);
-            //current assessment id
-            int currentId = viewModel.liveAssessments.getValue().getAssessmentId();
-            if (currentId > 0) {
-                Date currentDate = viewModel.liveAssessments.getValue().getAssessmentDueDate();
-                Long trigger = currentDate.getTime();
-                intent.putExtra("notification", assessmentTitle.getText().toString() + " is due today!");
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
-                //set the alarm
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-                Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
-            }
-            finish();
+            //ask the user if they want to set an alert for the start or end date or both
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Do you want to set an alert for the start date, end date, or both?");
+            builder.setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_question_mark));
+            builder.setPositiveButton("Start Date", (dialog, id) -> {
+                dialog.dismiss();
+                //set the start date alert
+                Intent intent = new Intent(this, Alerts.class);
+                //current assessment id
+                int currentId = viewModel.getAssessmentById(assessmentId).getAssessmentId();
+                if (currentId > 0) {
+                    Date currentDate = viewModel.getAssessmentById(currentId).getAssessmentStartDate();
+                    Long trigger = currentDate.getTime();
+                    intent.putExtra("notification", assessmentTitle.getText().toString() + " is starting today!");
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
+                    //set the alarm
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                    Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
+                }
+                finish();
+            });
+            builder.setNegativeButton("End Date", (dialog, id) -> {
+                dialog.dismiss();
+                //set the end date alert
+                Intent intent = new Intent(this, Alerts.class);
+                //current assessment id
+                int currentId = viewModel.getAssessmentById(assessmentId).getAssessmentId();
+                if (currentId > 0) {
+                    Date currentDate = viewModel.getAssessmentById(currentId).getAssessmentDueDate();
+                    Long trigger = currentDate.getTime();
+                    intent.putExtra("notification", assessmentTitle.getText().toString() + " is due today!");
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
+                    //set the alarm
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                    Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
+                }
+            });
+            builder.setNeutralButton("Both", (dialog, id) -> {
+                dialog.dismiss();
+                //set both alerts
+                Intent intent = new Intent(this, Alerts.class);
+                //current assessment id
+                int currentId = viewModel.getAssessmentById(assessmentId).getAssessmentId();
+                if (currentId > 0) {
+                    Date currentDate = viewModel.getAssessmentById(currentId).getAssessmentStartDate();
+                    Long trigger = currentDate.getTime();
+                    intent.putExtra("notification", assessmentTitle.getText().toString() + " is starting today!");
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
+                    //set the alarm
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                    Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
+                }
+                Intent intent2 = new Intent(this, Alerts.class);
+                //current assessment id
+                int currentId2 = viewModel.getAssessmentById(assessmentId).getAssessmentId();
+                if (currentId2 > 0) {
+                    Date currentDate2 = viewModel.getAssessmentById(currentId2).getAssessmentDueDate();
+                    Long trigger2 = currentDate2.getTime();
+                    intent2.putExtra("notification", assessmentTitle.getText().toString() + " is due today!");
+                    PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this, currentId2, intent2, PendingIntent.FLAG_IMMUTABLE);
+                    //set the alarm
+                    AlarmManager alarmManager2 = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    alarmManager2.set(AlarmManager.RTC_WAKEUP, trigger2, pendingIntent2);
+                    Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate2), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
+                }
+            });
         }
         return super.onOptionsItemSelected(item);
     }
