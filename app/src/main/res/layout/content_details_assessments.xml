@@ -78,12 +78,12 @@
         app:layout_constraintTop_toTopOf="@+id/text_assessment_typeLabel" />
 
     <TextView
-        android:id="@+id/text_assessment_goal_date"
+        android:id="@+id/text_assessment_start_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         style="@style/FieldNameText"
-        android:text="@string/assessmentDueDateLabel"
+        android:text="@string/assessmentStartDateLabel"
         android:textAlignment="viewEnd"
         app:layout_constraintEnd_toEndOf="@+id/text_assessment_typeLabel"
         app:layout_constraintTop_toBottomOf="@+id/text_assessment_typeLabel"
@@ -91,6 +91,28 @@
 
     <TextView
         android:id="@+id/termDetailStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/termDetailStartDateDummy"
+        app:layout_constraintStart_toEndOf="@id/text_assessment_start_date"
+        app:layout_constraintTop_toTopOf="@id/text_assessment_start_date"
+        tools:ignore="DuplicateSpeakableTextCheck" />
+
+    <TextView
+        android:id="@+id/text_assessment_goal_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        style="@style/FieldNameText"
+        android:text="@string/assessmentDueDateLabel"
+        android:textAlignment="viewEnd"
+        app:layout_constraintEnd_toEndOf="@+id/text_assessment_start_date"
+        app:layout_constraintTop_toBottomOf="@+id/text_assessment_start_date"
+        tools:ignore="TextSizeCheck" />
+
+    <TextView
+        android:id="@+id/termDetailDueDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
