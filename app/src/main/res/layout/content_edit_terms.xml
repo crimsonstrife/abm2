@@ -56,6 +56,21 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="TextSizeCheck" />
 
+        <TextView
+            android:id="@+id/termDetailDueDate"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorText"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:autoSizeTextType="uniform"
+            android:text="@string/date_format_dummy"
+            app:layout_constraintStart_toEndOf="@id/termDetailDatesLabel"
+            app:layout_constraintTop_toBottomOf="@id/termDetailTitle"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
         <Button
             android:id="@+id/termDetailEditStartDate"
             style="@style/button_date"
@@ -67,7 +82,7 @@
             android:focusable="true"
             android:textColorHint="@color/colorHintText"
             app:layout_constraintStart_toEndOf="@id/termDetailDatesLabel"
-            app:layout_constraintTop_toBottomOf="@id/termDetailTitle"
+            app:layout_constraintTop_toBottomOf="@id/termDetailDueDate"
             tools:ignore="DuplicateSpeakableTextCheck" />
         <TextView
             android:id="@+id/termDetailTextUntil"
@@ -78,9 +93,24 @@
             android:text="@string/untilForDates"
             android:labelFor="@id/termDetailEditEndDate"
             android:textColor="@color/colorText"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/termDetailEditStartDate"
             app:layout_constraintTop_toBottomOf="@id/termDetailTitle" />
+
+        <TextView
+            android:id="@+id/termDetailEndDate"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorText"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:autoSizeTextType="uniform"
+            android:text="@string/date_format_dummy"
+            app:layout_constraintStart_toEndOf="@id/termDetailTextUntil"
+            app:layout_constraintTop_toBottomOf="@id/termDetailTitle" />
+
         <Button
             android:id="@+id/termDetailEditEndDate"
             android:layout_width="100dp"
@@ -92,7 +122,7 @@
             style="@style/button_date"
             android:textColorHint="@color/colorHintText"
             app:layout_constraintStart_toEndOf="@id/termDetailTextUntil"
-            app:layout_constraintTop_toBottomOf="@id/termDetailTitle"
+            app:layout_constraintTop_toBottomOf="@id/termDetailEndDate"
             tools:ignore="DuplicateSpeakableTextCheck"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
