@@ -112,12 +112,12 @@
             android:id="@+id/editText_start_date"
             style="@style/button_date"
             android:layout_height="48dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:textColorHint="#757575"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintStart_toEndOf="@+id/text_course_dates"
-            app:layout_constraintTop_toTopOf="@+id/text_course_dates"
+            app:layout_constraintStart_toStartOf="@id/courseDetailStartDate"
+            app:layout_constraintTop_toBottomOf="@id/courseDetailStartDate"
             tools:ignore="DuplicateSpeakableTextCheck" />
 
         <TextView
@@ -128,19 +128,47 @@
             android:layout_marginTop="10dp"
             android:text="@string/untilForDates"
             android:labelFor="@id/editText_end_date"
-            app:layout_constraintStart_toEndOf="@+id/editText_start_date"
-            app:layout_constraintTop_toTopOf="@+id/editText_start_date" />
+            app:layout_constraintStart_toEndOf="@+id/courseDetailStartDate"
+            app:layout_constraintTop_toTopOf="@+id/courseDetailStartDate"
+            app:layout_constraintBottom_toBottomOf="@+id/courseDetailStartDate"/>
+
+        <TextView
+            android:id="@+id/courseDetailStartDate"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorText"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:autoSizeTextType="uniform"
+            android:text="@string/date_format_dummy"
+            app:layout_constraintStart_toStartOf="@id/spinner_course_status"
+            app:layout_constraintTop_toBottomOf="@id/spinner_course_status"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+        <TextView
+            android:id="@+id/courseDetailEndDate"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="15dp"
+            android:textColor="@color/colorText"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:autoSizeTextType="uniform"
+            android:text="@string/date_format_dummy"
+            app:layout_constraintStart_toEndOf="@+id/text_until"
+            app:layout_constraintTop_toTopOf="@id/courseDetailStartDate" />
 
         <Button
             android:id="@+id/editText_end_date"
             style="@style/button_date"
             android:layout_height="48dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:textColorHint="#757575"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintStart_toEndOf="@+id/text_until"
-            app:layout_constraintTop_toTopOf="@+id/editText_start_date" />
+            app:layout_constraintStart_toStartOf="@id/courseDetailEndDate"
+            app:layout_constraintTop_toBottomOf="@id/courseDetailEndDate"/>
 
         <TextView
             android:id="@+id/text_course_reminders"
@@ -152,7 +180,7 @@
             android:labelFor="@id/checkBox_start_date"
             android:textAlignment="viewEnd"
             app:layout_constraintStart_toStartOf="@+id/text_course_dates"
-            app:layout_constraintTop_toBottomOf="@+id/text_course_dates" />
+            app:layout_constraintTop_toBottomOf="@+id/editText_end_date" />
 
         <CheckBox
             android:id="@+id/checkBox_start_date"
