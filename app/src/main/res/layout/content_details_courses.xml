@@ -90,7 +90,7 @@
 
 
     <TextView
-        android:id="@+id/termDetailStartDate"
+        android:id="@+id/termDetailDueDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -105,8 +105,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:text="@string/untilForDates"
-        app:layout_constraintStart_toEndOf="@id/termDetailStartDate"
-        app:layout_constraintTop_toTopOf="@id/termDetailStartDate" />
+        app:layout_constraintStart_toEndOf="@id/termDetailDueDate"
+        app:layout_constraintTop_toTopOf="@id/termDetailDueDate" />
 
     <TextView
         android:id="@+id/termDetailEndDate"
@@ -115,7 +115,7 @@
         android:layout_marginStart="15dp"
         android:text="@string/termDetailEndDateDummy"
         app:layout_constraintStart_toEndOf="@id/termDetailTextUntil"
-        app:layout_constraintTop_toTopOf="@id/termDetailStartDate" />
+        app:layout_constraintTop_toTopOf="@id/termDetailDueDate" />
 
     <View
         android:id="@+id/divider"
