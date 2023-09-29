@@ -11,27 +11,21 @@
     tools:context=".Views.TermDetailsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/term_toolbarParentLayout"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:fitsSystemWindows="true">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/term_toolbarLayout"
+        android:layout_height="wrap_content"
+        android:id="@+id/term_toolbar"
+        android:fitsSystemWindows="true"
+        android:theme="@style/Theme.MaterialComponents"
+        android:background="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@id/toolbar">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"/>
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/AppTheme.AppBarOverlay"
+            app:title="@string/nav_termTitle">
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
