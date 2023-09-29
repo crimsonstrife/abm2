@@ -160,12 +160,14 @@ public class EditorModel extends AndroidViewModel {
      * Save Assessment
      * @param assessmentTitle   - title of the assessment
      * @param assessmentDescription - description of the assessment
-     * @param date - due date of the assessment
+     * @param startDate - start date of the assessment
+     * @param dueDate - due date of the assessment
      * @param assessmentType - type of the assessment
      * @param courseId - course id of the assessment
-     * @param alert - alert boolean of the assessment
+     * @param startAlert - alert boolean of the assessment
+     * @param dueAlert - alert boolean of the assessment
      */
-    public void saveAssessment(String assessmentTitle, String assessmentDescription, Date date, Types assessmentType, int courseId, boolean alert) {
+    public void saveAssessment(String assessmentTitle, String assessmentDescription, Date startDate, Date dueDate, Types assessmentType, int courseId, boolean startAlert , boolean dueAlert) {
         Assessments assessments = liveAssessments.getValue();
         if (assessments == null) {
             if (assessmentTitle.trim().isEmpty()) {
@@ -173,13 +175,15 @@ public class EditorModel extends AndroidViewModel {
             } else if (assessmentDescription.trim().isEmpty()) {
                 return;
             }
-            assessments = new Assessments(assessmentTitle.trim(), assessmentType, assessmentDescription.trim(), date, alert, courseId);
+            assessments = new Assessments(assessmentTitle.trim(), assessmentType, assessmentDescription.trim(), startDate, dueDate, startAlert, dueAlert, courseId);
         } else {
             assessments.setAssessmentName(assessmentTitle.trim());
             assessments.setAssessmentDescription(assessmentDescription.trim());
-            assessments.setAssessmentDueDate(date);
+            assessments.setAssessmentStartDate(startDate);
+            assessments.setAssessmentDueDate(dueDate);
             assessments.setAssessmentType(assessmentType);
-            assessments.setAssessmentAlert(alert);
+            assessments.setAssessmentStartAlert(startAlert);
+            assessments.setAssessmentDueAlert(dueAlert);
             assessments.setAssessmentCourseId(courseId);
         }
         courseRepository.insertAssessment(assessments);
