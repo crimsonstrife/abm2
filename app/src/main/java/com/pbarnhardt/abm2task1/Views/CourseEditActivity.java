@@ -13,7 +13,9 @@ import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_TERM_ID;
 import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_KEY;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,17 +28,24 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.pbarnhardt.abm2task1.Adapters.CourseAdapter;
+import com.pbarnhardt.abm2task1.Entity.Assessments;
+import com.pbarnhardt.abm2task1.Entity.Mentors;
 import com.pbarnhardt.abm2task1.Entity.Terms;
 import com.pbarnhardt.abm2task1.Enums.Status;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
+import com.pbarnhardt.abm2task1.Utils.Alerts;
 import com.pbarnhardt.abm2task1.Utils.Converters;
 import com.pbarnhardt.abm2task1.Utils.Formatting;
 import com.pbarnhardt.abm2task1.databinding.ActivityCourseEditBinding;
@@ -44,6 +53,7 @@ import com.pbarnhardt.abm2task1.databinding.ContentEditCoursesBinding;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -64,6 +74,8 @@ public class CourseEditActivity extends AppCompatActivity {
     private EditText editCourseNote;
     private Button editCourseStartDate;
     private Button editCourseEndDate;
+    private TextView courseStartDateView;
+    private TextView courseEndDateView;
     private CheckBox editCourseStartAlert;
     private CheckBox editCourseEndAlert;
     private Spinner editCourseStatus;
@@ -77,6 +89,7 @@ public class CourseEditActivity extends AppCompatActivity {
     private Status newCourseStatus;
     private String currentDate = Formatting.dateFormat.format(Calendar.getInstance(Locale.getDefault()).getTime());
     private String endDate;
+    private CourseAdapter adapter;
 
     /**
      * On create.
@@ -99,6 +112,13 @@ public class CourseEditActivity extends AppCompatActivity {
             edit = savedInstanceState.getBoolean(EDIT_KEY);
         }
 
+        //try to get the coursekey from the intent
+        try {
+            courseId = getIntent().getIntExtra(COURSE_KEY, -1);
+        } catch (Exception e) {
+            Log.v("Exception", Objects.requireNonNull(e.getLocalizedMessage()));
+        }
+
         //initiate the binding
         contentBinding = activityBinding.contentInclude;
         editCourseTitle = contentBinding.editTextCourseTitle;
@@ -106,6 +126,8 @@ public class CourseEditActivity extends AppCompatActivity {
         editCourseNote = contentBinding.editTextCourseNote;
         editCourseStartDate = contentBinding.editTextStartDate;
         editCourseEndDate = contentBinding.editTextEndDate;
+        courseStartDateView = contentBinding.courseDetailStartDate;
+        courseEndDateView = contentBinding.courseDetailEndDate;
         editCourseStartAlert = contentBinding.checkBoxStartDate;
         editCourseEndAlert = contentBinding.checkBoxEndDate;
         editCourseStatus = contentBinding.spinnerCourseStatus;
@@ -129,8 +151,9 @@ public class CourseEditActivity extends AppCompatActivity {
                 Log.v("Exception", Objects.requireNonNull(e.getLocalizedMessage()));
             }
         } else {
-            newCourseStartDate = null;
-            newCourseEndDate = null;
+            //set to the current date if the start and end dates are null
+            newCourseStartDate = Calendar.getInstance(Locale.getDefault()).getTime();
+            newCourseEndDate = Calendar.getInstance(Locale.getDefault()).getTime();
         }
         newCourseStartAlert = getIntent().getBooleanExtra(COURSE_START_ALARM, false);
         newCourseEndAlert = getIntent().getBooleanExtra(COURSE_END_ALARM, false);
@@ -173,8 +196,10 @@ public class CourseEditActivity extends AppCompatActivity {
             editCourseTitle.setText(newCourseTitle);
             editCourseDescription.setText(newCourseDescription);
             editCourseNote.setText(newCourseNote);
-            editCourseStartDate.setText(Formatting.dateFormat.format(newCourseStartDate));
-            editCourseEndDate.setText(Formatting.dateFormat.format(newCourseEndDate));
+            editCourseStartDate.setText(Formatting.dateFormat.format(viewModel.getCourseById(courseId).getCourseStartDate()));
+            courseStartDateView.setText(Formatting.dateFormat.format(viewModel.getCourseById(courseId).getCourseStartDate()));
+            editCourseEndDate.setText(Formatting.dateFormat.format(viewModel.getCourseById(courseId).getCourseEndDate()));
+            courseEndDateView.setText(Formatting.dateFormat.format(viewModel.getCourseById(courseId).getCourseEndDate()));
             editCourseStartAlert.setChecked(newCourseStartAlert);
             editCourseEndAlert.setChecked(newCourseEndAlert);
             editCourseStatus.setSelection(statusAdapter.getPosition(newCourseStatus));
@@ -182,8 +207,10 @@ public class CourseEditActivity extends AppCompatActivity {
             editCourseTitle.setText(newCourseTitle);
             editCourseDescription.setText(newCourseDescription);
             editCourseNote.setText(newCourseNote);
-            editCourseStartDate.setText(Formatting.dateFormat.format(newCourseStartDate));
-            editCourseEndDate.setText(Formatting.dateFormat.format(newCourseEndDate));
+            editCourseStartDate.setText(getIntent().getStringExtra(COURSE_START_DATE));
+            courseStartDateView.setText(getIntent().getStringExtra(COURSE_START_DATE));
+            editCourseEndDate.setText(getIntent().getStringExtra(COURSE_START_DATE));
+            courseEndDateView.setText(getIntent().getStringExtra(COURSE_START_DATE));
             editCourseStartAlert.setChecked(newCourseStartAlert);
             editCourseEndAlert.setChecked(newCourseEndAlert);
             editCourseStatus.setSelection(statusAdapter.getPosition(newCourseStatus));
@@ -209,6 +236,7 @@ public class CourseEditActivity extends AppCompatActivity {
                 editCourseStartDate.setText(Formatting.dateFormat.format(calendar1.getTime()));
                 //set the hint to the selected date
                 editCourseStartDate.setHint(Formatting.dateFormat.format(calendar1.getTime()));
+                courseStartDateView.setText(Formatting.dateFormat.format(calendar1.getTime()));
             };
             new DatePickerDialog(CourseEditActivity.this, date, calendar1.get(Calendar.YEAR), calendar1.get(Calendar.MONTH), calendar1.get(Calendar.DAY_OF_MONTH)).show();
         });
@@ -224,6 +252,7 @@ public class CourseEditActivity extends AppCompatActivity {
                 editCourseEndDate.setText(Formatting.dateFormat.format(calendar2.getTime()));
                 //update the button hint
                 editCourseEndDate.setHint(Formatting.dateFormat.format(calendar2.getTime()));
+                courseEndDateView.setText(Formatting.dateFormat.format(calendar2.getTime()));
             };
             new DatePickerDialog(CourseEditActivity.this, date, calendar2.get(Calendar.YEAR), calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DAY_OF_MONTH)).show();
         });
@@ -252,8 +281,10 @@ public class CourseEditActivity extends AppCompatActivity {
                 editCourseTitle.setText(newCourseTitle);
                 editCourseDescription.setText(newCourseDescription);
                 editCourseNote.setText(newCourseNote);
-                editCourseStartDate.setText(Formatting.dateFormat.format(newCourseStartDate));
-                editCourseEndDate.setText(Formatting.dateFormat.format(newCourseEndDate));
+                editCourseStartDate.setText(Formatting.dateFormat.format(viewModel.getCourseById(courseId).getCourseStartDate()));
+                courseStartDateView.setText(Formatting.dateFormat.format(viewModel.getCourseById(courseId).getCourseStartDate()));
+                editCourseEndDate.setText(Formatting.dateFormat.format(viewModel.getCourseById(courseId).getCourseEndDate()));
+                courseEndDateView.setText(Formatting.dateFormat.format(viewModel.getCourseById(courseId).getCourseEndDate()));
                 editCourseStartAlert.setChecked(newCourseStartAlert);
                 editCourseEndAlert.setChecked(newCourseEndAlert);
                 editCourseStatus.setSelection(statusAdapter.getPosition(newCourseStatus));
@@ -264,6 +295,8 @@ public class CourseEditActivity extends AppCompatActivity {
                 editCourseNote.setText("");
                 editCourseStartDate.setText(Formatting.dateFormat.format(currentDate));
                 editCourseEndDate.setText(Formatting.dateFormat.format(endDate));
+                courseStartDateView.setText(Formatting.dateFormat.format(currentDate));
+                courseEndDateView.setText(Formatting.dateFormat.format(endDate));
                 editCourseStartAlert.setChecked(false);
                 editCourseEndAlert.setChecked(false);
                 editCourseStatus.setSelection(0);
@@ -318,8 +351,6 @@ public class CourseEditActivity extends AppCompatActivity {
                         //notify the user that the course was saved
                         Toast.makeText(CourseEditActivity.this, "Course Saved", Toast.LENGTH_SHORT).show();
                         //navigate back to the course list
-                        Intent intent = new Intent(CourseEditActivity.this, CoursesListActivity.class);
-                        startActivity(intent);
                         finish();
                     });
                     builder.setNegativeButton("No", (dialog, which) -> {
@@ -331,8 +362,6 @@ public class CourseEditActivity extends AppCompatActivity {
                     //notify the user that the course was saved
                     Toast.makeText(CourseEditActivity.this, "Course Saved", Toast.LENGTH_SHORT).show();
                     //navigate back to the course list
-                    Intent intent = new Intent(CourseEditActivity.this, CoursesListActivity.class);
-                    startActivity(intent);
                     finish();
                 }
             } else {
@@ -343,8 +372,6 @@ public class CourseEditActivity extends AppCompatActivity {
                 //notify the user that the course was saved
                 Toast.makeText(CourseEditActivity.this, "Course Saved", Toast.LENGTH_SHORT).show();
                 //navigate back to the course list
-                Intent intent = new Intent(CourseEditActivity.this, CoursesListActivity.class);
-                startActivity(intent);
                 finish();
             }
         } catch (Exception e) {
@@ -372,16 +399,177 @@ public class CourseEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            saveAndReturn();
+            //ask the user if they want to save before exiting
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+            builder.setMessage("Do you want to save?");
+            builder.setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_question_mark));
+            builder.setPositiveButton("Yes", (dialog, id) -> {
+                dialog.dismiss();
+                saveAndReturn();
+                finish();
+            });
+            builder.setNegativeButton("No", (dialog, id) -> {
+                dialog.dismiss();
+                finish();
+            });
+            android.app.AlertDialog dialog = builder.create();
+            dialog.show();
             return true;
         } else if (item.getItemId() == R.id.action_delete) {
-            viewModel.deleteCourse();
-            finish();
-        } else if (item.getItemId() == R.id.action_help) {
-            //TODO: add help
+            //ask the user if they want to delete the course
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+            builder.setMessage("Are you sure you want to delete this course?");
+            builder.setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_question_mark));
+            builder.setPositiveButton("Yes", (dialog, id) -> {
+                dialog.dismiss();
+                boolean hasAssessments;
+                boolean hasMentors;
+                //check if the course has any assessments assigned or mentors assigned to this course ID
+                LiveData<List<Assessments>> assignedAssessments = viewModel.getAssessmentsByCourseId(courseId);
+                LiveData<List<Mentors>> assignedMentors = viewModel.getMentorsByCourseId(courseId);
+                //check that the lists are not null
+                if (assignedAssessments.getValue() != null || assignedMentors.getValue() != null) {
+                    //check each list to see if it has any items
+                    if (assignedAssessments.getValue() != null) {
+                        //if the list is bigger than 0, then there are assessments assigned to this course
+                        hasAssessments = assignedAssessments.getValue().size() > 0;
+                    } else {
+                        hasAssessments = false;
+                    }
+                    if (assignedMentors.getValue() != null) {
+                        //if the list is bigger than 0, then there are mentors assigned to this course
+                        hasMentors = assignedMentors.getValue().size() > 0;
+                    } else {
+                        hasMentors = false;
+                    }
+                } else {
+                    hasMentors = false;
+                    hasAssessments = false;
+                }
+                //if the course has assessments or mentors assigned, ask the user if they want to delete the course
+                if((hasMentors || hasAssessments)) {
+                    //build the alert and show it
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                    builder2.setTitle("Delete Course?");
+                    builder2.setMessage("Are you sure you want to delete this course?\nThis course has assessments and/or mentors assigned to it.  If you delete this course, the assessments and/or mentors will not be assigned to any course.\nDelete course anyway?");
+                    builder2.setIcon(android.R.drawable.ic_dialog_alert);
+                    builder2.setPositiveButton("Yes", (dialog2, which) -> {
+                        //if the user clicks yes, delete the course and return to the previous activity
+                        viewModel.deleteCourse();
+                        //use the assigned assessments and mentors to remove the course ID from the assessment and mentor objects
+                        if (hasAssessments) {
+                            for (Assessments assessment : assignedAssessments.getValue()) {
+                                viewModel.overwriteAssessment(assessment, -1);
+                            }
+                        }
+                        if (hasMentors) {
+                            for (Mentors mentor : assignedMentors.getValue()) {
+                                viewModel.overwriteMentor(mentor, -1);
+                            }
+                        }
+                        //notify the user that the course was deleted
+                        Toast.makeText(CourseEditActivity.this, "Course Deleted", Toast.LENGTH_SHORT).show();
+                        //navigate back to the course list
+                        finish();
+                    });
+                    builder2.setNegativeButton("No", (dialog2, which) -> {
+                        //if the user clicks no, close the alert so they can fix the dates
+                    });
+                    AlertDialog dialog2 = builder2.create();
+                    dialog2.show();
+                } else {
+                    //if the course does not have assessments or mentors assigned, delete the course and return to the previous activity
+                    viewModel.deleteCourse();
+                    //notify the user that the course was deleted
+                    Toast.makeText(CourseEditActivity.this, "Course Deleted", Toast.LENGTH_SHORT).show();
+                    //navigate back to the course list
+                    finish();
+                }
+            });
+            builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
         } else if (item.getItemId() == R.id.action_save) {
             saveAndReturn();
             return true;
+        } else if (item.getItemId() == R.id.action_help) {
+            //TODO: add help dialog
+        } else if (item.getItemId() == R.id.action_notify) {
+            //ask the user if they want to set an alert for the start or end date or both
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+            builder.setMessage("Do you want to set an alert for the start date, end date, or both?");
+            builder.setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_question_mark));
+            builder.setPositiveButton("Start Date", (dialog, id) -> {
+                dialog.dismiss();
+                //set the start date alert
+                Intent intent = new Intent(this, Alerts.class);
+                //current course id
+                int currentId = viewModel.liveCourses.getValue().getCourseId();
+                if (currentId > 0) {
+                    Date currentDate = viewModel.liveCourses.getValue().getCourseStartDate();
+                    Long trigger = currentDate.getTime();
+                    intent.putExtra("notification", editCourseTitle.getText().toString() + " is starting today!");
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
+                    //set the alarm
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                    Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
+                }
+                finish();
+            });
+            builder.setNegativeButton("End Date", (dialog, id) -> {
+                dialog.dismiss();
+                //set the end date alert
+                Intent intent = new Intent(this, Alerts.class);
+                //current course id
+                int currentId2 = viewModel.liveCourses.getValue().getCourseId();
+                if (currentId2 > 0) {
+                    Date currentDate2 = viewModel.liveCourses.getValue().getCourseEndDate();
+                    Long trigger2 = currentDate2.getTime();
+                    intent.putExtra("notification", editCourseTitle.getText().toString() + " is ending today!");
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId2, intent, PendingIntent.FLAG_IMMUTABLE);
+                    //set the alarm
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger2, pendingIntent);
+                    Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
+                }
+            });
+            builder.setNeutralButton("Both", (dialog, id) -> {
+                dialog.dismiss();
+                //set both alerts
+                Intent intent = new Intent(this, Alerts.class);
+                //current course id
+                int currentId = viewModel.liveCourses.getValue().getCourseId();
+                if (currentId > 0) {
+                    Date currentDate = viewModel.liveCourses.getValue().getCourseStartDate();
+                    Long trigger = currentDate.getTime();
+                    intent.putExtra("notification", editCourseTitle.getText().toString() + " is starting today!");
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
+                    //set the alarm
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                    Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
+                }
+                Intent intent2 = new Intent(this, Alerts.class);
+                //current course id
+                int currentId2 = viewModel.liveCourses.getValue().getCourseId();
+                if (currentId2 > 0) {
+                    Date currentDate2 = viewModel.liveCourses.getValue().getCourseEndDate();
+                    Long trigger2 = currentDate2.getTime();
+                    intent2.putExtra("notification", editCourseTitle.getText().toString() + " is ending today!");
+                    PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this, currentId2, intent2, PendingIntent.FLAG_IMMUTABLE);
+                    //set the alarm
+                    AlarmManager alarmManager2 = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    alarmManager2.set(AlarmManager.RTC_WAKEUP, trigger2, pendingIntent2);
+                    Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate2), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
+                }
+            });
         }
         return super.onOptionsItemSelected(item);
     }
