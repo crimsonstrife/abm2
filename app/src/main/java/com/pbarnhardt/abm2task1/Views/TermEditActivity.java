@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -20,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.pbarnhardt.abm2task1.Adapters.TermAdapter;
 import com.pbarnhardt.abm2task1.Entity.Courses;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
@@ -42,12 +44,15 @@ public class TermEditActivity extends AppCompatActivity {
     private boolean edit;
     int termId;
     private EditorModel viewModel;
+    private TermAdapter adapter;
     private final List<Courses> courseList = new ArrayList<>();
     private ActivityTermEditBinding activityBinding;
     private ContentEditTermsBinding contentBinding;
     private EditText termTitle;
     private Button termStartDate;
     private Button termEndDate;
+    private TextView startDateText;
+    private TextView endDateText;
 
     /**
      * On create.
@@ -75,6 +80,8 @@ public class TermEditActivity extends AppCompatActivity {
         termTitle = contentBinding.termDetailTitle;
         termStartDate = contentBinding.termDetailEditStartDate;
         termEndDate = contentBinding.termDetailEditEndDate;
+        startDateText = contentBinding.termDetailDueDate;
+        endDateText = contentBinding.termDetailEndDate;
 
         //initialize the view model
         initiateViewModel();
@@ -86,11 +93,12 @@ public class TermEditActivity extends AppCompatActivity {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
+
+                termStartDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+                termStartDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
+                startDateText.setText(Formatting.dateFormat.format(calendar.getTime()));
             };
             new DatePickerDialog(TermEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-            //update the button text with the selected date
-            termStartDate.setText(Formatting.dateFormat.format(calendar.getTime()));
-            termStartDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
         });
         termEndDate.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
@@ -98,11 +106,12 @@ public class TermEditActivity extends AppCompatActivity {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
+
+                termEndDate.setText(Formatting.dateFormat.format(calendar.getTime()));
+                termEndDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
+                endDateText.setText(Formatting.dateFormat.format(calendar.getTime()));
             };
             new DatePickerDialog(TermEditActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-            //update the button text with the selected date
-            termEndDate.setText(Formatting.dateFormat.format(calendar.getTime()));
-            termEndDate.setHint(Formatting.dateFormat.format(calendar.getTime()));
         });
     }
 
@@ -115,6 +124,8 @@ public class TermEditActivity extends AppCompatActivity {
                 termStartDate.setHint(Formatting.dateFormat.format(terms.getTermStartDate()));
                 termEndDate.setText(Formatting.dateFormat.format(terms.getTermEndDate()));
                 termEndDate.setHint(Formatting.dateFormat.format(terms.getTermEndDate()));
+                startDateText.setText(Formatting.dateFormat.format(terms.getTermStartDate()));
+                endDateText.setText(Formatting.dateFormat.format(terms.getTermEndDate()));
             }
         });
 
@@ -165,8 +176,6 @@ public class TermEditActivity extends AppCompatActivity {
             //notify the user that the term was saved
             Toast.makeText(this, "Term Saved", Toast.LENGTH_SHORT).show();
             //navigate back to the term list
-            Intent intent = new Intent(this, TermsListActivity.class);
-            startActivity(intent);
             finish();
         } catch (ParseException e) {
             Log.v("Exception: ", Objects.requireNonNull(e.getLocalizedMessage()));
