@@ -60,7 +60,7 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
         //initialize the binding
         contentBinding = activityBinding.contentInclude;
         termTitleView = contentBinding.termDetailTitle;
-        termStartDateView = contentBinding.termDetailStartDate;
+        termStartDateView = contentBinding.termDetailDueDate;
         termEndDateView = contentBinding.termDetailEndDate;
         recyclerView = contentBinding.termCoursesRecyclerView;
 
