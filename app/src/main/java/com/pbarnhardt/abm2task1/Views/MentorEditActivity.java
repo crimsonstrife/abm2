@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.pbarnhardt.abm2task1.Adapters.MentorAdapter;
 import com.pbarnhardt.abm2task1.Models.EditorModel;
 import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.databinding.ActivityMentorEditBinding;
@@ -40,6 +41,7 @@ public class MentorEditActivity extends AppCompatActivity {
     private EditText mentorName;
     private EditText mentorEmail;
     private EditText mentorPhone;
+    private MentorAdapter adapter;
 
     /**
      * On create.
@@ -128,8 +130,6 @@ public class MentorEditActivity extends AppCompatActivity {
             //notify the user that the mentor was saved
             Toast.makeText(this, "Mentor Saved", Toast.LENGTH_SHORT).show();
             //navigate back to the mentor list
-            Intent intent = new Intent(this, MentorsListActivity.class);
-            startActivity(intent);
             finish();
         } catch (Exception e) {
             Log.e("MentorEditActivity", Objects.requireNonNull(e.getMessage()));
