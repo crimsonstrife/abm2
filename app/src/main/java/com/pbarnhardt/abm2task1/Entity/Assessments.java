@@ -21,8 +21,10 @@ public class Assessments {
     private String assessmentName;
     private String assessmentDescription;
     private Types assessmentType;
+    private Date assessmentStartDate;
     private Date assessmentDueDate;
-    private boolean assessmentAlert;
+    private boolean assessmentStartAlert;
+    private boolean assessmentDueAlert;
     private int courseId;
 
     /**
@@ -31,26 +33,32 @@ public class Assessments {
      * @param assessmentName     the assessment name
      * @param assessmentDescription the assessment description
      * @param assessmentType     the assessment type
+     * @param assessmentStartDate the assessment start date
      * @param assessmentDueDate  the assessment due date
-     * @param assessmentAlert    the assessment alert
+     * @param assessmentStartAlert    the assessment start alert
+     * @param assessmentDueAlert the assessment due alert
      * @param courseId           the course id
      */
     @Ignore
-    public Assessments(int assessmentId, String assessmentName, Types assessmentType, String assessmentDescription, Date assessmentDueDate, boolean assessmentAlert, int courseId) {
+    public Assessments(int assessmentId, String assessmentName, Types assessmentType, String assessmentDescription, Date assessmentStartDate, Date assessmentDueDate, boolean assessmentStartAlert, boolean assessmentDueAlert, int courseId) {
         this.assessmentId = assessmentId;
         this.assessmentName = assessmentName;
         this.assessmentDescription = assessmentDescription;
         this.assessmentType = assessmentType;
+        this.assessmentStartDate = assessmentStartDate;
         this.assessmentDueDate = assessmentDueDate;
-        this.assessmentAlert = assessmentAlert;
+        this.assessmentStartAlert = assessmentStartAlert;
+        this.assessmentDueAlert = assessmentDueAlert;
         this.courseId = courseId;
     }
-    public Assessments(String assessmentName, Types assessmentType, String assessmentDescription, Date assessmentDueDate, boolean assessmentAlert, int courseId) {
+    public Assessments(String assessmentName, Types assessmentType, String assessmentDescription, Date assessmentStartDate, Date assessmentDueDate, boolean assessmentStartAlert, boolean assessmentDueAlert, int courseId) {
         this.assessmentName = assessmentName;
         this.assessmentDescription = assessmentDescription;
         this.assessmentType = assessmentType;
+        this.assessmentStartDate = assessmentStartDate;
         this.assessmentDueDate = assessmentDueDate;
-        this.assessmentAlert = assessmentAlert;
+        this.assessmentStartAlert = assessmentStartAlert;
+        this.assessmentDueAlert = assessmentDueAlert;
         this.courseId = courseId;
     }
 
@@ -91,6 +99,15 @@ public class Assessments {
     }
 
     /**
+     * Gets assessment start date.
+     *
+     * @return the assessment start date
+     */
+    public Date getAssessmentStartDate() {
+        return assessmentStartDate;
+    }
+
+    /**
      * Gets assessment due date.
      *
      * @return the assessment due date
@@ -100,12 +117,21 @@ public class Assessments {
     }
 
     /**
-     * Gets assessment alert.
+     * Gets assessment start alert.
      *
      * @return the assessment alert
      */
-    public boolean getAssessmentAlert() {
-        return assessmentAlert;
+    public boolean getAssessmentStartAlert() {
+        return assessmentStartAlert;
+    }
+
+    /**
+     * Gets assessment due alert.
+     *
+     * @return the assessment alert
+     */
+    public boolean getAssessmentDueAlert() {
+        return assessmentDueAlert;
     }
 
     /**
@@ -145,6 +171,15 @@ public class Assessments {
     }
 
     /**
+     * Sets assessment start date.
+     *
+     * @param assessmentStartDate the assessment start date
+     */
+    public void setAssessmentStartDate(Date assessmentStartDate) {
+        this.assessmentStartDate = assessmentStartDate;
+    }
+
+    /**
      * Sets assessment due date.
      *
      * @param assessmentDueDate the assessment due date
@@ -167,8 +202,17 @@ public class Assessments {
      *
      * @param assessmentAlert the assessment alert
      */
-    public void setAssessmentAlert(boolean assessmentAlert) {
-        this.assessmentAlert = assessmentAlert;
+    public void setAssessmentStartAlert(boolean assessmentAlert) {
+        this.assessmentStartAlert = assessmentAlert;
+    }
+
+    /**
+     * Sets assessment alert.
+     *
+     * @param assessmentAlert the assessment alert
+     */
+    public void setAssessmentDueAlert(boolean assessmentAlert) {
+        this.assessmentDueAlert = assessmentAlert;
     }
 
     /**
