@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -105,7 +106,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
         courseTitleView = contentBinding.editTextCourseTitle;
         courseDescriptionView = contentBinding.courseDetailDescription;
         courseStatusView = contentBinding.spinnerCourseStatus;
-        courseStartDateView = contentBinding.termDetailStartDate;
+        courseStartDateView = contentBinding.termDetailDueDate;
         courseEndDateView = contentBinding.termDetailEndDate;
         courseNotesView = contentBinding.editTextCourseNote;
         courseAssessmentsRecyclerView = contentBinding.courseAssessmentsRecyclerView;
@@ -131,6 +132,8 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
             this.startActivity(intent);
             finish();
         });
+
+
         contentBinding.floatingAddMentorToCourseButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add Mentor");
@@ -150,10 +153,12 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
                     dropdownMentors.showAsDropDown(contentBinding.floatingAddMentorToCourseButton);
                     dropdownMentors.setOutsideTouchable(true);
                     dropdownMentors.setFocusable(true);
+                    dropdownMentors.setWidth(getDensityFromDpSize(200));
                     dropdownMentors.setSelectedMentorListener((position, mentor) -> {
                         mentor.setCourseId(courseId);
                         viewModel.overwriteMentor(mentor, courseId);
                         dropdownMentors.dismiss();
+                        mentorAdapter.notifyDataSetChanged();
                     });
                 } else {
                     //no unassigned mentors, show toast
@@ -163,6 +168,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
             AlertDialog alert = builder.create();
             alert.show();
         });
+
         contentBinding.floatingAddAssessmentToCourseButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add Assessment");
@@ -181,11 +187,13 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
                     dropdownAssessments.setWidth(WindowManager.LayoutParams.MATCH_PARENT);
                     dropdownAssessments.showAsDropDown(contentBinding.floatingAddAssessmentToCourseButton);
                     dropdownAssessments.setOutsideTouchable(true);
+                    dropdownAssessments.setWidth(getDensityFromDpSize(200));
                     dropdownAssessments.setFocusable(true);
                     dropdownAssessments.setSelectedAssessmentListener((position, assessment) -> {
                         assessment.setAssessmentCourseId(courseId);
                         viewModel.overwriteAssessment(assessment, courseId);
                         dropdownAssessments.dismiss();
+                        assessmentAdapter.notifyDataSetChanged();
                     });
                 } else {
                     //no unassigned assessments, show toast
@@ -194,15 +202,36 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
             });
             AlertDialog alert = builder.create();
             alert.show();
-            contentBinding.shareButton.setOnClickListener(v1 -> {
-                Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                sendIntent.setType("text/plain");
-                String shareHeader = "Course: " + contentBinding.editTextCourseTitle.getText().toString() + "Notes";
-                String shareMessage = "Notes: " + contentBinding.editTextCourseNote.getText().toString();
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, shareHeader);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(sendIntent, "Share Course Notes with"));
+        });
+
+        contentBinding.shareButton.setOnClickListener(v1 -> {
+            //ask user if they want to share just the notes, or the entire details for the course
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+            builder1.setTitle("Share Course");
+            builder1.setMessage("Share just the notes, or the course details?");
+            builder1.setIcon(R.drawable.ic_action_share);
+            builder1.setPositiveButton("Notes", (dialog, which) -> {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                String shareBody = courseNotesView.getText().toString();
+                String shareSubject = courseTitleView.getText().toString() + " Notes";
+                intent.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+                intent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(intent, "Share Notes using"));
             });
+            builder1.setNegativeButton("Details", (dialog, which) -> {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                String shareBody = "Course Title: " + courseTitleView.getText().toString() + "\n" + "Course Description: " + courseDescriptionView.getText().toString() + "\n" + "Course Status: " + courseStatusView.getText().toString() + "\n" + "Course Start Date: " + courseStartDateView.getText().toString() + "\n" + "Course End Date: " + courseEndDateView.getText().toString() + "\n" + "Course Notes: " + courseNotesView.getText().toString();
+                    String shareSubject = courseTitleView.getText().toString() + " Details";
+                    intent.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+                    intent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                    startActivity(Intent.createChooser(intent, "Share Details using"));
+            });
+            //cancel button
+            builder1.setNeutralButton("Cancel", (dialog, which) -> dialog.dismiss());
+            AlertDialog alert1 = builder1.create();
+            alert1.show();
         });
     }
 
@@ -315,6 +344,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
         alert.show();
     }
 
+    private int getDensityFromDpSize(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
            MenuInflater inflater = getMenuInflater();
@@ -335,7 +368,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
             builder.setIcon(android.R.drawable.ic_dialog_alert);
             builder.setPositiveButton("Yes", (dialog, which) -> {
                 //reassign any assessments or mentors to -1
-                int thisCourseId = viewModel.liveCourses.getValue().getCourseId();
+                int thisCourseId = viewModel.getCourseById(courseId).getCourseId();
                 List<Assessments> assessments = viewModel.assessmentsList.getValue();
                 List<Mentors> mentors = viewModel.mentorsList.getValue();
                 //if there are assessments, for each assessment, if the course id matches, set it to -1
@@ -364,22 +397,72 @@ public class CourseDetailsActivity extends AppCompatActivity implements MentorAd
         } else if (item.getItemId() == R.id.action_help) {
             //TODO: add help dialog
         } else if (item.getItemId() == R.id.action_notify) {
-            Intent intent = new Intent(this, Alerts.class);
-            //current course id
-            int currentId = viewModel.liveCourses.getValue().getCourseId();
-            if (currentId > 0) {
-                Date currentDate = viewModel.liveCourses.getValue().getCourseEndDate();
-                Long trigger = currentDate.getTime();
-                intent.putExtra("notification", courseTitleView.getText().toString() + " ends today!");
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
-                //set the alarm
+            //ask the user if they want to set a notification for the start or end date or both
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Set Notification");
+            builder.setMessage("Set a notification for the start date, end date, or both?");
+            builder.setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_action_notify));
+            builder.setPositiveButton("Start Date", (dialog, which) -> {
+                //set notification for start date
+                Intent intent = new Intent(this, Alerts.class);
+                intent.putExtra("notification", "Course " + courseTitleView.getText().toString() + " starts today.");
+                PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-                Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
-            }
-            finish();
+                try {
+                    Date startDate = Formatting.dateFormat.parse(courseStartDateView.getText().toString());
+                    if (alarmManager != null) {
+                        assert startDate != null;
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, startDate.getTime(), sender);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            //set notification for end date
+            builder.setNegativeButton("End Date", (dialog, which) -> {
+                Intent intent = new Intent(this, Alerts.class);
+                intent.putExtra("notification", "Course " + courseTitleView.getText().toString() + " ends today.");
+                PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                try {
+                    Date endDate = Formatting.dateFormat.parse(courseEndDateView.getText().toString());
+                    if (alarmManager != null) {
+                        assert endDate != null;
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, endDate.getTime(), sender);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            //set notification for both start and end date
+            builder.setNeutralButton("Both", (dialog, which) -> {
+                Intent intent = new Intent(this, Alerts.class);
+                intent.putExtra("notification", "Course " + courseTitleView.getText().toString() + " starts today.");
+                PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                try {
+                    Date startDate = Formatting.dateFormat.parse(courseStartDateView.getText().toString());
+                    if (alarmManager != null) {
+                        assert startDate != null;
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, startDate.getTime(), sender);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Intent intent1 = new Intent(this, Alerts.class);
+                intent1.putExtra("notification", "Course " + courseTitleView.getText().toString() + " ends today.");
+                PendingIntent sender1 = PendingIntent.getBroadcast(this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmManager1 = (AlarmManager) getSystemService(ALARM_SERVICE);
+                try {
+                    Date endDate = Formatting.dateFormat.parse(courseEndDateView.getText().toString());
+                    if (alarmManager1 != null) {
+                        assert endDate != null;
+                        alarmManager1.set(AlarmManager.RTC_WAKEUP, endDate.getTime(), sender1);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
         return super.onOptionsItemSelected(item);
     }
