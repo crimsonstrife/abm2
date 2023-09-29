@@ -60,7 +60,7 @@ public class SampleDataSet {
      */
     public static List<Assessments> getAssessments() {
         List<Assessments> assessment = new ArrayList<>();
-        assessment.add(new Assessments(1, SAMPLE_ASSESSMENT_TITLE, Types.OBJECTIVE, SAMPLE_ASSESSMENT_DESCRIPTION, getDate(3), true, 1));
+        assessment.add(new Assessments(1, SAMPLE_ASSESSMENT_TITLE, Types.OBJECTIVE, SAMPLE_ASSESSMENT_DESCRIPTION, getDate(0), getDate(3), false, true, 1));
         return assessment;
     }
 
