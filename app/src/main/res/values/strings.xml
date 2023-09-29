@@ -81,4 +81,6 @@
     <string name="edit_assessment">Edit Assessment</string>
     <string name="new_assessment">New Assessment</string>
     <string name="notify">Notify</string>
+    <string name="date_format_dummy">MM/DD/YYYY</string>
+    <string name="assessmentStartDateLabel">Start Date</string>
 </resources>
