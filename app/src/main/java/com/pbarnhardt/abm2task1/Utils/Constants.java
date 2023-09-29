@@ -16,7 +16,7 @@ public class Constants {
     public static final String COURSE_COLUMN_ID = "courseId";
     public static final String ASSESSMENT_COLUMN_ID = "assessmentId";
     public static final String MENTOR_COLUMN_ID = "mentorId";
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
 
     //constants for courses
     public static final String COURSE_ID = "courseId";
