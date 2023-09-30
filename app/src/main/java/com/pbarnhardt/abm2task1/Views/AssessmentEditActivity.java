@@ -1,12 +1,18 @@
 package com.pbarnhardt.abm2task1.Views;
 
 import static com.pbarnhardt.abm2task1.Utils.Constants.ASSESSMENT_KEY;
+import static com.pbarnhardt.abm2task1.Utils.Constants.CHANNEL_ID;
 import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
+import static com.pbarnhardt.abm2task1.Utils.Constants.IMPORTANCE;
+import static com.pbarnhardt.abm2task1.Utils.Constants.NOTIFICATION;
+import static com.pbarnhardt.abm2task1.Utils.Constants.PENDING_INTENT;
+import static com.pbarnhardt.abm2task1.Utils.Constants.SUBJECT;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
@@ -343,6 +349,8 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 finish();
             });
             builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
         } else if (item.getItemId() == R.id.action_save) {
             saveAndReturn();
             return true;
@@ -362,7 +370,16 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 if (currentId > 0) {
                     Date currentDate = viewModel.getAssessmentById(currentId).getAssessmentStartDate();
                     Long trigger = currentDate.getTime();
-                    intent.putExtra("notification", assessmentTitle.getText().toString() + " is starting today!");
+                    intent.putExtra(CHANNEL_ID, "Assessment Notification");
+                    if (viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName() != null && !viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName().isEmpty()) {
+                        intent.putExtra(SUBJECT, "Assessment for " + viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName() + " is starting today!");
+                    } else {
+                        intent.putExtra(SUBJECT, "Assessment is starting today!");
+                    }
+                    intent.putExtra(NOTIFICATION, assessmentTitle.getText().toString() + " is starting today!");
+                    intent.putExtra(IMPORTANCE, NotificationManager.IMPORTANCE_HIGH);
+                    //add this assessment activity as a pending intent
+                    intent.putExtra(PENDING_INTENT, PendingIntent.getActivity(this, currentId, new Intent(this, AssessmentDetailsActivity.class), PendingIntent.FLAG_IMMUTABLE));
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
                     //set the alarm
                     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -382,7 +399,16 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 if (currentId > 0) {
                     Date currentDate = viewModel.getAssessmentById(currentId).getAssessmentDueDate();
                     Long trigger = currentDate.getTime();
-                    intent.putExtra("notification", assessmentTitle.getText().toString() + " is due today!");
+                    intent.putExtra(CHANNEL_ID, "Assessment Notification");
+                    if (viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName() != null && !viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName().isEmpty()) {
+                        intent.putExtra(SUBJECT, "Assessment for " + viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName() + " is due today!");
+                    } else {
+                        intent.putExtra(SUBJECT, "Assessment is due today!");
+                    }
+                    intent.putExtra(NOTIFICATION, assessmentTitle.getText().toString() + " is due today!");
+                    intent.putExtra(IMPORTANCE, NotificationManager.IMPORTANCE_HIGH);
+                    //add this assessment activity as a pending intent
+                    intent.putExtra(PENDING_INTENT, PendingIntent.getActivity(this, currentId, new Intent(this, AssessmentDetailsActivity.class), PendingIntent.FLAG_IMMUTABLE));
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
                     //set the alarm
                     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -391,6 +417,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
                 }
+                finish();
             });
             builder.setNeutralButton("Both", (dialog, id) -> {
                 dialog.dismiss();
@@ -401,7 +428,16 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 if (currentId > 0) {
                     Date currentDate = viewModel.getAssessmentById(currentId).getAssessmentStartDate();
                     Long trigger = currentDate.getTime();
-                    intent.putExtra("notification", assessmentTitle.getText().toString() + " is starting today!");
+                    intent.putExtra(CHANNEL_ID, "Assessment Notification");
+                    if (viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName() != null && !viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName().isEmpty()) {
+                        intent.putExtra(SUBJECT, "Assessment for " + viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName() + " is starting today!");
+                    } else {
+                        intent.putExtra(SUBJECT, "Assessment is starting today!");
+                    }
+                    intent.putExtra(NOTIFICATION, assessmentTitle.getText().toString() + " is starting today!");
+                    intent.putExtra(IMPORTANCE, NotificationManager.IMPORTANCE_HIGH);
+                    //add this assessment activity as a pending intent
+                    intent.putExtra(PENDING_INTENT, PendingIntent.getActivity(this, currentId, new Intent(this, AssessmentDetailsActivity.class), PendingIntent.FLAG_IMMUTABLE));
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
                     //set the alarm
                     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -410,22 +446,36 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
                 }
-                Intent intent2 = new Intent(this, Alerts.class);
+                //set the end date alert
+                intent = new Intent(this, Alerts.class);
                 //current assessment id
-                int currentId2 = viewModel.getAssessmentById(assessmentId).getAssessmentId();
-                if (currentId2 > 0) {
-                    Date currentDate2 = viewModel.getAssessmentById(currentId2).getAssessmentDueDate();
-                    Long trigger2 = currentDate2.getTime();
-                    intent2.putExtra("notification", assessmentTitle.getText().toString() + " is due today!");
-                    PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this, currentId2, intent2, PendingIntent.FLAG_IMMUTABLE);
+                currentId = viewModel.getAssessmentById(assessmentId).getAssessmentId();
+                if (currentId > 0) {
+                    Date currentDate = viewModel.getAssessmentById(currentId).getAssessmentDueDate();
+                    Long trigger = currentDate.getTime();
+                    intent.putExtra(CHANNEL_ID, "Assessment Notification");
+                    if (viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName() != null && !viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName().isEmpty()) {
+                        intent.putExtra(SUBJECT, "Assessment for " + viewModel.getCourseById(viewModel.getAssessmentById(assessmentId).getAssessmentCourseId()).getCourseName() + " is due today!");
+                    } else {
+                        intent.putExtra(SUBJECT, "Assessment is due today!");
+                    }
+                    intent.putExtra(NOTIFICATION, assessmentTitle.getText().toString() + " is due today!");
+                    intent.putExtra(IMPORTANCE, NotificationManager.IMPORTANCE_HIGH);
+                    //add this assessment activity as a pending intent
+                    intent.putExtra(PENDING_INTENT, PendingIntent.getActivity(this, currentId, new Intent(this, AssessmentDetailsActivity.class), PendingIntent.FLAG_IMMUTABLE));
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentId, intent, PendingIntent.FLAG_IMMUTABLE);
                     //set the alarm
-                    AlarmManager alarmManager2 = (AlarmManager) getSystemService(ALARM_SERVICE);
-                    alarmManager2.set(AlarmManager.RTC_WAKEUP, trigger2, pendingIntent2);
-                    Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate2), Toast.LENGTH_LONG).show();
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                    Toast.makeText(this, "Notification set for " + Formatting.dateFormat.format(currentDate), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(this, "Unable to set notification", Toast.LENGTH_LONG).show();
                 }
+                finish();
             });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

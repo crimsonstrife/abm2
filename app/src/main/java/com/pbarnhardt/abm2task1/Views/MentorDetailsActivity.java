@@ -4,6 +4,9 @@ import static com.pbarnhardt.abm2task1.Utils.Constants.MENTOR_KEY;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,8 +15,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.pbarnhardt.abm2task1.Models.EditorModel;
+import com.pbarnhardt.abm2task1.R;
 import com.pbarnhardt.abm2task1.databinding.ActivityMentorDetailsBinding;
 import com.pbarnhardt.abm2task1.databinding.ContentDetailsMentorsBinding;
+
+import java.util.Objects;
 
 public class MentorDetailsActivity extends AppCompatActivity {
     /**
@@ -40,6 +46,10 @@ public class MentorDetailsActivity extends AppCompatActivity {
         setContentView(view);
         toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
+        //set toolbar color
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_action_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //initialize the binding
         contentBinding = activityBinding.contentInclude;
@@ -73,5 +83,23 @@ public class MentorDetailsActivity extends AppCompatActivity {
         } else {
             finish();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_details, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish(); //close the activity
+            return true;
+        } else if (item.getItemId() == R.id.action_help) {
+            //TODO: add help dialog
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

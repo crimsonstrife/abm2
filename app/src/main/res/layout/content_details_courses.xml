@@ -182,9 +182,9 @@
     <TextView
         android:id="@+id/text_course_assessments"
         style="@style/FieldNameText"
-        android:layout_width="101dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:text="@string/nav_assessmentTitle"
         android:textAlignment="viewEnd"
         app:layout_constraintStart_toStartOf="@+id/text_course_title"
@@ -192,21 +192,23 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/course_assessmentsRecyclerView"
-        android:layout_width="wrap_content"
-        android:maxWidth="250dp"
-        android:minWidth="250dp"
-        android:minHeight="200dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:scrollbars="vertical"
         android:layout_marginStart="20dp"
+        android:layout_margin="20dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_course_assessments"
-        app:layout_constraintTop_toTopOf="@+id/text_course_assessments" />
+        app:layout_constraintStart_toStartOf="@+id/text_course_assessments"
+        app:layout_constraintTop_toBottomOf="@+id/text_course_assessments" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingAddAssessmentToCourseButton"
@@ -215,13 +217,13 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="72dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:clickable="true"
         android:layout_gravity="bottom|end"
         android:tooltipText="Add an Assessment to this Course"
         app:backgroundTint="@color/colorAccent"
-        app:layout_constraintTop_toBottomOf="@+id/text_course_assessments"
-        app:layout_constraintEnd_toEndOf="@+id/text_course_assessments"
+        app:layout_constraintTop_toBottomOf="@+id/divider2"
+        app:layout_constraintStart_toEndOf="@+id/text_course_assessments"
         app:srcCompat="@drawable/ic_action_add"
         android:importantForAccessibility="no" />
 
@@ -238,21 +240,23 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/course_mentorsRecyclerView"
-        android:layout_width="wrap_content"
-        android:maxWidth="250dp"
-        android:minWidth="250dp"
-        android:minHeight="200dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:scrollbars="vertical"
         android:layout_marginStart="20dp"
+        android:layout_margin="20dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_course_mentors"
-        app:layout_constraintTop_toTopOf="@+id/text_course_mentors" />
+        app:layout_constraintStart_toStartOf="@+id/text_course_mentors"
+        app:layout_constraintTop_toBottomOf="@+id/text_course_mentors" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingAddMentorToCourseButton"
         android:layout_width="wrap_content"
@@ -260,13 +264,13 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="72dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:clickable="true"
         android:layout_gravity="bottom|end"
         android:tooltipText="Add a Mentor to this Course"
         app:backgroundTint="@color/colorAccent"
-        app:layout_constraintTop_toBottomOf="@+id/text_course_mentors"
-        app:layout_constraintEnd_toEndOf="@+id/text_course_mentors"
+        app:layout_constraintTop_toBottomOf="@+id/course_assessmentsRecyclerView"
+        app:layout_constraintStart_toEndOf="@+id/text_course_mentors"
         app:srcCompat="@drawable/ic_action_add"
         android:importantForAccessibility="no" />
 
@@ -275,5 +279,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="494dp" />
+        app:layout_constraintGuide_percent="0.6757866" />
 </androidx.constraintlayout.widget.ConstraintLayout>

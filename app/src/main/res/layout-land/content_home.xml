@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_main"
+    tools:context=".Views.MainActivity"
+    android:gravity="start"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/quote_container"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|fill_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:contentDescription="@string/app_name"
+            app:srcCompat="@drawable/studentlogo" />
+
+        <TextView
+            android:id="@+id/text_quote"
+            style="@style/QuoteText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/logo"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="#78909C"
+            tools:text="@string/dailyQoute" />
+
+        <TextView
+            android:id="@+id/text_quote_author"
+            style="@style/QuoteText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_quote"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="#78909C"
+            tools:text="@string/dailyqouteAuthor"
+            tools:ignore="RtlSymmetry" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|fill_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/quote_container">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <!-- Terms -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_terms"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:minHeight="100dp"
+                        android:minWidth="450dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="10dp"
+                        app:cardUseCompatPadding="true"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageButton
+                            android:id="@+id/btn_terms"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:layout_gravity="bottom"
+                            android:background="@color/colorBackground"
+                            android:contentDescription="@string/nav_termTitle"
+                            tools:ignore="DuplicateSpeakableTextCheck" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="start|center"
+                                android:padding="10dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_action_term"
+                                android:importantForAccessibility="no" />
+                            <TextView
+                                android:id="@+id/label_terms"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:paddingEnd="20dp"
+                                android:paddingStart="20dp"
+                                android:text="@string/nav_termTitle"
+                                android:textSize="25sp" />
+                            <Space
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="match_parent"/>
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+                    <!-- Courses -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_courses"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:minHeight="100dp"
+                        android:minWidth="450dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="10dp"
+                        app:cardUseCompatPadding="true"
+                        app:layout_constraintTop_toBottomOf="@id/card_terms">
+                        <ImageButton
+                            android:id="@+id/btn_courses"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:layout_gravity="bottom"
+                            android:background="@color/colorBackground"
+                            android:contentDescription="@string/nav_courseTitle"
+                            tools:ignore="DuplicateSpeakableTextCheck" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="start|center"
+                                android:padding="10dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_action_course"
+                                android:importantForAccessibility="no" />
+                            <TextView
+                                android:id="@+id/label_courses"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:paddingEnd="20dp"
+                                android:paddingStart="20dp"
+                                android:text="@string/nav_courseTitle"
+                                android:textSize="25sp" />
+                            <Space
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="match_parent"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <!-- Assessments -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_assessments"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:minHeight="100dp"
+                        android:minWidth="450dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="10dp"
+                        app:cardUseCompatPadding="true"
+                        app:layout_constraintTop_toBottomOf="@id/card_courses">
+
+                        <ImageButton
+                            android:id="@+id/btn_assessments"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:layout_gravity="bottom"
+                            android:background="@color/colorBackground"
+                            android:contentDescription="@string/nav_assessmentTitle"
+                            tools:ignore="DuplicateSpeakableTextCheck" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="start|center"
+                                android:padding="10dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_action_assessment"
+                                android:importantForAccessibility="no" />
+                            <TextView
+                                android:id="@+id/label_assessments"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:paddingEnd="20dp"
+                                android:paddingStart="20dp"
+                                android:text="@string/nav_assessmentTitle"
+                                android:textSize="25sp" />
+                            <Space
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="match_parent"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <!-- Mentors -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_mentors"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:minHeight="100dp"
+                        android:minWidth="450dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="10dp"
+                        app:cardUseCompatPadding="true"
+                        app:layout_constraintTop_toBottomOf="@id/card_assessments">
+
+                        <ImageButton
+                            android:id="@+id/btn_mentors"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:layout_gravity="bottom"
+                            android:background="@color/colorBackground"
+                            android:contentDescription="@string/nav_mentorTitle"
+                            tools:ignore="DuplicateSpeakableTextCheck" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="start|center"
+                                android:padding="10dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_action_mentor"
+                                android:importantForAccessibility="no" />
+                            <TextView
+                                android:id="@+id/label_mentors"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:paddingEnd="20dp"
+                                android:paddingStart="20dp"
+                                android:text="@string/nav_mentorTitle"
+                                android:textSize="25sp" />
+                            <Space
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="match_parent"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

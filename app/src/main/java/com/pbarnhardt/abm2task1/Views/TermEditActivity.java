@@ -4,7 +4,6 @@ import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_KEY;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -205,7 +204,19 @@ public class TermEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
-            saveAndReturn();
+            //ask the user if they want to save the term
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Save term?");
+            builder.setMessage("Do you want to save the term?");
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setPositiveButton("Save", (dialog, id) -> {
+                dialog.dismiss();
+                saveAndReturn();
+            });
+            builder.setNegativeButton("Don't Save", (dialog, id) -> {
+                dialog.dismiss();
+                finish();
+            });
             return true;
         } else if(item.getItemId() == R.id.action_delete) {
             //if editing, cancel out of the activity

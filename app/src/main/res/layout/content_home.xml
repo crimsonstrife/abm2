@@ -14,24 +14,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:id="@+id/wgulogo"
-            android:layout_width="100dp"
-            android:layout_height="25dp"
+            android:id="@+id/logo"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="20dp"
             android:contentDescription="@string/app_name"
-            app:srcCompat="@drawable/wgu"
-            app:tint="@color/colorPrimary" />
+            app:srcCompat="@drawable/studentlogo" />
 
         <TextView
             android:id="@+id/text_quote"
             style="@style/QuoteText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/wgulogo"
+            android:layout_below="@+id/logo"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="16dp"

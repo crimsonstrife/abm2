@@ -4,6 +4,9 @@ import static com.pbarnhardt.abm2task1.Utils.Constants.TERM_KEY;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -29,6 +32,7 @@ import com.pbarnhardt.abm2task1.databinding.ContentDetailsTermsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TermDetailsActivity extends AppCompatActivity implements CourseAdapter.CourseSelection {
     private int termId;
@@ -56,6 +60,10 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
         setContentView(view);
         toolbar = activityBinding.toolbar;
         setSupportActionBar(toolbar);
+        //set toolbar color
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_action_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //initialize the binding
         contentBinding = activityBinding.contentInclude;
@@ -175,5 +183,60 @@ public class TermDetailsActivity extends AppCompatActivity implements CourseAdap
         builder.setNegativeButton("Cancel", (dialog, id) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_details, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish(); //close the activity
+            return true;
+        } else if (item.getItemId() == R.id.action_help) {
+            //TODO: add help dialog
+        } else if(item.getItemId() == R.id.action_delete) {
+                doDelete();
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Do delete of the term
+     */
+    private void doDelete() {
+        if(viewModel.liveTerms.getValue() != null) {
+            String title = viewModel.liveTerms.getValue().getTermName();
+            if(coursesListData != null && coursesListData.size() > 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Problem deleting " + title);
+                builder.setMessage("You cannot delete a term that has courses assigned to it. \nYou must first delete the courses assigned to this term.  \nThis deletion will be cancelled.");
+                builder.setIcon(android.R.drawable.ic_dialog_alert);
+                builder.setPositiveButton("OK", (dialog, id) -> {
+                    dialog.dismiss();
+                    finish();
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Delete " + title + "?");
+                builder.setMessage("Are you sure you want to delete term '" + title + "'?");
+                builder.setIcon(android.R.drawable.ic_dialog_alert);
+                builder.setPositiveButton("Delete", (dialog, id) -> {
+                    dialog.dismiss();
+                    viewModel.deleteTerm();
+                    finish();
+                });
+                builder.setNegativeButton("Cancel", (dialog, id) -> dialog.dismiss());
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        }
     }
 }

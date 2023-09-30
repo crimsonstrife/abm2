@@ -49,4 +49,11 @@ public class Constants {
     public static final String MENTOR_PHONE = "mentorPhone";
     public static final String MENTOR_EMAIL = "mentorEmail";
     public static final String MENTOR_COURSE_ID = "mentorCourseId";
+
+    //constants for notifications
+    public static final String CHANNEL_ID = "CHANNEL_ID";
+    public static final String SUBJECT = "SUBJECT";
+    public static final String NOTIFICATION = "NOTIFICATION";
+    public static final String IMPORTANCE = "IMPORTANCE";
+    public static final String PENDING_INTENT = "PENDING_INTENT";
 }

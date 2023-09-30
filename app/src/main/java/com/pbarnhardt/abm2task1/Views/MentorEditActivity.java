@@ -4,7 +4,6 @@ import static com.pbarnhardt.abm2task1.Utils.Constants.COURSE_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.EDIT_KEY;
 import static com.pbarnhardt.abm2task1.Utils.Constants.MENTOR_KEY;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -94,11 +93,15 @@ public class MentorEditActivity extends AppCompatActivity {
                 // User clicked OK button
                 setTitle("New Mentor");
                 newMentor = true;
+                dialog.dismiss();
             });
             builder.setNegativeButton("Cancel", (dialog, id) -> {
                 // User cancelled the dialog
+                dialog.dismiss();
                 finish();
             });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         } else if (extras.containsKey(COURSE_KEY)){
             setTitle("New Mentor");
             courseId = extras.getInt(COURSE_KEY);
@@ -126,7 +129,7 @@ public class MentorEditActivity extends AppCompatActivity {
             String email = mentorEmail.getText().toString();
             String phone = mentorPhone.getText().toString();
             //save the mentor
-            viewModel.saveMentor(name, email, phone, courseId);
+            viewModel.saveMentor(name, phone, email, courseId);
             //notify the user that the mentor was saved
             Toast.makeText(this, "Mentor Saved", Toast.LENGTH_SHORT).show();
             //navigate back to the mentor list
@@ -140,6 +143,8 @@ public class MentorEditActivity extends AppCompatActivity {
                 // User clicked OK button
                 dialog.dismiss();
             });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
         finish();
     }
